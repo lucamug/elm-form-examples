@@ -4,9 +4,13 @@
 body {
     font-family: sans-serif;
     background-color: #eee;
-    color: #444;
-    margin: 10px;
-    margin-top: 60px;
+    color: #888;
+    margin: 30px;
+}
+
+a {
+    color: #888;
+    text-decoration: none;
 }
 .form-container {
     max-width: 420px;
@@ -26,9 +30,6 @@ body {
     font-family: monospace;
 }
 
-h1, h2 {
-    color: #888;
-}
 input {
     background-color: #eee;
     box-shadow: 3px 3px 20px 10px #00000006;
@@ -77,4 +78,7 @@ button.disabled {
 }
 .home-container {
     text-align: left;
+}
+.footer {
+    margin: 20px 0;
 }

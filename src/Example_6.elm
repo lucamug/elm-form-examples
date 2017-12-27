@@ -70,7 +70,7 @@ update msg model =
                     )
 
         SetField field value ->
-            ( setField model field value, Cmd.none )
+            ( setField field value model, Cmd.none )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -83,8 +83,8 @@ update msg model =
 -- HELPERS
 
 
-setField : Model -> FormField -> String -> Model
-setField model field value =
+setField : FormField -> String -> Model -> Model
+setField field value model =
     case field of
         Email ->
             { model | email = value }
@@ -128,7 +128,7 @@ validate =
 
 view : Model -> Html Msg
 view model =
-    Utils.view model exampleVersion viewForm viewResponse
+    Utils.view model exampleVersion viewForm
 
 
 viewForm : Model -> Html Msg
@@ -164,15 +164,6 @@ viewForm model =
                 [ ( "disabled", not <| List.isEmpty model.errors ) ]
             ]
             [ text "Submit" ]
-        ]
-
-
-viewResponse : String -> Html msg
-viewResponse response =
-    div [ class "response-container" ]
-        [ h2 [] [ text "Response" ]
-        , textarea []
-            [ text response ]
         ]
 
 

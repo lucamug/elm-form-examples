@@ -122,7 +122,7 @@ validate =
 
 view : Model -> Html Msg
 view model =
-    Utils.view model exampleVersion viewForm viewResponse
+    Utils.view model exampleVersion viewForm
 
 
 viewForm : Model -> Html Msg
@@ -156,46 +156,6 @@ viewForm model =
         , button
             []
             [ text "Submit" ]
-        ]
-
-
-viewForm2 : Model -> Html Msg
-viewForm2 model =
-    Html.form
-        [ onSubmit SubmitForm
-        , class "form-container"
-        ]
-        [ viewFormErrors Email model.errors
-        , div []
-            [ input
-                [ type_ "text"
-                , placeholder "Email"
-                , onInput SetEmail
-                , value model.email
-                ]
-                []
-            ]
-        , viewFormErrors Password model.errors
-        , div []
-            [ input
-                [ type_ "password"
-                , placeholder "Password"
-                , onInput SetPassword
-                , value model.password
-                ]
-                []
-            ]
-        , button []
-            [ text "Submit" ]
-        ]
-
-
-viewResponse : String -> Html msg
-viewResponse response =
-    div [ class "response-container" ]
-        [ h2 [] [ text "Response" ]
-        , textarea []
-            [ text response ]
         ]
 
 

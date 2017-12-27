@@ -100,7 +100,7 @@ postRequest model =
 
 view : Model -> Html Msg
 view model =
-    Utils.view model exampleVersion viewForm viewResponse
+    Utils.view model exampleVersion viewForm
 
 
 viewForm : Model -> Html Msg
@@ -132,15 +132,6 @@ viewForm model =
         , button
             []
             [ text "Submit" ]
-        ]
-
-
-viewResponse : String -> Html msg
-viewResponse response =
-    div [ class "response-container" ]
-        [ h2 [] [ text "Response" ]
-        , textarea []
-            [ text response ]
         ]
 
 

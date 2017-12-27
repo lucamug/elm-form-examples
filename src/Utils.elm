@@ -8,21 +8,25 @@ import Html.Attributes exposing (..)
 exampleComment : Dict.Dict String String
 exampleComment =
     Dict.fromList
-        [ "1" => "First dumb version of the form. Just an old simple form, not the proper way to build forms in Elm"
+        [ "index" => "Examples of Form built in elm."
+        , "1" => "First version: just an old simple form."
         , "2" => "Changed the form to be à la Elm using \"application/x-www-form-urlencoded\" as encoding system"
-        , "3" => "Changed the encoding to json"
+        , "3" => "Changed the encoding system to json"
         , "4" => "Added validation"
         , "5" => "Moved the field updates out of the update function"
-        , "6" => "Replaced the <form> element with <div> and adding \"onClick SubmitForm\" to the button"
-        , "7" => "Bringing back the onEnter behaviour that submit the form pressing Enter when input fields have focus"
-        , "8" => "Added validation while typing and disabled Submit button"
+        , "6" => "Replaced the <form> element with <div> and added \"onClick SubmitForm\" to the button"
+        , "7" => "Restored the \"submit-on-enter\" behavior"
+        , "8" => "Added validation while typing"
         ]
 
 
 viewFooter : String -> Html msg
 viewFooter version =
     div [ class "footer" ]
-        [ text "https://github.com/lucamug/elm-form-examples" ]
+        [ a [ href "https://github.com/lucamug/elm-form-examples" ]
+            [ text "[ code ] " ]
+        , a [ href "https://medium.com/@l.mugnaini/forms-in-elm-validation-tutorial-and-examples-2339830055da" ] [ text " [ article ]" ]
+        ]
 
 
 urlMirrorService : String
@@ -38,13 +42,21 @@ viewHeader version =
         ]
 
 
+viewSimple : String -> Html msg -> Html msg
+viewSimple exampleVersion viewForm =
+    div []
+        [ viewHeader exampleVersion
+        , viewForm
+        , viewFooter exampleVersion
+        ]
+
+
 view :
-    { b | response : Maybe a }
+    { a | response : Maybe String }
     -> String
-    -> ({ b | response : Maybe a } -> Html msg)
-    -> (a -> Html msg)
+    -> ({ a | response : Maybe String } -> Html msg)
     -> Html msg
-view model exampleVersion viewForm viewResponse =
+view model exampleVersion viewForm =
     div []
         [ viewHeader exampleVersion
         , viewForm model
@@ -58,6 +70,15 @@ view model exampleVersion viewForm viewResponse =
         ]
 
 
+viewResponse : String -> Html msg
+viewResponse response =
+    div [ class "response-container" ]
+        [ h2 [] [ text "Response" ]
+        , textarea []
+            [ text response ]
+        ]
+
+
 (=>) : a -> b -> ( a, b )
 (=>) =
     (,)
@@ -67,7 +88,3 @@ getComment : String -> String
 getComment version =
     Dict.get version exampleComment
         |> Maybe.withDefault ""
-
-
-
--- "https://www.w3schools.com/action_page.php"

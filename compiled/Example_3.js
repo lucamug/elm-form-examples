@@ -12997,6 +12997,38 @@ _lucamug$elm_meta_json_decoder$Utils_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
+var _lucamug$elm_meta_json_decoder$Utils$viewResponse = function (response) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('response-container'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Response'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$textarea,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(response),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _lucamug$elm_meta_json_decoder$Utils$urlMirrorService = 'http://httpbin.org/post';
 var _lucamug$elm_meta_json_decoder$Utils$viewFooter = function (version) {
 	return A2(
@@ -13008,36 +13040,66 @@ var _lucamug$elm_meta_json_decoder$Utils$viewFooter = function (version) {
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('https://github.com/lucamug/elm-form-examples'),
-			_1: {ctor: '[]'}
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$href('https://github.com/lucamug/elm-form-examples'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('[ code ] '),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href('https://medium.com/@l.mugnaini/forms-in-elm-validation-tutorial-and-examples-2339830055da'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(' [ article ]'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _lucamug$elm_meta_json_decoder$Utils$exampleComment = _elm_lang$core$Dict$fromList(
 	{
 		ctor: '::',
-		_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '1', 'First dumb version of the form. Just an old simple form, not the proper way to build forms in Elm'),
+		_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], 'index', 'Examples of Form built in elm.'),
 		_1: {
 			ctor: '::',
-			_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '2', 'Changed the form to be à la Elm using \"application/x-www-form-urlencoded\" as encoding system'),
+			_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '1', 'First version: just an old simple form.'),
 			_1: {
 				ctor: '::',
-				_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '3', 'Changed the encoding to json'),
+				_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '2', 'Changed the form to be à la Elm using \"application/x-www-form-urlencoded\" as encoding system'),
 				_1: {
 					ctor: '::',
-					_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '4', 'Added validation'),
+					_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '3', 'Changed the encoding system to json'),
 					_1: {
 						ctor: '::',
-						_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '5', 'Moved the field updates out of the update function'),
+						_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '4', 'Added validation'),
 						_1: {
 							ctor: '::',
-							_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '6', 'Replaced the <form> element with <div> and adding \"onClick SubmitForm\" to the button'),
+							_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '5', 'Moved the field updates out of the update function'),
 							_1: {
 								ctor: '::',
-								_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '7', 'Bringing back the onEnter behaviour that submit the form pressing Enter when input fields have focus'),
+								_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '6', 'Replaced the <form> element with <div> and added \"onClick SubmitForm\" to the button'),
 								_1: {
 									ctor: '::',
-									_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '8', 'Added validation while typing and disabled Submit button'),
-									_1: {ctor: '[]'}
+									_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '7', 'Restored the \"submit-on-enter\" behavior'),
+									_1: {
+										ctor: '::',
+										_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '8', 'Added validation while typing'),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						}
@@ -13086,8 +13148,27 @@ var _lucamug$elm_meta_json_decoder$Utils$viewHeader = function (version) {
 			}
 		});
 };
-var _lucamug$elm_meta_json_decoder$Utils$view = F4(
-	function (model, exampleVersion, viewForm, viewResponse) {
+var _lucamug$elm_meta_json_decoder$Utils$viewSimple = F2(
+	function (exampleVersion, viewForm) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _lucamug$elm_meta_json_decoder$Utils$viewHeader(exampleVersion),
+				_1: {
+					ctor: '::',
+					_0: viewForm,
+					_1: {
+						ctor: '::',
+						_0: _lucamug$elm_meta_json_decoder$Utils$viewFooter(exampleVersion),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _lucamug$elm_meta_json_decoder$Utils$view = F3(
+	function (model, exampleVersion, viewForm) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{ctor: '[]'},
@@ -13102,7 +13183,7 @@ var _lucamug$elm_meta_json_decoder$Utils$view = F4(
 						_0: function () {
 							var _p0 = model.response;
 							if (_p0.ctor === 'Just') {
-								return viewResponse(_p0._0);
+								return _lucamug$elm_meta_json_decoder$Utils$viewResponse(_p0._0);
 							} else {
 								return _elm_lang$html$Html$text('');
 							}
@@ -13117,38 +13198,6 @@ var _lucamug$elm_meta_json_decoder$Utils$view = F4(
 			});
 	});
 
-var _lucamug$elm_meta_json_decoder$Main$viewResponse = function (response) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('response-container'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h2,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Response'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$textarea,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(response),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
 var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
 	var body = _elm_lang$http$Http$jsonBody(
 		_elm_lang$core$Json_Encode$object(
@@ -13351,7 +13400,7 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 		});
 };
 var _lucamug$elm_meta_json_decoder$Main$view = function (model) {
-	return A4(_lucamug$elm_meta_json_decoder$Utils$view, model, _lucamug$elm_meta_json_decoder$Main$exampleVersion, _lucamug$elm_meta_json_decoder$Main$viewForm, _lucamug$elm_meta_json_decoder$Main$viewResponse);
+	return A3(_lucamug$elm_meta_json_decoder$Utils$view, model, _lucamug$elm_meta_json_decoder$Main$exampleVersion, _lucamug$elm_meta_json_decoder$Main$viewForm);
 };
 var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
 	{

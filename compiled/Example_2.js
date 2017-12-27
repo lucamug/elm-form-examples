@@ -6169,274 +6169,6 @@ var _elm_lang$core$Time$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
 
-//import Maybe, Native.List //
-
-var _elm_lang$core$Native_Regex = function() {
-
-function escape(str)
-{
-	return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-}
-function caseInsensitive(re)
-{
-	return new RegExp(re.source, 'gi');
-}
-function regex(raw)
-{
-	return new RegExp(raw, 'g');
-}
-
-function contains(re, string)
-{
-	return string.match(re) !== null;
-}
-
-function find(n, re, str)
-{
-	n = n.ctor === 'All' ? Infinity : n._0;
-	var out = [];
-	var number = 0;
-	var string = str;
-	var lastIndex = re.lastIndex;
-	var prevLastIndex = -1;
-	var result;
-	while (number++ < n && (result = re.exec(string)))
-	{
-		if (prevLastIndex === re.lastIndex) break;
-		var i = result.length - 1;
-		var subs = new Array(i);
-		while (i > 0)
-		{
-			var submatch = result[i];
-			subs[--i] = submatch === undefined
-				? _elm_lang$core$Maybe$Nothing
-				: _elm_lang$core$Maybe$Just(submatch);
-		}
-		out.push({
-			match: result[0],
-			submatches: _elm_lang$core$Native_List.fromArray(subs),
-			index: result.index,
-			number: number
-		});
-		prevLastIndex = re.lastIndex;
-	}
-	re.lastIndex = lastIndex;
-	return _elm_lang$core$Native_List.fromArray(out);
-}
-
-function replace(n, re, replacer, string)
-{
-	n = n.ctor === 'All' ? Infinity : n._0;
-	var count = 0;
-	function jsReplacer(match)
-	{
-		if (count++ >= n)
-		{
-			return match;
-		}
-		var i = arguments.length - 3;
-		var submatches = new Array(i);
-		while (i > 0)
-		{
-			var submatch = arguments[i];
-			submatches[--i] = submatch === undefined
-				? _elm_lang$core$Maybe$Nothing
-				: _elm_lang$core$Maybe$Just(submatch);
-		}
-		return replacer({
-			match: match,
-			submatches: _elm_lang$core$Native_List.fromArray(submatches),
-			index: arguments[arguments.length - 2],
-			number: count
-		});
-	}
-	return string.replace(re, jsReplacer);
-}
-
-function split(n, re, str)
-{
-	n = n.ctor === 'All' ? Infinity : n._0;
-	if (n === Infinity)
-	{
-		return _elm_lang$core$Native_List.fromArray(str.split(re));
-	}
-	var string = str;
-	var result;
-	var out = [];
-	var start = re.lastIndex;
-	var restoreLastIndex = re.lastIndex;
-	while (n--)
-	{
-		if (!(result = re.exec(string))) break;
-		out.push(string.slice(start, result.index));
-		start = re.lastIndex;
-	}
-	out.push(string.slice(start));
-	re.lastIndex = restoreLastIndex;
-	return _elm_lang$core$Native_List.fromArray(out);
-}
-
-return {
-	regex: regex,
-	caseInsensitive: caseInsensitive,
-	escape: escape,
-
-	contains: F2(contains),
-	find: F3(find),
-	replace: F4(replace),
-	split: F3(split)
-};
-
-}();
-
-var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
-var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
-var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
-var _elm_lang$core$Regex$contains = _elm_lang$core$Native_Regex.contains;
-var _elm_lang$core$Regex$caseInsensitive = _elm_lang$core$Native_Regex.caseInsensitive;
-var _elm_lang$core$Regex$regex = _elm_lang$core$Native_Regex.regex;
-var _elm_lang$core$Regex$escape = _elm_lang$core$Native_Regex.escape;
-var _elm_lang$core$Regex$Match = F4(
-	function (a, b, c, d) {
-		return {match: a, submatches: b, index: c, number: d};
-	});
-var _elm_lang$core$Regex$Regex = {ctor: 'Regex'};
-var _elm_lang$core$Regex$AtMost = function (a) {
-	return {ctor: 'AtMost', _0: a};
-};
-var _elm_lang$core$Regex$All = {ctor: 'All'};
-
-var _elm_lang$core$Set$foldr = F3(
-	function (f, b, _p0) {
-		var _p1 = _p0;
-		return A3(
-			_elm_lang$core$Dict$foldr,
-			F3(
-				function (k, _p2, b) {
-					return A2(f, k, b);
-				}),
-			b,
-			_p1._0);
-	});
-var _elm_lang$core$Set$foldl = F3(
-	function (f, b, _p3) {
-		var _p4 = _p3;
-		return A3(
-			_elm_lang$core$Dict$foldl,
-			F3(
-				function (k, _p5, b) {
-					return A2(f, k, b);
-				}),
-			b,
-			_p4._0);
-	});
-var _elm_lang$core$Set$toList = function (_p6) {
-	var _p7 = _p6;
-	return _elm_lang$core$Dict$keys(_p7._0);
-};
-var _elm_lang$core$Set$size = function (_p8) {
-	var _p9 = _p8;
-	return _elm_lang$core$Dict$size(_p9._0);
-};
-var _elm_lang$core$Set$member = F2(
-	function (k, _p10) {
-		var _p11 = _p10;
-		return A2(_elm_lang$core$Dict$member, k, _p11._0);
-	});
-var _elm_lang$core$Set$isEmpty = function (_p12) {
-	var _p13 = _p12;
-	return _elm_lang$core$Dict$isEmpty(_p13._0);
-};
-var _elm_lang$core$Set$Set_elm_builtin = function (a) {
-	return {ctor: 'Set_elm_builtin', _0: a};
-};
-var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
-var _elm_lang$core$Set$singleton = function (k) {
-	return _elm_lang$core$Set$Set_elm_builtin(
-		A2(
-			_elm_lang$core$Dict$singleton,
-			k,
-			{ctor: '_Tuple0'}));
-};
-var _elm_lang$core$Set$insert = F2(
-	function (k, _p14) {
-		var _p15 = _p14;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A3(
-				_elm_lang$core$Dict$insert,
-				k,
-				{ctor: '_Tuple0'},
-				_p15._0));
-	});
-var _elm_lang$core$Set$fromList = function (xs) {
-	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
-};
-var _elm_lang$core$Set$map = F2(
-	function (f, s) {
-		return _elm_lang$core$Set$fromList(
-			A2(
-				_elm_lang$core$List$map,
-				f,
-				_elm_lang$core$Set$toList(s)));
-	});
-var _elm_lang$core$Set$remove = F2(
-	function (k, _p16) {
-		var _p17 = _p16;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$remove, k, _p17._0));
-	});
-var _elm_lang$core$Set$union = F2(
-	function (_p19, _p18) {
-		var _p20 = _p19;
-		var _p21 = _p18;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
-	});
-var _elm_lang$core$Set$intersect = F2(
-	function (_p23, _p22) {
-		var _p24 = _p23;
-		var _p25 = _p22;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
-	});
-var _elm_lang$core$Set$diff = F2(
-	function (_p27, _p26) {
-		var _p28 = _p27;
-		var _p29 = _p26;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
-	});
-var _elm_lang$core$Set$filter = F2(
-	function (p, _p30) {
-		var _p31 = _p30;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(
-				_elm_lang$core$Dict$filter,
-				F2(
-					function (k, _p32) {
-						return p(k);
-					}),
-				_p31._0));
-	});
-var _elm_lang$core$Set$partition = F2(
-	function (p, _p33) {
-		var _p34 = _p33;
-		var _p35 = A2(
-			_elm_lang$core$Dict$partition,
-			F2(
-				function (k, _p36) {
-					return p(k);
-				}),
-			_p34._0);
-		var p1 = _p35._0;
-		var p2 = _p35._1;
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
-			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
-		};
-	});
-
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
 
@@ -13265,6 +12997,38 @@ _lucamug$elm_meta_json_decoder$Utils_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
+var _lucamug$elm_meta_json_decoder$Utils$viewResponse = function (response) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('response-container'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Response'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$textarea,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(response),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _lucamug$elm_meta_json_decoder$Utils$urlMirrorService = 'http://httpbin.org/post';
 var _lucamug$elm_meta_json_decoder$Utils$viewFooter = function (version) {
 	return A2(
@@ -13276,36 +13040,66 @@ var _lucamug$elm_meta_json_decoder$Utils$viewFooter = function (version) {
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('https://github.com/lucamug/elm-form-examples'),
-			_1: {ctor: '[]'}
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$href('https://github.com/lucamug/elm-form-examples'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('[ code ] '),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href('https://medium.com/@l.mugnaini/forms-in-elm-validation-tutorial-and-examples-2339830055da'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(' [ article ]'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _lucamug$elm_meta_json_decoder$Utils$exampleComment = _elm_lang$core$Dict$fromList(
 	{
 		ctor: '::',
-		_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '1', 'First dumb version of the form. Just an old simple form, not the proper way to build forms in Elm'),
+		_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], 'index', 'Examples of Form built in elm.'),
 		_1: {
 			ctor: '::',
-			_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '2', 'Changed the form to be à la Elm using \"application/x-www-form-urlencoded\" as encoding system'),
+			_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '1', 'First version: just an old simple form.'),
 			_1: {
 				ctor: '::',
-				_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '3', 'Changed the encoding to json'),
+				_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '2', 'Changed the form to be à la Elm using \"application/x-www-form-urlencoded\" as encoding system'),
 				_1: {
 					ctor: '::',
-					_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '4', 'Added validation'),
+					_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '3', 'Changed the encoding system to json'),
 					_1: {
 						ctor: '::',
-						_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '5', 'Moved the field updates out of the update function'),
+						_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '4', 'Added validation'),
 						_1: {
 							ctor: '::',
-							_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '6', 'Replaced the <form> element with <div> and adding \"onClick SubmitForm\" to the button'),
+							_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '5', 'Moved the field updates out of the update function'),
 							_1: {
 								ctor: '::',
-								_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '7', 'Bringing back the onEnter behaviour that submit the form pressing Enter when input fields have focus'),
+								_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '6', 'Replaced the <form> element with <div> and added \"onClick SubmitForm\" to the button'),
 								_1: {
 									ctor: '::',
-									_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '8', 'Added validation while typing and disabled Submit button'),
-									_1: {ctor: '[]'}
+									_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '7', 'Restored the \"submit-on-enter\" behavior'),
+									_1: {
+										ctor: '::',
+										_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '8', 'Added validation while typing'),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						}
@@ -13354,8 +13148,27 @@ var _lucamug$elm_meta_json_decoder$Utils$viewHeader = function (version) {
 			}
 		});
 };
-var _lucamug$elm_meta_json_decoder$Utils$view = F4(
-	function (model, exampleVersion, viewForm, viewResponse) {
+var _lucamug$elm_meta_json_decoder$Utils$viewSimple = F2(
+	function (exampleVersion, viewForm) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _lucamug$elm_meta_json_decoder$Utils$viewHeader(exampleVersion),
+				_1: {
+					ctor: '::',
+					_0: viewForm,
+					_1: {
+						ctor: '::',
+						_0: _lucamug$elm_meta_json_decoder$Utils$viewFooter(exampleVersion),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _lucamug$elm_meta_json_decoder$Utils$view = F3(
+	function (model, exampleVersion, viewForm) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{ctor: '[]'},
@@ -13370,7 +13183,7 @@ var _lucamug$elm_meta_json_decoder$Utils$view = F4(
 						_0: function () {
 							var _p0 = model.response;
 							if (_p0.ctor === 'Just') {
-								return viewResponse(_p0._0);
+								return _lucamug$elm_meta_json_decoder$Utils$viewResponse(_p0._0);
 							} else {
 								return _elm_lang$html$Html$text('');
 							}
@@ -13385,175 +13198,6 @@ var _lucamug$elm_meta_json_decoder$Utils$view = F4(
 			});
 	});
 
-var _rtfeldman$elm_validate$Validate$ifInvalid = F2(
-	function (test, error) {
-		var validator = function (subject) {
-			return test(subject) ? {
-				ctor: '::',
-				_0: error,
-				_1: {ctor: '[]'}
-			} : {ctor: '[]'};
-		};
-		return validator;
-	});
-var _rtfeldman$elm_validate$Validate$isValidEmail = function () {
-	var validEmail = _elm_lang$core$Regex$caseInsensitive(
-		_elm_lang$core$Regex$regex('^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'));
-	return _elm_lang$core$Regex$contains(validEmail);
-}();
-var _rtfeldman$elm_validate$Validate$ifInvalidEmail = _rtfeldman$elm_validate$Validate$ifInvalid(
-	function (_p0) {
-		return !_rtfeldman$elm_validate$Validate$isValidEmail(_p0);
-	});
-var _rtfeldman$elm_validate$Validate$isNothing = function (subject) {
-	var _p1 = subject;
-	if (_p1.ctor === 'Just') {
-		return false;
-	} else {
-		return true;
-	}
-};
-var _rtfeldman$elm_validate$Validate$ifNothing = _rtfeldman$elm_validate$Validate$ifInvalid(_rtfeldman$elm_validate$Validate$isNothing);
-var _rtfeldman$elm_validate$Validate$ifEmptySet = _rtfeldman$elm_validate$Validate$ifInvalid(_elm_lang$core$Set$isEmpty);
-var _rtfeldman$elm_validate$Validate$ifEmptyDict = _rtfeldman$elm_validate$Validate$ifInvalid(_elm_lang$core$Dict$isEmpty);
-var _rtfeldman$elm_validate$Validate$ifNotInt = F2(
-	function (error, subject) {
-		var _p2 = _elm_lang$core$String$toInt(subject);
-		if (_p2.ctor === 'Ok') {
-			return {ctor: '[]'};
-		} else {
-			return {
-				ctor: '::',
-				_0: error,
-				_1: {ctor: '[]'}
-			};
-		}
-	});
-var _rtfeldman$elm_validate$Validate$lacksNonWhitespaceChars = _elm_lang$core$Regex$regex('^\\s*$');
-var _rtfeldman$elm_validate$Validate$ifBlank = _rtfeldman$elm_validate$Validate$ifInvalid(
-	_elm_lang$core$Regex$contains(_rtfeldman$elm_validate$Validate$lacksNonWhitespaceChars));
-var _rtfeldman$elm_validate$Validate$any = F2(
-	function (validators, subject) {
-		any:
-		while (true) {
-			var _p3 = validators;
-			if (_p3.ctor === '[]') {
-				return true;
-			} else {
-				var _p4 = _p3._0(subject);
-				if (_p4.ctor === '[]') {
-					var _v4 = _p3._1,
-						_v5 = subject;
-					validators = _v4;
-					subject = _v5;
-					continue any;
-				} else {
-					return false;
-				}
-			}
-		}
-	});
-var _rtfeldman$elm_validate$Validate$eager = F2(
-	function (validators, subject) {
-		eager:
-		while (true) {
-			var _p5 = validators;
-			if (_p5.ctor === '[]') {
-				return _elm_lang$core$Maybe$Nothing;
-			} else {
-				var _p6 = _p5._0(subject);
-				if (_p6.ctor === '[]') {
-					var _v8 = _p5._1,
-						_v9 = subject;
-					validators = _v8;
-					subject = _v9;
-					continue eager;
-				} else {
-					return _elm_lang$core$Maybe$Just(_p6._0);
-				}
-			}
-		}
-	});
-var _rtfeldman$elm_validate$Validate$all = function (validators) {
-	var validator = function (subject) {
-		var accumulateErrors = F2(
-			function (currentValidator, totalErrors) {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					totalErrors,
-					currentValidator(subject));
-			});
-		return A3(
-			_elm_lang$core$List$foldl,
-			accumulateErrors,
-			{ctor: '[]'},
-			validators);
-	};
-	return validator;
-};
-
-var _lucamug$elm_meta_json_decoder$Main$viewFormErrors = F2(
-	function (field, errors) {
-		return A2(
-			_elm_lang$html$Html$ul,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('formErrors'),
-				_1: {ctor: '[]'}
-			},
-			A2(
-				_elm_lang$core$List$map,
-				function (_p0) {
-					var _p1 = _p0;
-					return A2(
-						_elm_lang$html$Html$li,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p1._1),
-							_1: {ctor: '[]'}
-						});
-				},
-				A2(
-					_elm_lang$core$List$filter,
-					function (_p2) {
-						var _p3 = _p2;
-						return _elm_lang$core$Native_Utils.eq(_p3._0, field);
-					},
-					errors)));
-	});
-var _lucamug$elm_meta_json_decoder$Main$viewResponse = function (response) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('response-container'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h2,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Response'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$textarea,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(response),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
 var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
 	var body = A2(
 		_elm_lang$http$Http$stringBody,
@@ -13563,15 +13207,15 @@ var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
 			'&',
 			A2(
 				_elm_lang$core$List$map,
-				function (_p4) {
-					var _p5 = _p4;
+				function (_p0) {
+					var _p1 = _p0;
 					return A2(
 						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$http$Http$encodeUri(_p5._0),
+						_elm_lang$http$Http$encodeUri(_p1._0),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'=',
-							_elm_lang$http$Http$encodeUri(_p5._1)));
+							_elm_lang$http$Http$encodeUri(_p1._1)));
 				},
 				{
 					ctor: '::',
@@ -13593,91 +13237,38 @@ var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
 			withCredentials: false
 		});
 };
-var _lucamug$elm_meta_json_decoder$Main$initialModel = {
-	errors: {ctor: '[]'},
-	email: '',
-	password: '',
-	response: _elm_lang$core$Maybe$Nothing
-};
+var _lucamug$elm_meta_json_decoder$Main$initialModel = {email: '', password: '', response: _elm_lang$core$Maybe$Nothing};
 var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '2';
-var _lucamug$elm_meta_json_decoder$Main$Model = F4(
-	function (a, b, c, d) {
-		return {errors: a, email: b, password: c, response: d};
+var _lucamug$elm_meta_json_decoder$Main$Model = F3(
+	function (a, b, c) {
+		return {email: a, password: b, response: c};
 	});
 var _lucamug$elm_meta_json_decoder$Main$Response = function (a) {
 	return {ctor: 'Response', _0: a};
 };
-var _lucamug$elm_meta_json_decoder$Main$SetPassword = function (a) {
-	return {ctor: 'SetPassword', _0: a};
-};
-var _lucamug$elm_meta_json_decoder$Main$SetEmail = function (a) {
-	return {ctor: 'SetEmail', _0: a};
-};
-var _lucamug$elm_meta_json_decoder$Main$SubmitForm = {ctor: 'SubmitForm'};
-var _lucamug$elm_meta_json_decoder$Main$NoOp = {ctor: 'NoOp'};
-var _lucamug$elm_meta_json_decoder$Main$Password = {ctor: 'Password'};
-var _lucamug$elm_meta_json_decoder$Main$Email = {ctor: 'Email'};
-var _lucamug$elm_meta_json_decoder$Main$validate = _rtfeldman$elm_validate$Validate$all(
-	{
-		ctor: '::',
-		_0: function (_p6) {
-			return A2(
-				_rtfeldman$elm_validate$Validate$ifBlank,
-				{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Email, _1: 'Email can\'t be blank.'},
-				function (_) {
-					return _.email;
-				}(_p6));
-		},
-		_1: {
-			ctor: '::',
-			_0: function (_p7) {
-				return A2(
-					_rtfeldman$elm_validate$Validate$ifBlank,
-					{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Password, _1: 'Password can\'t be blank.'},
-					function (_) {
-						return _.password;
-					}(_p7));
-			},
-			_1: {ctor: '[]'}
-		}
-	});
 var _lucamug$elm_meta_json_decoder$Main$update = F2(
 	function (msg, model) {
-		var _p8 = A2(_elm_lang$core$Debug$log, 'msg', msg);
-		switch (_p8.ctor) {
+		var _p2 = A2(_elm_lang$core$Debug$log, 'msg', msg);
+		switch (_p2.ctor) {
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'SubmitForm':
-				var _p9 = _lucamug$elm_meta_json_decoder$Main$validate(model);
-				if (_p9.ctor === '[]') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								errors: {ctor: '[]'},
-								response: _elm_lang$core$Maybe$Nothing
-							}),
-						_1: A2(
-							_elm_lang$http$Http$send,
-							_lucamug$elm_meta_json_decoder$Main$Response,
-							_lucamug$elm_meta_json_decoder$Main$postRequest(model))
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{errors: _p9}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{response: _elm_lang$core$Maybe$Nothing}),
+					_1: A2(
+						_elm_lang$http$Http$send,
+						_lucamug$elm_meta_json_decoder$Main$Response,
+						_lucamug$elm_meta_json_decoder$Main$postRequest(model))
+				};
 			case 'SetEmail':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{email: _p8._0}),
+						{email: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetPassword':
@@ -13685,17 +13276,17 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{password: _p8._0}),
+						{password: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				if (_p8._0.ctor === 'Ok') {
+				if (_p2._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								response: _elm_lang$core$Maybe$Just(_p8._0._0)
+								response: _elm_lang$core$Maybe$Just(_p2._0._0)
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
@@ -13708,7 +13299,7 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 								response: _elm_lang$core$Maybe$Just(
 									A2(
 										_elm_lang$core$Basics_ops['++'],
-										_elm_lang$core$Basics$toString(_p8._0._0),
+										_elm_lang$core$Basics$toString(_p2._0._0),
 										' - See the Console for more details.'))
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
@@ -13716,6 +13307,13 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 				}
 		}
 	});
+var _lucamug$elm_meta_json_decoder$Main$SetPassword = function (a) {
+	return {ctor: 'SetPassword', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$SetEmail = function (a) {
+	return {ctor: 'SetEmail', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$SubmitForm = {ctor: 'SubmitForm'};
 var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 	return A2(
 		_elm_lang$html$Html$form,
@@ -13738,119 +13336,6 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 					_0: _elm_lang$html$Html$text('Email'),
 					_1: {
 						ctor: '::',
-						_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Email, model.errors),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$input,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('text'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$placeholder('Email'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onInput(_lucamug$elm_meta_json_decoder$Main$SetEmail),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$value(model.email),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$label,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Password'),
-						_1: {
-							ctor: '::',
-							_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Password, model.errors),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$input,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('password'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$placeholder('Password'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(_lucamug$elm_meta_json_decoder$Main$SetPassword),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$value(model.password),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$button,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Submit'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _lucamug$elm_meta_json_decoder$Main$view = function (model) {
-	return A4(_lucamug$elm_meta_json_decoder$Utils$view, model, _lucamug$elm_meta_json_decoder$Main$exampleVersion, _lucamug$elm_meta_json_decoder$Main$viewForm, _lucamug$elm_meta_json_decoder$Main$viewResponse);
-};
-var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
-	{
-		init: {ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
-		view: _lucamug$elm_meta_json_decoder$Main$view,
-		update: _lucamug$elm_meta_json_decoder$Main$update,
-		subscriptions: function (_p10) {
-			return _elm_lang$core$Platform_Sub$none;
-		}
-	})();
-var _lucamug$elm_meta_json_decoder$Main$viewForm2 = function (model) {
-	return A2(
-		_elm_lang$html$Html$form,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onSubmit(_lucamug$elm_meta_json_decoder$Main$SubmitForm),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('form-container'),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Email, model.errors),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html$input,
 							{
@@ -13872,56 +13357,71 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm2 = function (model) {
 							},
 							{ctor: '[]'}),
 						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Password, model.errors),
-					_1: {
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$label,
+					{ctor: '[]'},
+					{
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$input,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('password'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$placeholder('Password'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(_lucamug$elm_meta_json_decoder$Main$SetPassword),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$value(model.password),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}),
+						_0: _elm_lang$html$Html$text('Password'),
 						_1: {
 							ctor: '::',
 							_0: A2(
-								_elm_lang$html$Html$button,
-								{ctor: '[]'},
+								_elm_lang$html$Html$input,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Submit'),
-									_1: {ctor: '[]'}
-								}),
+									_0: _elm_lang$html$Html_Attributes$type_('password'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$placeholder('Password'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onInput(_lucamug$elm_meta_json_decoder$Main$SetPassword),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$value(model.password),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								},
+								{ctor: '[]'}),
 							_1: {ctor: '[]'}
 						}
-					}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Submit'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
 				}
 			}
 		});
 };
+var _lucamug$elm_meta_json_decoder$Main$view = function (model) {
+	return A3(_lucamug$elm_meta_json_decoder$Utils$view, model, _lucamug$elm_meta_json_decoder$Main$exampleVersion, _lucamug$elm_meta_json_decoder$Main$viewForm);
+};
+var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
+	{
+		init: {ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
+		view: _lucamug$elm_meta_json_decoder$Main$view,
+		update: _lucamug$elm_meta_json_decoder$Main$update,
+		subscriptions: function (_p3) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	})();
+var _lucamug$elm_meta_json_decoder$Main$NoOp = {ctor: 'NoOp'};
+var _lucamug$elm_meta_json_decoder$Main$Password = {ctor: 'Password'};
+var _lucamug$elm_meta_json_decoder$Main$Email = {ctor: 'Email'};
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

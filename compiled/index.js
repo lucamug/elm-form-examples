@@ -5954,489 +5954,6 @@ var _elm_lang$core$Task$cmdMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
 
-//import Native.Scheduler //
-
-var _elm_lang$core$Native_Time = function() {
-
-var now = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-{
-	callback(_elm_lang$core$Native_Scheduler.succeed(Date.now()));
-});
-
-function setInterval_(interval, task)
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-	{
-		var id = setInterval(function() {
-			_elm_lang$core$Native_Scheduler.rawSpawn(task);
-		}, interval);
-
-		return function() { clearInterval(id); };
-	});
-}
-
-return {
-	now: now,
-	setInterval_: F2(setInterval_)
-};
-
-}();
-var _elm_lang$core$Time$setInterval = _elm_lang$core$Native_Time.setInterval_;
-var _elm_lang$core$Time$spawnHelp = F3(
-	function (router, intervals, processes) {
-		var _p0 = intervals;
-		if (_p0.ctor === '[]') {
-			return _elm_lang$core$Task$succeed(processes);
-		} else {
-			var _p1 = _p0._0;
-			var spawnRest = function (id) {
-				return A3(
-					_elm_lang$core$Time$spawnHelp,
-					router,
-					_p0._1,
-					A3(_elm_lang$core$Dict$insert, _p1, id, processes));
-			};
-			var spawnTimer = _elm_lang$core$Native_Scheduler.spawn(
-				A2(
-					_elm_lang$core$Time$setInterval,
-					_p1,
-					A2(_elm_lang$core$Platform$sendToSelf, router, _p1)));
-			return A2(_elm_lang$core$Task$andThen, spawnRest, spawnTimer);
-		}
-	});
-var _elm_lang$core$Time$addMySub = F2(
-	function (_p2, state) {
-		var _p3 = _p2;
-		var _p6 = _p3._1;
-		var _p5 = _p3._0;
-		var _p4 = A2(_elm_lang$core$Dict$get, _p5, state);
-		if (_p4.ctor === 'Nothing') {
-			return A3(
-				_elm_lang$core$Dict$insert,
-				_p5,
-				{
-					ctor: '::',
-					_0: _p6,
-					_1: {ctor: '[]'}
-				},
-				state);
-		} else {
-			return A3(
-				_elm_lang$core$Dict$insert,
-				_p5,
-				{ctor: '::', _0: _p6, _1: _p4._0},
-				state);
-		}
-	});
-var _elm_lang$core$Time$inMilliseconds = function (t) {
-	return t;
-};
-var _elm_lang$core$Time$millisecond = 1;
-var _elm_lang$core$Time$second = 1000 * _elm_lang$core$Time$millisecond;
-var _elm_lang$core$Time$minute = 60 * _elm_lang$core$Time$second;
-var _elm_lang$core$Time$hour = 60 * _elm_lang$core$Time$minute;
-var _elm_lang$core$Time$inHours = function (t) {
-	return t / _elm_lang$core$Time$hour;
-};
-var _elm_lang$core$Time$inMinutes = function (t) {
-	return t / _elm_lang$core$Time$minute;
-};
-var _elm_lang$core$Time$inSeconds = function (t) {
-	return t / _elm_lang$core$Time$second;
-};
-var _elm_lang$core$Time$now = _elm_lang$core$Native_Time.now;
-var _elm_lang$core$Time$onSelfMsg = F3(
-	function (router, interval, state) {
-		var _p7 = A2(_elm_lang$core$Dict$get, interval, state.taggers);
-		if (_p7.ctor === 'Nothing') {
-			return _elm_lang$core$Task$succeed(state);
-		} else {
-			var tellTaggers = function (time) {
-				return _elm_lang$core$Task$sequence(
-					A2(
-						_elm_lang$core$List$map,
-						function (tagger) {
-							return A2(
-								_elm_lang$core$Platform$sendToApp,
-								router,
-								tagger(time));
-						},
-						_p7._0));
-			};
-			return A2(
-				_elm_lang$core$Task$andThen,
-				function (_p8) {
-					return _elm_lang$core$Task$succeed(state);
-				},
-				A2(_elm_lang$core$Task$andThen, tellTaggers, _elm_lang$core$Time$now));
-		}
-	});
-var _elm_lang$core$Time$subscription = _elm_lang$core$Native_Platform.leaf('Time');
-var _elm_lang$core$Time$State = F2(
-	function (a, b) {
-		return {taggers: a, processes: b};
-	});
-var _elm_lang$core$Time$init = _elm_lang$core$Task$succeed(
-	A2(_elm_lang$core$Time$State, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty));
-var _elm_lang$core$Time$onEffects = F3(
-	function (router, subs, _p9) {
-		var _p10 = _p9;
-		var rightStep = F3(
-			function (_p12, id, _p11) {
-				var _p13 = _p11;
-				return {
-					ctor: '_Tuple3',
-					_0: _p13._0,
-					_1: _p13._1,
-					_2: A2(
-						_elm_lang$core$Task$andThen,
-						function (_p14) {
-							return _p13._2;
-						},
-						_elm_lang$core$Native_Scheduler.kill(id))
-				};
-			});
-		var bothStep = F4(
-			function (interval, taggers, id, _p15) {
-				var _p16 = _p15;
-				return {
-					ctor: '_Tuple3',
-					_0: _p16._0,
-					_1: A3(_elm_lang$core$Dict$insert, interval, id, _p16._1),
-					_2: _p16._2
-				};
-			});
-		var leftStep = F3(
-			function (interval, taggers, _p17) {
-				var _p18 = _p17;
-				return {
-					ctor: '_Tuple3',
-					_0: {ctor: '::', _0: interval, _1: _p18._0},
-					_1: _p18._1,
-					_2: _p18._2
-				};
-			});
-		var newTaggers = A3(_elm_lang$core$List$foldl, _elm_lang$core$Time$addMySub, _elm_lang$core$Dict$empty, subs);
-		var _p19 = A6(
-			_elm_lang$core$Dict$merge,
-			leftStep,
-			bothStep,
-			rightStep,
-			newTaggers,
-			_p10.processes,
-			{
-				ctor: '_Tuple3',
-				_0: {ctor: '[]'},
-				_1: _elm_lang$core$Dict$empty,
-				_2: _elm_lang$core$Task$succeed(
-					{ctor: '_Tuple0'})
-			});
-		var spawnList = _p19._0;
-		var existingDict = _p19._1;
-		var killTask = _p19._2;
-		return A2(
-			_elm_lang$core$Task$andThen,
-			function (newProcesses) {
-				return _elm_lang$core$Task$succeed(
-					A2(_elm_lang$core$Time$State, newTaggers, newProcesses));
-			},
-			A2(
-				_elm_lang$core$Task$andThen,
-				function (_p20) {
-					return A3(_elm_lang$core$Time$spawnHelp, router, spawnList, existingDict);
-				},
-				killTask));
-	});
-var _elm_lang$core$Time$Every = F2(
-	function (a, b) {
-		return {ctor: 'Every', _0: a, _1: b};
-	});
-var _elm_lang$core$Time$every = F2(
-	function (interval, tagger) {
-		return _elm_lang$core$Time$subscription(
-			A2(_elm_lang$core$Time$Every, interval, tagger));
-	});
-var _elm_lang$core$Time$subMap = F2(
-	function (f, _p21) {
-		var _p22 = _p21;
-		return A2(
-			_elm_lang$core$Time$Every,
-			_p22._0,
-			function (_p23) {
-				return f(
-					_p22._1(_p23));
-			});
-	});
-_elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
-
-//import Maybe, Native.List //
-
-var _elm_lang$core$Native_Regex = function() {
-
-function escape(str)
-{
-	return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-}
-function caseInsensitive(re)
-{
-	return new RegExp(re.source, 'gi');
-}
-function regex(raw)
-{
-	return new RegExp(raw, 'g');
-}
-
-function contains(re, string)
-{
-	return string.match(re) !== null;
-}
-
-function find(n, re, str)
-{
-	n = n.ctor === 'All' ? Infinity : n._0;
-	var out = [];
-	var number = 0;
-	var string = str;
-	var lastIndex = re.lastIndex;
-	var prevLastIndex = -1;
-	var result;
-	while (number++ < n && (result = re.exec(string)))
-	{
-		if (prevLastIndex === re.lastIndex) break;
-		var i = result.length - 1;
-		var subs = new Array(i);
-		while (i > 0)
-		{
-			var submatch = result[i];
-			subs[--i] = submatch === undefined
-				? _elm_lang$core$Maybe$Nothing
-				: _elm_lang$core$Maybe$Just(submatch);
-		}
-		out.push({
-			match: result[0],
-			submatches: _elm_lang$core$Native_List.fromArray(subs),
-			index: result.index,
-			number: number
-		});
-		prevLastIndex = re.lastIndex;
-	}
-	re.lastIndex = lastIndex;
-	return _elm_lang$core$Native_List.fromArray(out);
-}
-
-function replace(n, re, replacer, string)
-{
-	n = n.ctor === 'All' ? Infinity : n._0;
-	var count = 0;
-	function jsReplacer(match)
-	{
-		if (count++ >= n)
-		{
-			return match;
-		}
-		var i = arguments.length - 3;
-		var submatches = new Array(i);
-		while (i > 0)
-		{
-			var submatch = arguments[i];
-			submatches[--i] = submatch === undefined
-				? _elm_lang$core$Maybe$Nothing
-				: _elm_lang$core$Maybe$Just(submatch);
-		}
-		return replacer({
-			match: match,
-			submatches: _elm_lang$core$Native_List.fromArray(submatches),
-			index: arguments[arguments.length - 2],
-			number: count
-		});
-	}
-	return string.replace(re, jsReplacer);
-}
-
-function split(n, re, str)
-{
-	n = n.ctor === 'All' ? Infinity : n._0;
-	if (n === Infinity)
-	{
-		return _elm_lang$core$Native_List.fromArray(str.split(re));
-	}
-	var string = str;
-	var result;
-	var out = [];
-	var start = re.lastIndex;
-	var restoreLastIndex = re.lastIndex;
-	while (n--)
-	{
-		if (!(result = re.exec(string))) break;
-		out.push(string.slice(start, result.index));
-		start = re.lastIndex;
-	}
-	out.push(string.slice(start));
-	re.lastIndex = restoreLastIndex;
-	return _elm_lang$core$Native_List.fromArray(out);
-}
-
-return {
-	regex: regex,
-	caseInsensitive: caseInsensitive,
-	escape: escape,
-
-	contains: F2(contains),
-	find: F3(find),
-	replace: F4(replace),
-	split: F3(split)
-};
-
-}();
-
-var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
-var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
-var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
-var _elm_lang$core$Regex$contains = _elm_lang$core$Native_Regex.contains;
-var _elm_lang$core$Regex$caseInsensitive = _elm_lang$core$Native_Regex.caseInsensitive;
-var _elm_lang$core$Regex$regex = _elm_lang$core$Native_Regex.regex;
-var _elm_lang$core$Regex$escape = _elm_lang$core$Native_Regex.escape;
-var _elm_lang$core$Regex$Match = F4(
-	function (a, b, c, d) {
-		return {match: a, submatches: b, index: c, number: d};
-	});
-var _elm_lang$core$Regex$Regex = {ctor: 'Regex'};
-var _elm_lang$core$Regex$AtMost = function (a) {
-	return {ctor: 'AtMost', _0: a};
-};
-var _elm_lang$core$Regex$All = {ctor: 'All'};
-
-var _elm_lang$core$Set$foldr = F3(
-	function (f, b, _p0) {
-		var _p1 = _p0;
-		return A3(
-			_elm_lang$core$Dict$foldr,
-			F3(
-				function (k, _p2, b) {
-					return A2(f, k, b);
-				}),
-			b,
-			_p1._0);
-	});
-var _elm_lang$core$Set$foldl = F3(
-	function (f, b, _p3) {
-		var _p4 = _p3;
-		return A3(
-			_elm_lang$core$Dict$foldl,
-			F3(
-				function (k, _p5, b) {
-					return A2(f, k, b);
-				}),
-			b,
-			_p4._0);
-	});
-var _elm_lang$core$Set$toList = function (_p6) {
-	var _p7 = _p6;
-	return _elm_lang$core$Dict$keys(_p7._0);
-};
-var _elm_lang$core$Set$size = function (_p8) {
-	var _p9 = _p8;
-	return _elm_lang$core$Dict$size(_p9._0);
-};
-var _elm_lang$core$Set$member = F2(
-	function (k, _p10) {
-		var _p11 = _p10;
-		return A2(_elm_lang$core$Dict$member, k, _p11._0);
-	});
-var _elm_lang$core$Set$isEmpty = function (_p12) {
-	var _p13 = _p12;
-	return _elm_lang$core$Dict$isEmpty(_p13._0);
-};
-var _elm_lang$core$Set$Set_elm_builtin = function (a) {
-	return {ctor: 'Set_elm_builtin', _0: a};
-};
-var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
-var _elm_lang$core$Set$singleton = function (k) {
-	return _elm_lang$core$Set$Set_elm_builtin(
-		A2(
-			_elm_lang$core$Dict$singleton,
-			k,
-			{ctor: '_Tuple0'}));
-};
-var _elm_lang$core$Set$insert = F2(
-	function (k, _p14) {
-		var _p15 = _p14;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A3(
-				_elm_lang$core$Dict$insert,
-				k,
-				{ctor: '_Tuple0'},
-				_p15._0));
-	});
-var _elm_lang$core$Set$fromList = function (xs) {
-	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
-};
-var _elm_lang$core$Set$map = F2(
-	function (f, s) {
-		return _elm_lang$core$Set$fromList(
-			A2(
-				_elm_lang$core$List$map,
-				f,
-				_elm_lang$core$Set$toList(s)));
-	});
-var _elm_lang$core$Set$remove = F2(
-	function (k, _p16) {
-		var _p17 = _p16;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$remove, k, _p17._0));
-	});
-var _elm_lang$core$Set$union = F2(
-	function (_p19, _p18) {
-		var _p20 = _p19;
-		var _p21 = _p18;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
-	});
-var _elm_lang$core$Set$intersect = F2(
-	function (_p23, _p22) {
-		var _p24 = _p23;
-		var _p25 = _p22;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
-	});
-var _elm_lang$core$Set$diff = F2(
-	function (_p27, _p26) {
-		var _p28 = _p27;
-		var _p29 = _p26;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
-	});
-var _elm_lang$core$Set$filter = F2(
-	function (p, _p30) {
-		var _p31 = _p30;
-		return _elm_lang$core$Set$Set_elm_builtin(
-			A2(
-				_elm_lang$core$Dict$filter,
-				F2(
-					function (k, _p32) {
-						return p(k);
-					}),
-				_p31._0));
-	});
-var _elm_lang$core$Set$partition = F2(
-	function (p, _p33) {
-		var _p34 = _p33;
-		var _p35 = A2(
-			_elm_lang$core$Dict$partition,
-			F2(
-				function (k, _p36) {
-					return p(k);
-				}),
-			_p34._0);
-		var p1 = _p35._0;
-		var p2 = _p35._1;
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
-			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
-		};
-	});
-
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
 
@@ -12784,482 +12301,6 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
-var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
-var _elm_lang$html$Html_Events$targetChecked = A2(
-	_elm_lang$core$Json_Decode$at,
-	{
-		ctor: '::',
-		_0: 'target',
-		_1: {
-			ctor: '::',
-			_0: 'checked',
-			_1: {ctor: '[]'}
-		}
-	},
-	_elm_lang$core$Json_Decode$bool);
-var _elm_lang$html$Html_Events$targetValue = A2(
-	_elm_lang$core$Json_Decode$at,
-	{
-		ctor: '::',
-		_0: 'target',
-		_1: {
-			ctor: '::',
-			_0: 'value',
-			_1: {ctor: '[]'}
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
-var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
-var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
-var _elm_lang$html$Html_Events$onFocus = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'focus',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onBlur = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'blur',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
-	_elm_lang$html$Html_Events$defaultOptions,
-	{preventDefault: true});
-var _elm_lang$html$Html_Events$onSubmit = function (msg) {
-	return A3(
-		_elm_lang$html$Html_Events$onWithOptions,
-		'submit',
-		_elm_lang$html$Html_Events$onSubmitOptions,
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onCheck = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'change',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
-};
-var _elm_lang$html$Html_Events$onInput = function (tagger) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'input',
-		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
-};
-var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseout',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseover',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseleave',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseenter',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mouseup',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'mousedown',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'dblclick',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$onClick = function (msg) {
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'click',
-		_elm_lang$core$Json_Decode$succeed(msg));
-};
-var _elm_lang$html$Html_Events$Options = F2(
-	function (a, b) {
-		return {stopPropagation: a, preventDefault: b};
-	});
-
-var _elm_lang$http$Native_Http = function() {
-
-
-// ENCODING AND DECODING
-
-function encodeUri(string)
-{
-	return encodeURIComponent(string);
-}
-
-function decodeUri(string)
-{
-	try
-	{
-		return _elm_lang$core$Maybe$Just(decodeURIComponent(string));
-	}
-	catch(e)
-	{
-		return _elm_lang$core$Maybe$Nothing;
-	}
-}
-
-
-// SEND REQUEST
-
-function toTask(request, maybeProgress)
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-	{
-		var xhr = new XMLHttpRequest();
-
-		configureProgress(xhr, maybeProgress);
-
-		xhr.addEventListener('error', function() {
-			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'NetworkError' }));
-		});
-		xhr.addEventListener('timeout', function() {
-			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'Timeout' }));
-		});
-		xhr.addEventListener('load', function() {
-			callback(handleResponse(xhr, request.expect.responseToResult));
-		});
-
-		try
-		{
-			xhr.open(request.method, request.url, true);
-		}
-		catch (e)
-		{
-			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'BadUrl', _0: request.url }));
-		}
-
-		configureRequest(xhr, request);
-		send(xhr, request.body);
-
-		return function() { xhr.abort(); };
-	});
-}
-
-function configureProgress(xhr, maybeProgress)
-{
-	if (maybeProgress.ctor === 'Nothing')
-	{
-		return;
-	}
-
-	xhr.addEventListener('progress', function(event) {
-		if (!event.lengthComputable)
-		{
-			return;
-		}
-		_elm_lang$core$Native_Scheduler.rawSpawn(maybeProgress._0({
-			bytes: event.loaded,
-			bytesExpected: event.total
-		}));
-	});
-}
-
-function configureRequest(xhr, request)
-{
-	function setHeader(pair)
-	{
-		xhr.setRequestHeader(pair._0, pair._1);
-	}
-
-	A2(_elm_lang$core$List$map, setHeader, request.headers);
-	xhr.responseType = request.expect.responseType;
-	xhr.withCredentials = request.withCredentials;
-
-	if (request.timeout.ctor === 'Just')
-	{
-		xhr.timeout = request.timeout._0;
-	}
-}
-
-function send(xhr, body)
-{
-	switch (body.ctor)
-	{
-		case 'EmptyBody':
-			xhr.send();
-			return;
-
-		case 'StringBody':
-			xhr.setRequestHeader('Content-Type', body._0);
-			xhr.send(body._1);
-			return;
-
-		case 'FormDataBody':
-			xhr.send(body._0);
-			return;
-	}
-}
-
-
-// RESPONSES
-
-function handleResponse(xhr, responseToResult)
-{
-	var response = toResponse(xhr);
-
-	if (xhr.status < 200 || 300 <= xhr.status)
-	{
-		response.body = xhr.responseText;
-		return _elm_lang$core$Native_Scheduler.fail({
-			ctor: 'BadStatus',
-			_0: response
-		});
-	}
-
-	var result = responseToResult(response);
-
-	if (result.ctor === 'Ok')
-	{
-		return _elm_lang$core$Native_Scheduler.succeed(result._0);
-	}
-	else
-	{
-		response.body = xhr.responseText;
-		return _elm_lang$core$Native_Scheduler.fail({
-			ctor: 'BadPayload',
-			_0: result._0,
-			_1: response
-		});
-	}
-}
-
-function toResponse(xhr)
-{
-	return {
-		status: { code: xhr.status, message: xhr.statusText },
-		headers: parseHeaders(xhr.getAllResponseHeaders()),
-		url: xhr.responseURL,
-		body: xhr.response
-	};
-}
-
-function parseHeaders(rawHeaders)
-{
-	var headers = _elm_lang$core$Dict$empty;
-
-	if (!rawHeaders)
-	{
-		return headers;
-	}
-
-	var headerPairs = rawHeaders.split('\u000d\u000a');
-	for (var i = headerPairs.length; i--; )
-	{
-		var headerPair = headerPairs[i];
-		var index = headerPair.indexOf('\u003a\u0020');
-		if (index > 0)
-		{
-			var key = headerPair.substring(0, index);
-			var value = headerPair.substring(index + 2);
-
-			headers = A3(_elm_lang$core$Dict$update, key, function(oldValue) {
-				if (oldValue.ctor === 'Just')
-				{
-					return _elm_lang$core$Maybe$Just(value + ', ' + oldValue._0);
-				}
-				return _elm_lang$core$Maybe$Just(value);
-			}, headers);
-		}
-	}
-
-	return headers;
-}
-
-
-// EXPECTORS
-
-function expectStringResponse(responseToResult)
-{
-	return {
-		responseType: 'text',
-		responseToResult: responseToResult
-	};
-}
-
-function mapExpect(func, expect)
-{
-	return {
-		responseType: expect.responseType,
-		responseToResult: function(response) {
-			var convertedResponse = expect.responseToResult(response);
-			return A2(_elm_lang$core$Result$map, func, convertedResponse);
-		}
-	};
-}
-
-
-// BODY
-
-function multipart(parts)
-{
-	var formData = new FormData();
-
-	while (parts.ctor !== '[]')
-	{
-		var part = parts._0;
-		formData.append(part._0, part._1);
-		parts = parts._1;
-	}
-
-	return { ctor: 'FormDataBody', _0: formData };
-}
-
-return {
-	toTask: F2(toTask),
-	expectStringResponse: expectStringResponse,
-	mapExpect: F2(mapExpect),
-	multipart: multipart,
-	encodeUri: encodeUri,
-	decodeUri: decodeUri
-};
-
-}();
-
-var _elm_lang$http$Http_Internal$map = F2(
-	function (func, request) {
-		return _elm_lang$core$Native_Utils.update(
-			request,
-			{
-				expect: A2(_elm_lang$http$Native_Http.mapExpect, func, request.expect)
-			});
-	});
-var _elm_lang$http$Http_Internal$RawRequest = F7(
-	function (a, b, c, d, e, f, g) {
-		return {method: a, headers: b, url: c, body: d, expect: e, timeout: f, withCredentials: g};
-	});
-var _elm_lang$http$Http_Internal$Request = function (a) {
-	return {ctor: 'Request', _0: a};
-};
-var _elm_lang$http$Http_Internal$Expect = {ctor: 'Expect'};
-var _elm_lang$http$Http_Internal$FormDataBody = {ctor: 'FormDataBody'};
-var _elm_lang$http$Http_Internal$StringBody = F2(
-	function (a, b) {
-		return {ctor: 'StringBody', _0: a, _1: b};
-	});
-var _elm_lang$http$Http_Internal$EmptyBody = {ctor: 'EmptyBody'};
-var _elm_lang$http$Http_Internal$Header = F2(
-	function (a, b) {
-		return {ctor: 'Header', _0: a, _1: b};
-	});
-
-var _elm_lang$http$Http$decodeUri = _elm_lang$http$Native_Http.decodeUri;
-var _elm_lang$http$Http$encodeUri = _elm_lang$http$Native_Http.encodeUri;
-var _elm_lang$http$Http$expectStringResponse = _elm_lang$http$Native_Http.expectStringResponse;
-var _elm_lang$http$Http$expectJson = function (decoder) {
-	return _elm_lang$http$Http$expectStringResponse(
-		function (response) {
-			return A2(_elm_lang$core$Json_Decode$decodeString, decoder, response.body);
-		});
-};
-var _elm_lang$http$Http$expectString = _elm_lang$http$Http$expectStringResponse(
-	function (response) {
-		return _elm_lang$core$Result$Ok(response.body);
-	});
-var _elm_lang$http$Http$multipartBody = _elm_lang$http$Native_Http.multipart;
-var _elm_lang$http$Http$stringBody = _elm_lang$http$Http_Internal$StringBody;
-var _elm_lang$http$Http$jsonBody = function (value) {
-	return A2(
-		_elm_lang$http$Http_Internal$StringBody,
-		'application/json',
-		A2(_elm_lang$core$Json_Encode$encode, 0, value));
-};
-var _elm_lang$http$Http$emptyBody = _elm_lang$http$Http_Internal$EmptyBody;
-var _elm_lang$http$Http$header = _elm_lang$http$Http_Internal$Header;
-var _elm_lang$http$Http$request = _elm_lang$http$Http_Internal$Request;
-var _elm_lang$http$Http$post = F3(
-	function (url, body, decoder) {
-		return _elm_lang$http$Http$request(
-			{
-				method: 'POST',
-				headers: {ctor: '[]'},
-				url: url,
-				body: body,
-				expect: _elm_lang$http$Http$expectJson(decoder),
-				timeout: _elm_lang$core$Maybe$Nothing,
-				withCredentials: false
-			});
-	});
-var _elm_lang$http$Http$get = F2(
-	function (url, decoder) {
-		return _elm_lang$http$Http$request(
-			{
-				method: 'GET',
-				headers: {ctor: '[]'},
-				url: url,
-				body: _elm_lang$http$Http$emptyBody,
-				expect: _elm_lang$http$Http$expectJson(decoder),
-				timeout: _elm_lang$core$Maybe$Nothing,
-				withCredentials: false
-			});
-	});
-var _elm_lang$http$Http$getString = function (url) {
-	return _elm_lang$http$Http$request(
-		{
-			method: 'GET',
-			headers: {ctor: '[]'},
-			url: url,
-			body: _elm_lang$http$Http$emptyBody,
-			expect: _elm_lang$http$Http$expectString,
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-};
-var _elm_lang$http$Http$toTask = function (_p0) {
-	var _p1 = _p0;
-	return A2(_elm_lang$http$Native_Http.toTask, _p1._0, _elm_lang$core$Maybe$Nothing);
-};
-var _elm_lang$http$Http$send = F2(
-	function (resultToMessage, request) {
-		return A2(
-			_elm_lang$core$Task$attempt,
-			resultToMessage,
-			_elm_lang$http$Http$toTask(request));
-	});
-var _elm_lang$http$Http$Response = F4(
-	function (a, b, c, d) {
-		return {url: a, status: b, headers: c, body: d};
-	});
-var _elm_lang$http$Http$BadPayload = F2(
-	function (a, b) {
-		return {ctor: 'BadPayload', _0: a, _1: b};
-	});
-var _elm_lang$http$Http$BadStatus = function (a) {
-	return {ctor: 'BadStatus', _0: a};
-};
-var _elm_lang$http$Http$NetworkError = {ctor: 'NetworkError'};
-var _elm_lang$http$Http$Timeout = {ctor: 'Timeout'};
-var _elm_lang$http$Http$BadUrl = function (a) {
-	return {ctor: 'BadUrl', _0: a};
-};
-var _elm_lang$http$Http$StringPart = F2(
-	function (a, b) {
-		return {ctor: 'StringPart', _0: a, _1: b};
-	});
-var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
-
 var _lucamug$elm_meta_json_decoder$Utils_ops = _lucamug$elm_meta_json_decoder$Utils_ops || {};
 _lucamug$elm_meta_json_decoder$Utils_ops['=>'] = F2(
 	function (v0, v1) {
@@ -13466,431 +12507,194 @@ var _lucamug$elm_meta_json_decoder$Utils$view = F3(
 			});
 	});
 
-var _rtfeldman$elm_validate$Validate$ifInvalid = F2(
-	function (test, error) {
-		var validator = function (subject) {
-			return test(subject) ? {
-				ctor: '::',
-				_0: error,
-				_1: {ctor: '[]'}
-			} : {ctor: '[]'};
-		};
-		return validator;
-	});
-var _rtfeldman$elm_validate$Validate$isValidEmail = function () {
-	var validEmail = _elm_lang$core$Regex$caseInsensitive(
-		_elm_lang$core$Regex$regex('^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'));
-	return _elm_lang$core$Regex$contains(validEmail);
-}();
-var _rtfeldman$elm_validate$Validate$ifInvalidEmail = _rtfeldman$elm_validate$Validate$ifInvalid(
-	function (_p0) {
-		return !_rtfeldman$elm_validate$Validate$isValidEmail(_p0);
-	});
-var _rtfeldman$elm_validate$Validate$isNothing = function (subject) {
-	var _p1 = subject;
-	if (_p1.ctor === 'Just') {
-		return false;
-	} else {
-		return true;
-	}
-};
-var _rtfeldman$elm_validate$Validate$ifNothing = _rtfeldman$elm_validate$Validate$ifInvalid(_rtfeldman$elm_validate$Validate$isNothing);
-var _rtfeldman$elm_validate$Validate$ifEmptySet = _rtfeldman$elm_validate$Validate$ifInvalid(_elm_lang$core$Set$isEmpty);
-var _rtfeldman$elm_validate$Validate$ifEmptyDict = _rtfeldman$elm_validate$Validate$ifInvalid(_elm_lang$core$Dict$isEmpty);
-var _rtfeldman$elm_validate$Validate$ifNotInt = F2(
-	function (error, subject) {
-		var _p2 = _elm_lang$core$String$toInt(subject);
-		if (_p2.ctor === 'Ok') {
-			return {ctor: '[]'};
-		} else {
-			return {
-				ctor: '::',
-				_0: error,
-				_1: {ctor: '[]'}
-			};
-		}
-	});
-var _rtfeldman$elm_validate$Validate$lacksNonWhitespaceChars = _elm_lang$core$Regex$regex('^\\s*$');
-var _rtfeldman$elm_validate$Validate$ifBlank = _rtfeldman$elm_validate$Validate$ifInvalid(
-	_elm_lang$core$Regex$contains(_rtfeldman$elm_validate$Validate$lacksNonWhitespaceChars));
-var _rtfeldman$elm_validate$Validate$any = F2(
-	function (validators, subject) {
-		any:
-		while (true) {
-			var _p3 = validators;
-			if (_p3.ctor === '[]') {
-				return true;
-			} else {
-				var _p4 = _p3._0(subject);
-				if (_p4.ctor === '[]') {
-					var _v4 = _p3._1,
-						_v5 = subject;
-					validators = _v4;
-					subject = _v5;
-					continue any;
-				} else {
-					return false;
-				}
-			}
-		}
-	});
-var _rtfeldman$elm_validate$Validate$eager = F2(
-	function (validators, subject) {
-		eager:
-		while (true) {
-			var _p5 = validators;
-			if (_p5.ctor === '[]') {
-				return _elm_lang$core$Maybe$Nothing;
-			} else {
-				var _p6 = _p5._0(subject);
-				if (_p6.ctor === '[]') {
-					var _v8 = _p5._1,
-						_v9 = subject;
-					validators = _v8;
-					subject = _v9;
-					continue eager;
-				} else {
-					return _elm_lang$core$Maybe$Just(_p6._0);
-				}
-			}
-		}
-	});
-var _rtfeldman$elm_validate$Validate$all = function (validators) {
-	var validator = function (subject) {
-		var accumulateErrors = F2(
-			function (currentValidator, totalErrors) {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					totalErrors,
-					currentValidator(subject));
-			});
-		return A3(
-			_elm_lang$core$List$foldl,
-			accumulateErrors,
-			{ctor: '[]'},
-			validators);
-	};
-	return validator;
-};
-
-var _lucamug$elm_meta_json_decoder$Main$viewFormErrors = F2(
-	function (field, errors) {
-		return A2(
-			_elm_lang$html$Html$ul,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('formErrors'),
-				_1: {ctor: '[]'}
-			},
-			A2(
-				_elm_lang$core$List$map,
-				function (_p0) {
-					var _p1 = _p0;
-					return A2(
-						_elm_lang$html$Html$li,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p1._1),
-							_1: {ctor: '[]'}
-						});
-				},
-				A2(
-					_elm_lang$core$List$filter,
-					function (_p2) {
-						var _p3 = _p2;
-						return _elm_lang$core$Native_Utils.eq(_p3._0, field);
-					},
-					errors)));
-	});
-var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
-	var body = _elm_lang$http$Http$jsonBody(
-		_elm_lang$core$Json_Encode$object(
-			{
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'email',
-					_1: _elm_lang$core$Json_Encode$string(model.email)
-				},
-				_1: {
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'password',
-						_1: _elm_lang$core$Json_Encode$string(model.password)
-					},
-					_1: {ctor: '[]'}
-				}
-			}));
-	return _elm_lang$http$Http$request(
-		{
-			method: 'POST',
-			headers: {ctor: '[]'},
-			url: _lucamug$elm_meta_json_decoder$Utils$urlMirrorService,
-			body: body,
-			expect: _elm_lang$http$Http$expectString,
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-};
-var _lucamug$elm_meta_json_decoder$Main$setField = F3(
-	function (field, value, model) {
-		var _p4 = field;
-		if (_p4.ctor === 'Email') {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{email: value});
-		} else {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{password: value});
-		}
-	});
-var _lucamug$elm_meta_json_decoder$Main$initialModel = {
-	errors: {ctor: '[]'},
-	email: '',
-	password: '',
-	response: _elm_lang$core$Maybe$Nothing
-};
-var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '6';
-var _lucamug$elm_meta_json_decoder$Main$Model = F4(
-	function (a, b, c, d) {
-		return {errors: a, email: b, password: c, response: d};
-	});
-var _lucamug$elm_meta_json_decoder$Main$Response = function (a) {
-	return {ctor: 'Response', _0: a};
-};
-var _lucamug$elm_meta_json_decoder$Main$SetField = F2(
-	function (a, b) {
-		return {ctor: 'SetField', _0: a, _1: b};
-	});
-var _lucamug$elm_meta_json_decoder$Main$SubmitForm = {ctor: 'SubmitForm'};
-var _lucamug$elm_meta_json_decoder$Main$NoOp = {ctor: 'NoOp'};
-var _lucamug$elm_meta_json_decoder$Main$Password = {ctor: 'Password'};
-var _lucamug$elm_meta_json_decoder$Main$Email = {ctor: 'Email'};
-var _lucamug$elm_meta_json_decoder$Main$validate = _rtfeldman$elm_validate$Validate$all(
+var _lucamug$elm_meta_json_decoder$Main$viewIndex = A2(
+	_elm_lang$html$Html$ul,
+	{ctor: '[]'},
 	{
 		ctor: '::',
-		_0: function (_p5) {
-			return A2(
-				_rtfeldman$elm_validate$Validate$ifBlank,
-				{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Email, _1: 'Email can\'t be blank.'},
-				function (_) {
-					return _.email;
-				}(_p5));
-		},
+		_0: A2(
+			_elm_lang$html$Html$li,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href('Example_1.html'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Example_1.html'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}),
 		_1: {
 			ctor: '::',
-			_0: function (_p6) {
-				return A2(
-					_rtfeldman$elm_validate$Validate$ifBlank,
-					{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Password, _1: 'Password can\'t be blank.'},
-					function (_) {
-						return _.password;
-					}(_p6));
-			},
-			_1: {ctor: '[]'}
-		}
-	});
-var _lucamug$elm_meta_json_decoder$Main$update = F2(
-	function (msg, model) {
-		var _p7 = A2(_elm_lang$core$Debug$log, 'msg', msg);
-		switch (_p7.ctor) {
-			case 'NoOp':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'SubmitForm':
-				var _p8 = _lucamug$elm_meta_json_decoder$Main$validate(model);
-				if (_p8.ctor === '[]') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								errors: {ctor: '[]'},
-								response: _elm_lang$core$Maybe$Nothing
-							}),
-						_1: A2(
-							_elm_lang$http$Http$send,
-							_lucamug$elm_meta_json_decoder$Main$Response,
-							_lucamug$elm_meta_json_decoder$Main$postRequest(model))
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{errors: _p8}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			case 'SetField':
-				return {
-					ctor: '_Tuple2',
-					_0: A3(_lucamug$elm_meta_json_decoder$Main$setField, _p7._0, _p7._1, model),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				if (_p7._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								response: _elm_lang$core$Maybe$Just(_p7._0._0)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								response: _elm_lang$core$Maybe$Just(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										_elm_lang$core$Basics$toString(_p7._0._0),
-										' - See the Console for more details.'))
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-		}
-	});
-var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('form-container'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$label,
+				_elm_lang$html$Html$li,
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('Email'),
-					_1: {
-						ctor: '::',
-						_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Email, model.errors),
-						_1: {
+					_0: A2(
+						_elm_lang$html$Html$a,
+						{
 							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$input,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('text'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$placeholder('Email'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onInput(
-												_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Email)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$value(model.email),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								},
-								{ctor: '[]'}),
+							_0: _elm_lang$html$Html_Attributes$href('Example_2.html'),
 							_1: {ctor: '[]'}
-						}
-					}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Example_2.html'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$label,
+					_elm_lang$html$Html$li,
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Password'),
-						_1: {
-							ctor: '::',
-							_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Password, model.errors),
-							_1: {
+						_0: A2(
+							_elm_lang$html$Html$a,
+							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$input,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('password'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$placeholder('Password'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(
-													_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Password)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$value(model.password),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									},
-									{ctor: '[]'}),
+								_0: _elm_lang$html$Html_Attributes$href('Example_3.html'),
 								_1: {ctor: '[]'}
-							}
-						}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Example_3.html'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$button,
+						_elm_lang$html$Html$li,
+						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_lucamug$elm_meta_json_decoder$Main$SubmitForm),
-							_1: {
+							_0: A2(
+								_elm_lang$html$Html$a,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$href('Example_4.html'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Example_4.html'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$li,
+							{ctor: '[]'},
+							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$classList(
+								_0: A2(
+									_elm_lang$html$Html$a,
 									{
 										ctor: '::',
-										_0: {
-											ctor: '_Tuple2',
-											_0: 'disabled',
-											_1: !_elm_lang$core$List$isEmpty(model.errors)
-										},
+										_0: _elm_lang$html$Html_Attributes$href('Example_5.html'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Example_5.html'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {ctor: '[]'}
-							}
-						},
-						{
+							}),
+						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Submit'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
+							_0: A2(
+								_elm_lang$html$Html$li,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$a,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$href('Example_6.html'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Example_6.html'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$li,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$a,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$href('Example_7.html'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Example_7.html'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$li,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$a,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$href('Example_8.html'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Example_8.html'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
 				}
 			}
-		});
-};
-var _lucamug$elm_meta_json_decoder$Main$view = function (model) {
-	return A3(_lucamug$elm_meta_json_decoder$Utils$view, model, _lucamug$elm_meta_json_decoder$Main$exampleVersion, _lucamug$elm_meta_json_decoder$Main$viewForm);
-};
-var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
-	{
-		init: {ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
-		view: _lucamug$elm_meta_json_decoder$Main$view,
-		update: _lucamug$elm_meta_json_decoder$Main$update,
-		subscriptions: function (_p9) {
-			return _elm_lang$core$Platform_Sub$none;
 		}
-	})();
+	});
+var _lucamug$elm_meta_json_decoder$Main$exampleVersion = 'index';
+var _lucamug$elm_meta_json_decoder$Main$view = A2(_lucamug$elm_meta_json_decoder$Utils$viewSimple, _lucamug$elm_meta_json_decoder$Main$exampleVersion, _lucamug$elm_meta_json_decoder$Main$viewIndex);
+var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(_lucamug$elm_meta_json_decoder$Main$view);
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _lucamug$elm_meta_json_decoder$Main$main !== 'undefined') {
-    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Main.Msg":{"args":[],"tags":{"SetField":["Main.FormField","String"],"Response":["Result.Result Http.Error String"],"SubmitForm":[],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.FormField":{"args":[],"tags":{"Email":[],"Password":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{},"aliases":{},"message":"msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

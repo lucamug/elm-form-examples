@@ -5,7 +5,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Utils
-import Validate
 
 
 exampleVersion : String
@@ -14,8 +13,7 @@ exampleVersion =
 
 
 type alias Model =
-    { errors : List Error
-    , email : String
+    { email : String
     , password : String
     , response : Maybe String
     }
@@ -23,15 +21,10 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { errors = []
-    , email = ""
+    { email = ""
     , password = ""
     , response = Nothing
     }
-
-
-type alias Error =
-    ( FormField, String )
 
 
 type Msg
@@ -58,16 +51,9 @@ update msg model =
             ( model, Cmd.none )
 
         SubmitForm ->
-            case validate model of
-                [] ->
-                    ( { model | errors = [], response = Nothing }
-                    , Http.send Response (postRequest model)
-                    )
-
-                errors ->
-                    ( { model | errors = errors }
-                    , Cmd.none
-                    )
+            ( { model | response = Nothing }
+            , Http.send Response (postRequest model)
+            )
 
         SetEmail email ->
             ( { model | email = email }, Cmd.none )
@@ -109,21 +95,13 @@ postRequest model =
         }
 
 
-validate : Model -> List Error
-validate =
-    Validate.all
-        [ .email >> Validate.ifBlank ( Email, "Email can't be blank." )
-        , .password >> Validate.ifBlank ( Password, "Password can't be blank." )
-        ]
-
-
 
 -- VIEWS
 
 
 view : Model -> Html Msg
 view model =
-    Utils.view model exampleVersion viewForm viewResponse
+    Utils.view model exampleVersion viewForm
 
 
 viewForm : Model -> Html Msg
@@ -134,7 +112,6 @@ viewForm model =
         ]
         [ label []
             [ text "Email"
-            , viewFormErrors Email model.errors
             , input
                 [ type_ "text"
                 , placeholder "Email"
@@ -145,7 +122,6 @@ viewForm model =
             ]
         , label []
             [ text "Password"
-            , viewFormErrors Password model.errors
             , input
                 [ type_ "password"
                 , placeholder "Password"
@@ -158,54 +134,6 @@ viewForm model =
             []
             [ text "Submit" ]
         ]
-
-
-viewForm2 : Model -> Html Msg
-viewForm2 model =
-    Html.form
-        [ onSubmit SubmitForm
-        , class "form-container"
-        ]
-        [ viewFormErrors Email model.errors
-        , div []
-            [ input
-                [ type_ "text"
-                , placeholder "Email"
-                , onInput SetEmail
-                , value model.email
-                ]
-                []
-            ]
-        , viewFormErrors Password model.errors
-        , div []
-            [ input
-                [ type_ "password"
-                , placeholder "Password"
-                , onInput SetPassword
-                , value model.password
-                ]
-                []
-            ]
-        , button []
-            [ text "Submit" ]
-        ]
-
-
-viewResponse : String -> Html msg
-viewResponse response =
-    div [ class "response-container" ]
-        [ h2 [] [ text "Response" ]
-        , textarea []
-            [ text response ]
-        ]
-
-
-viewFormErrors : FormField -> List Error -> Html msg
-viewFormErrors field errors =
-    errors
-        |> List.filter (\( fieldError, _ ) -> fieldError == field)
-        |> List.map (\( _, error ) -> li [] [ text error ])
-        |> ul [ class "formErrors" ]
 
 
 

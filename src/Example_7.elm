@@ -71,10 +71,7 @@ update msg model =
                     )
 
         SetField field value ->
-            ( model
-                |> setField field value
-            , Cmd.none
-            )
+            ( setField field value model, Cmd.none )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -145,13 +142,14 @@ onEnter msg =
 
 view : Model -> Html Msg
 view model =
-    Utils.view model exampleVersion viewForm viewResponse
+    Utils.view model exampleVersion viewForm
 
 
 viewForm : Model -> Html Msg
 viewForm model =
     Html.div
         [ class "form-container"
+        , onEnter SubmitForm
         ]
         [ label []
             [ text "Email"
@@ -181,15 +179,6 @@ viewForm model =
                 [ ( "disabled", not <| List.isEmpty model.errors ) ]
             ]
             [ text "Submit" ]
-        ]
-
-
-viewResponse : String -> Html msg
-viewResponse response =
-    div [ class "response-container" ]
-        [ h2 [] [ text "Response" ]
-        , textarea []
-            [ text response ]
         ]
 
 

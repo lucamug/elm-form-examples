@@ -10,13 +10,13 @@ exampleVersion =
     "1"
 
 
+
+-- VIEWS
+
+
 view : Html msg
 view =
-    div []
-        [ Utils.viewHeader exampleVersion
-        , viewForm
-        , Utils.viewFooter exampleVersion
-        ]
+    Utils.viewSimple exampleVersion viewForm
 
 
 viewForm : Html msg
@@ -46,33 +46,6 @@ viewForm =
             ]
         , button
             []
-            [ text "Submit" ]
-        ]
-
-
-viewForm2 : Html msg
-viewForm2 =
-    Html.form
-        [ action Utils.urlMirrorService
-        , method "post"
-        ]
-        [ div []
-            [ input
-                [ type_ "text"
-                , placeholder "Email"
-                , name "email"
-                ]
-                []
-            ]
-        , div []
-            [ input
-                [ type_ "password"
-                , placeholder "Password"
-                , name "password"
-                ]
-                []
-            ]
-        , button []
             [ text "Submit" ]
         ]
 
