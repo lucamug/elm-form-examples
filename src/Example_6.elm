@@ -4,7 +4,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
-import Json.Decode as Decode
 import Json.Encode as Encode
 import Utils
 import Validate
@@ -71,10 +70,7 @@ update msg model =
                     )
 
         SetField field value ->
-            ( model
-                |> setField field value
-            , Cmd.none
-            )
+            ( setField model field value, Cmd.none )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -87,8 +83,8 @@ update msg model =
 -- HELPERS
 
 
-setField : FormField -> String -> Model -> Model
-setField field value model =
+setField : Model -> FormField -> String -> Model
+setField model field value =
     case field of
         Email ->
             { model | email = value }
@@ -124,19 +120,6 @@ validate =
         [ .email >> Validate.ifBlank ( Email, "Email can't be blank." )
         , .password >> Validate.ifBlank ( Password, "Password can't be blank." )
         ]
-
-
-onEnter : msg -> Attribute msg
-onEnter msg =
-    keyCode
-        |> Decode.andThen
-            (\key ->
-                if key == 13 then
-                    Decode.succeed msg
-                else
-                    Decode.fail "Not enter"
-            )
-        |> on "keyup"
 
 
 

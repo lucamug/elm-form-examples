@@ -13615,7 +13615,7 @@ var _lucamug$elm_meta_json_decoder$Main$initialModel = {
 	password: '',
 	response: _elm_lang$core$Maybe$Nothing
 };
-var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '7';
+var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '8';
 var _lucamug$elm_meta_json_decoder$Main$Model = F4(
 	function (a, b, c, d) {
 		return {errors: a, email: b, password: c, response: d};
@@ -13655,15 +13655,29 @@ var _lucamug$elm_meta_json_decoder$Main$validate = _rtfeldman$elm_validate$Valid
 			_1: {ctor: '[]'}
 		}
 	});
+var _lucamug$elm_meta_json_decoder$Main$setErrors = function (model) {
+	var _p7 = _lucamug$elm_meta_json_decoder$Main$validate(model);
+	if (_p7.ctor === '[]') {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				errors: {ctor: '[]'}
+			});
+	} else {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{errors: _p7});
+	}
+};
 var _lucamug$elm_meta_json_decoder$Main$update = F2(
 	function (msg, model) {
-		var _p7 = A2(_elm_lang$core$Debug$log, 'msg', msg);
-		switch (_p7.ctor) {
+		var _p8 = A2(_elm_lang$core$Debug$log, 'msg', msg);
+		switch (_p8.ctor) {
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'SubmitForm':
-				var _p8 = _lucamug$elm_meta_json_decoder$Main$validate(model);
-				if (_p8.ctor === '[]') {
+				var _p9 = _lucamug$elm_meta_json_decoder$Main$validate(model);
+				if (_p9.ctor === '[]') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -13682,24 +13696,25 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{errors: _p8}),
+							{errors: _p9}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			case 'SetField':
 				return {
 					ctor: '_Tuple2',
-					_0: A3(_lucamug$elm_meta_json_decoder$Main$setField, _p7._0, _p7._1, model),
+					_0: _lucamug$elm_meta_json_decoder$Main$setErrors(
+						A3(_lucamug$elm_meta_json_decoder$Main$setField, _p8._0, _p8._1, model)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				if (_p7._0.ctor === 'Ok') {
+				if (_p8._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								response: _elm_lang$core$Maybe$Just(_p7._0._0)
+								response: _elm_lang$core$Maybe$Just(_p8._0._0)
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
@@ -13712,7 +13727,7 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 								response: _elm_lang$core$Maybe$Just(
 									A2(
 										_elm_lang$core$Basics_ops['++'],
-										_elm_lang$core$Basics$toString(_p7._0._0),
+										_elm_lang$core$Basics$toString(_p8._0._0),
 										' - See the Console for more details.'))
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
@@ -13844,7 +13859,7 @@ var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
 		init: {ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
 		view: _lucamug$elm_meta_json_decoder$Main$view,
 		update: _lucamug$elm_meta_json_decoder$Main$update,
-		subscriptions: function (_p9) {
+		subscriptions: function (_p10) {
 			return _elm_lang$core$Platform_Sub$none;
 		}
 	})();

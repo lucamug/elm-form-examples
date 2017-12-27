@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
+import Json.Decode as Decode
 import Json.Encode as Encode
 import Utils
 import Validate
@@ -11,7 +12,7 @@ import Validate
 
 exampleVersion : String
 exampleVersion =
-    "5"
+    "8"
 
 
 type alias Model =
@@ -70,7 +71,11 @@ update msg model =
                     )
 
         SetField field value ->
-            ( setField model field value, Cmd.none )
+            ( model
+                |> setField field value
+                |> setErrors
+            , Cmd.none
+            )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -83,8 +88,18 @@ update msg model =
 -- HELPERS
 
 
-setField : Model -> FormField -> String -> Model
-setField model field value =
+setErrors : Model -> Model
+setErrors model =
+    case validate model of
+        [] ->
+            { model | errors = [] }
+
+        errors ->
+            { model | errors = errors }
+
+
+setField : FormField -> String -> Model -> Model
+setField field value model =
     case field of
         Email ->
             { model | email = value }
@@ -122,6 +137,19 @@ validate =
         ]
 
 
+onEnter : msg -> Attribute msg
+onEnter msg =
+    keyCode
+        |> Decode.andThen
+            (\key ->
+                if key == 13 then
+                    Decode.succeed msg
+                else
+                    Decode.fail "Not enter"
+            )
+        |> on "keyup"
+
+
 
 -- VIEWS
 
@@ -133,9 +161,8 @@ view model =
 
 viewForm : Model -> Html Msg
 viewForm model =
-    Html.form
-        [ onSubmit SubmitForm
-        , class "form-container"
+    Html.div
+        [ class "form-container"
         ]
         [ label []
             [ text "Email"
@@ -160,7 +187,10 @@ viewForm model =
                 []
             ]
         , button
-            []
+            [ onClick SubmitForm
+            , classList
+                [ ( "disabled", not <| List.isEmpty model.errors ) ]
+            ]
             [ text "Submit" ]
         ]
 
