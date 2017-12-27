@@ -38,8 +38,7 @@ type alias Error =
 type Msg
     = NoOp
     | SubmitForm
-    | SetEmail String
-    | SetPassword String
+    | SetField FormField String
     | Response (Result Http.Error String)
 
 
@@ -70,11 +69,8 @@ update msg model =
                     , Cmd.none
                     )
 
-        SetEmail email ->
-            ( { model | email = email }, Cmd.none )
-
-        SetPassword password ->
-            ( { model | password = password }, Cmd.none )
+        SetField field value ->
+            ( setField model field value, Cmd.none )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -84,7 +80,17 @@ update msg model =
 
 
 
---HELPERS
+-- HELPERS
+
+
+setField : Model -> FormField -> String -> Model
+setField model field value =
+    case field of
+        Email ->
+            { model | email = value }
+
+        Password ->
+            { model | password = value }
 
 
 postRequest : Model -> Http.Request String
@@ -137,7 +143,7 @@ viewForm model =
             , input
                 [ type_ "text"
                 , placeholder "Email"
-                , onInput SetEmail
+                , onInput <| SetField Email
                 , value model.email
                 ]
                 []
@@ -148,44 +154,13 @@ viewForm model =
             , input
                 [ type_ "password"
                 , placeholder "Password"
-                , onInput SetPassword
+                , onInput <| SetField Password
                 , value model.password
                 ]
                 []
             ]
         , button
             []
-            [ text "Submit" ]
-        ]
-
-
-viewForm2 : Model -> Html Msg
-viewForm2 model =
-    Html.form
-        [ onSubmit SubmitForm
-        , class "form-container"
-        ]
-        [ viewFormErrors Email model.errors
-        , div []
-            [ input
-                [ type_ "text"
-                , placeholder "Email"
-                , onInput SetEmail
-                , value model.email
-                ]
-                []
-            ]
-        , viewFormErrors Password model.errors
-        , div []
-            [ input
-                [ type_ "password"
-                , placeholder "Password"
-                , onInput SetPassword
-                , value model.password
-                ]
-                []
-            ]
-        , button []
             [ text "Submit" ]
         ]
 

@@ -4,7 +4,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
-import Json.Decode as Decode
 import Json.Encode as Encode
 import Utils
 import Validate
@@ -12,7 +11,7 @@ import Validate
 
 exampleVersion : String
 exampleVersion =
-    "8"
+    "3"
 
 
 type alias Model =
@@ -39,7 +38,8 @@ type alias Error =
 type Msg
     = NoOp
     | SubmitForm
-    | SetField FormField String
+    | SetEmail String
+    | SetPassword String
     | Response (Result Http.Error String)
 
 
@@ -70,12 +70,11 @@ update msg model =
                     , Cmd.none
                     )
 
-        SetField field value ->
-            ( model
-                |> setField field value
-                |> setErrors
-            , Cmd.none
-            )
+        SetEmail email ->
+            ( { model | email = email }, Cmd.none )
+
+        SetPassword password ->
+            ( { model | password = password }, Cmd.none )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -85,27 +84,7 @@ update msg model =
 
 
 
--- HELPERS
-
-
-setErrors : Model -> Model
-setErrors model =
-    case validate model of
-        [] ->
-            { model | errors = [] }
-
-        errors ->
-            { model | errors = errors }
-
-
-setField : FormField -> String -> Model -> Model
-setField field value model =
-    case field of
-        Email ->
-            { model | email = value }
-
-        Password ->
-            { model | password = value }
+--HELPERS
 
 
 postRequest : Model -> Http.Request String
@@ -137,19 +116,6 @@ validate =
         ]
 
 
-onEnter : msg -> Attribute msg
-onEnter msg =
-    keyCode
-        |> Decode.andThen
-            (\key ->
-                if key == 13 then
-                    Decode.succeed msg
-                else
-                    Decode.fail "Not enter"
-            )
-        |> on "keyup"
-
-
 
 -- VIEWS
 
@@ -161,8 +127,9 @@ view model =
 
 viewForm : Model -> Html Msg
 viewForm model =
-    Html.div
-        [ class "form-container"
+    Html.form
+        [ onSubmit SubmitForm
+        , class "form-container"
         ]
         [ label []
             [ text "Email"
@@ -170,7 +137,7 @@ viewForm model =
             , input
                 [ type_ "text"
                 , placeholder "Email"
-                , onInput <| SetField Email
+                , onInput SetEmail
                 , value model.email
                 ]
                 []
@@ -181,16 +148,44 @@ viewForm model =
             , input
                 [ type_ "password"
                 , placeholder "Password"
-                , onInput <| SetField Password
+                , onInput SetPassword
                 , value model.password
                 ]
                 []
             ]
         , button
-            [ onClick SubmitForm
-            , classList
-                [ ( "disabled", not <| List.isEmpty model.errors ) ]
+            []
+            [ text "Submit" ]
+        ]
+
+
+viewForm2 : Model -> Html Msg
+viewForm2 model =
+    Html.form
+        [ onSubmit SubmitForm
+        , class "form-container"
+        ]
+        [ viewFormErrors Email model.errors
+        , div []
+            [ input
+                [ type_ "text"
+                , placeholder "Email"
+                , onInput SetEmail
+                , value model.email
+                ]
+                []
             ]
+        , viewFormErrors Password model.errors
+        , div []
+            [ input
+                [ type_ "password"
+                , placeholder "Password"
+                , onInput SetPassword
+                , value model.password
+                ]
+                []
+            ]
+        , button []
             [ text "Submit" ]
         ]
 

@@ -12588,7 +12588,7 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = A2(
 			}
 		}
 	});
-var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '7';
+var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '1';
 var _lucamug$elm_meta_json_decoder$Main$view = A2(
 	_elm_lang$html$Html$div,
 	{ctor: '[]'},

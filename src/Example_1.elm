@@ -7,7 +7,7 @@ import Utils
 
 exampleVersion : String
 exampleVersion =
-    "7"
+    "1"
 
 
 view : Html msg

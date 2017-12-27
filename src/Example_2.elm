@@ -4,14 +4,13 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
-import Json.Encode as Encode
 import Utils
 import Validate
 
 
 exampleVersion : String
 exampleVersion =
-    "5"
+    "2"
 
 
 type alias Model =
@@ -38,7 +37,8 @@ type alias Error =
 type Msg
     = NoOp
     | SubmitForm
-    | SetField FormField String
+    | SetEmail String
+    | SetPassword String
     | Response (Result Http.Error String)
 
 
@@ -69,8 +69,11 @@ update msg model =
                     , Cmd.none
                     )
 
-        SetField field value ->
-            ( setField model field value, Cmd.none )
+        SetEmail email ->
+            ( { model | email = email }, Cmd.none )
+
+        SetPassword password ->
+            ( { model | password = password }, Cmd.none )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -80,28 +83,20 @@ update msg model =
 
 
 
--- HELPERS
-
-
-setField : Model -> FormField -> String -> Model
-setField model field value =
-    case field of
-        Email ->
-            { model | email = value }
-
-        Password ->
-            { model | password = value }
+--HELPERS
 
 
 postRequest : Model -> Http.Request String
 postRequest model =
     let
         body =
-            Encode.object
-                [ ( "email", Encode.string model.email )
-                , ( "password", Encode.string model.password )
-                ]
-                |> Http.jsonBody
+            [ ( "email", model.email )
+            , ( "password", model.password )
+            ]
+                |> List.map
+                    (\( name, value ) -> Http.encodeUri name ++ "=" ++ Http.encodeUri value)
+                |> String.join "&"
+                |> Http.stringBody "application/x-www-form-urlencoded"
     in
     Http.request
         { method = "POST"
@@ -133,8 +128,9 @@ view model =
 
 viewForm : Model -> Html Msg
 viewForm model =
-    Html.div
-        [ class "form-container"
+    Html.form
+        [ onSubmit SubmitForm
+        , class "form-container"
         ]
         [ label []
             [ text "Email"
@@ -142,7 +138,7 @@ viewForm model =
             , input
                 [ type_ "text"
                 , placeholder "Email"
-                , onInput <| SetField Email
+                , onInput SetEmail
                 , value model.email
                 ]
                 []
@@ -153,16 +149,44 @@ viewForm model =
             , input
                 [ type_ "password"
                 , placeholder "Password"
-                , onInput <| SetField Password
+                , onInput SetPassword
                 , value model.password
                 ]
                 []
             ]
         , button
-            [ onClick SubmitForm
-            , classList
-                [ ( "disabled", not <| List.isEmpty model.errors ) ]
+            []
+            [ text "Submit" ]
+        ]
+
+
+viewForm2 : Model -> Html Msg
+viewForm2 model =
+    Html.form
+        [ onSubmit SubmitForm
+        , class "form-container"
+        ]
+        [ viewFormErrors Email model.errors
+        , div []
+            [ input
+                [ type_ "text"
+                , placeholder "Email"
+                , onInput SetEmail
+                , value model.email
+                ]
+                []
             ]
+        , viewFormErrors Password model.errors
+        , div []
+            [ input
+                [ type_ "password"
+                , placeholder "Password"
+                , onInput SetPassword
+                , value model.password
+                ]
+                []
+            ]
+        , button []
             [ text "Submit" ]
         ]
 

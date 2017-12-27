@@ -12,7 +12,7 @@ import Validate
 
 exampleVersion : String
 exampleVersion =
-    "9"
+    "7"
 
 
 type alias Model =
@@ -73,6 +73,7 @@ update msg model =
         SetField field value ->
             ( model
                 |> setField field value
+                |> setErrors
             , Cmd.none
             )
 
@@ -85,6 +86,16 @@ update msg model =
 
 
 -- HELPERS
+
+
+setErrors : Model -> Model
+setErrors model =
+    case validate model of
+        [] ->
+            { model | errors = [] }
+
+        errors ->
+            { model | errors = errors }
 
 
 setField : FormField -> String -> Model -> Model

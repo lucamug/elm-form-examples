@@ -13711,15 +13711,11 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 	});
 var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 	return A2(
-		_elm_lang$html$Html$form,
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onSubmit(_lucamug$elm_meta_json_decoder$Main$SubmitForm),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('form-container'),
-				_1: {ctor: '[]'}
-			}
+			_0: _elm_lang$html$Html_Attributes$class('form-container'),
+			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
@@ -13801,7 +13797,24 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 					ctor: '::',
 					_0: A2(
 						_elm_lang$html$Html$button,
-						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_lucamug$elm_meta_json_decoder$Main$SubmitForm),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$classList(
+									{
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'disabled',
+											_1: !_elm_lang$core$List$isEmpty(model.errors)
+										},
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						},
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html$text('Submit'),

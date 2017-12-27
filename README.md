@@ -48,3 +48,66 @@ http://package.elm-lang.org/packages/krisajenkins/elm-exts/27.4.0/Exts-Http
 https://github.com/rtfeldman/elm-spa-example/blob/master/src/Page/Login.elm
 https://github.com/rtfeldman/elm-spa-example/blob/master/src/Request/User.elm
 https://stackoverflow.com/questions/36387409/how-to-submit-a-form-in-elm
+
+
+## Forms in Elm
+
+Sometime new comers to Elm complain about the complexity and the large amount of boilerplate needed to implement forms in Elm.
+
+Forms are the main interaction point between users and applications and should be simple to build.
+
+Let's start with a simple and useless exercise. Build an old fashion form, the way we were doing in ancient time, but using Elm. This is what it could be the result:
+
+viewForm : Html msg
+viewForm =
+    Html.form
+        [ action "http://httpbin.org/post"
+        , method "post"
+        ]
+        [ label []
+            [ text "Email"
+            , input
+                [ type_ "text"
+                , placeholder "Email"
+                , name "email"
+                ]
+                []
+            ]
+        , label []
+            [ text "Password"
+            , input
+                [ type_ "password"
+                , placeholder "Password"
+                , name "password"
+                ]
+                []
+            ]
+        , button
+            []
+            [ text "Submit" ]
+        ]
+
+Nothing special here, 1 on 1 to what and Html form would look like. This form send a POST request in "application/x-www-form-urlencoded"(https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) format, where the values are percent-encoded(https://developer.mozilla.org/en-US/docs/Glossary/percent-encoding) and concatenated in key-value tuples separated by '&', with a '=' between the key and the value.
+
+Full code: https://github.com/lucamug/elm-form-examples/blob/master/src/Example_1.elm
+Demo: https://lucamug.github.io/elm-form-examples/Example_1.html
+
+On submitting the form, this text is sent in the body request:
+
+email=bar&password=foo
+
+I am using http://httpbin.org/post as a server service that receive the received data. Unfortunately this service it doesn't return the content of the body as it is, but it parse it as Json data.
+
+In the response, among other data, you can find:
+
+{
+    "form": {
+        "email": "bar",
+        "password": "foo"
+    },
+    "headers": {
+        "Content-Type": "application/x-www-form-urlencoded",
+        ...
+    },
+    ...
+}
