@@ -72,16 +72,26 @@ update msg model =
 --HELPERS
 
 
+formUrlencoded : List ( String, String ) -> String
+formUrlencoded object =
+    object
+        |> List.map
+            (\( name, value ) ->
+                Http.encodeUri name
+                    ++ "="
+                    ++ Http.encodeUri value
+            )
+        |> String.join "&"
+
+
 postRequest : Model -> Http.Request String
 postRequest model =
     let
         body =
-            [ ( "email", model.email )
-            , ( "password", model.password )
-            ]
-                |> List.map
-                    (\( name, value ) -> Http.encodeUri name ++ "=" ++ Http.encodeUri value)
-                |> String.join "&"
+            formUrlencoded
+                [ ( "email", model.email )
+                , ( "password", model.password )
+                ]
                 |> Http.stringBody "application/x-www-form-urlencoded"
     in
     Http.request

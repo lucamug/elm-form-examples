@@ -13198,34 +13198,38 @@ var _lucamug$elm_meta_json_decoder$Utils$view = F3(
 			});
 	});
 
+var _lucamug$elm_meta_json_decoder$Main$formUrlencoded = function (object) {
+	return A2(
+		_elm_lang$core$String$join,
+		'&',
+		A2(
+			_elm_lang$core$List$map,
+			function (_p0) {
+				var _p1 = _p0;
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$http$Http$encodeUri(_p1._0),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'=',
+						_elm_lang$http$Http$encodeUri(_p1._1)));
+			},
+			object));
+};
 var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
 	var body = A2(
 		_elm_lang$http$Http$stringBody,
 		'application/x-www-form-urlencoded',
-		A2(
-			_elm_lang$core$String$join,
-			'&',
-			A2(
-				_elm_lang$core$List$map,
-				function (_p0) {
-					var _p1 = _p0;
-					return A2(
-						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$http$Http$encodeUri(_p1._0),
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'=',
-							_elm_lang$http$Http$encodeUri(_p1._1)));
-				},
-				{
+		_lucamug$elm_meta_json_decoder$Main$formUrlencoded(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'email', _1: model.email},
+				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'email', _1: model.email},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'password', _1: model.password},
-						_1: {ctor: '[]'}
-					}
-				})));
+					_0: {ctor: '_Tuple2', _0: 'password', _1: model.password},
+					_1: {ctor: '[]'}
+				}
+			}));
 	return _elm_lang$http$Http$request(
 		{
 			method: 'POST',
