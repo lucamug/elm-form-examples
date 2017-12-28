@@ -21,32 +21,16 @@ view =
 
 viewForm : Html msg
 viewForm =
-    Html.form
-        [ action Utils.urlMirrorService
-        , method "post"
-        , class "form-container"
-        ]
+    Html.form [ action Utils.urlMirrorService, method "post", class "form-container" ]
         [ label []
             [ text "Email"
-            , input
-                [ type_ "text"
-                , placeholder "Email"
-                , name "email"
-                ]
-                []
+            , input [ type_ "text", placeholder "Email", name "email" ] []
             ]
         , label []
             [ text "Password"
-            , input
-                [ type_ "password"
-                , placeholder "Password"
-                , name "password"
-                ]
-                []
+            , input [ type_ "password", placeholder "Password", name "password" ] []
             ]
-        , button
-            []
-            [ text "Submit" ]
+        , button [] [ text "Submit" ]
         ]
 
 
