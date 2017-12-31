@@ -14,14 +14,16 @@ If you don't already have `elm` and `elm-live`:
 
 Then, to build everything:
 
-> elm-live --output=Example_1.js src/Example_1.elm --open --debug
-> elm-live --output=Example_2.js src/Example_2.elm --open --debug
-> elm-live --output=Example_3.js src/Example_3.elm --open --debug
-> elm-live --output=Example_4.js src/Example_4.elm --open --debug
-> elm-live --output=Example_5.js src/Example_5.elm --open --debug
-> elm-live --output=Example_6.js src/Example_6.elm --open --debug
-> elm-live --output=Example_7.js src/Example_7.elm --open --debug
-> elm-live --output=Example_8.js src/Example_8.elm --open --debug
+> elm-live --output=compiled/Example_1.js src/Example_1.elm --open --debug
+> elm-live --output=compiled/Example_2.js src/Example_2.elm --open --debug
+> elm-live --output=compiled/Example_3.js src/Example_3.elm --open --debug
+> elm-live --output=compiled/Example_4.js src/Example_4.elm --open --debug
+> elm-live --output=compiled/Example_5.js src/Example_5.elm --open --debug
+> elm-live --output=compiled/Example_6.js src/Example_6.elm --open --debug
+> elm-live --output=compiled/Example_7.js src/Example_7.elm --open --debug
+> elm-live --output=compiled/Example_8.js src/Example_8.elm --open --debug
+> elm-live --output=compiled/Example_9.js src/Example_9.elm --open --debug
+> elm-live --output=compiled/Example_10.js src/Example_10.elm --open --debug
 
 (Leave off the `--debug` if you don't want the time-traveling debugger.)
 

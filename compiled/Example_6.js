@@ -13366,7 +13366,31 @@ var _lucamug$elm_meta_json_decoder$Utils$exampleComment = _elm_lang$core$Dict$fr
 									_1: {
 										ctor: '::',
 										_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '8', 'Added validation while typing'),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '9', 'Created the helper \"viewInput\" that generalized the creation of input fields'),
+											_1: {
+												ctor: '::',
+												_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '10', 'Added \"showErrors\" functionality that show error only after the first submit '),
+												_1: {
+													ctor: '::',
+													_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '11', 'Added focus detection so that focus is evident also during history playback'),
+													_1: {
+														ctor: '::',
+														_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '12', 'Added the icon to hide and show the password'),
+														_1: {
+															ctor: '::',
+															_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '13', 'Added spinner while the app is waiting for an answer'),
+															_1: {
+																ctor: '::',
+																_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '14', 'Added \"Floating Lable\"'),
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
+											}
+										}
 									}
 								}
 							}
@@ -13776,30 +13800,30 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 					_0: _elm_lang$html$Html$text('Email'),
 					_1: {
 						ctor: '::',
-						_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Email, model.errors),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$input,
-								{
+						_0: A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('text'),
+								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('text'),
+									_0: _elm_lang$html$Html_Attributes$placeholder('Email'),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$placeholder('Email'),
+										_0: _elm_lang$html$Html_Events$onInput(
+											_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Email)),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onInput(
-												_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Email)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$value(model.email),
-												_1: {ctor: '[]'}
-											}
+											_0: _elm_lang$html$Html_Attributes$value(model.email),
+											_1: {ctor: '[]'}
 										}
 									}
-								},
-								{ctor: '[]'}),
+								}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Email, model.errors),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -13814,30 +13838,30 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 						_0: _elm_lang$html$Html$text('Password'),
 						_1: {
 							ctor: '::',
-							_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Password, model.errors),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$input,
-									{
+							_0: A2(
+								_elm_lang$html$Html$input,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$type_('password'),
+									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('password'),
+										_0: _elm_lang$html$Html_Attributes$placeholder('Password'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$placeholder('Password'),
+											_0: _elm_lang$html$Html_Events$onInput(
+												_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Password)),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(
-													_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Password)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$value(model.password),
-													_1: {ctor: '[]'}
-												}
+												_0: _elm_lang$html$Html_Attributes$value(model.password),
+												_1: {ctor: '[]'}
 											}
 										}
-									},
-									{ctor: '[]'}),
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(_lucamug$elm_meta_json_decoder$Main$viewFormErrors, _lucamug$elm_meta_json_decoder$Main$Password, model.errors),
 								_1: {ctor: '[]'}
 							}
 						}

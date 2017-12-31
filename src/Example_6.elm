@@ -138,7 +138,6 @@ viewForm model =
         ]
         [ label []
             [ text "Email"
-            , viewFormErrors Email model.errors
             , input
                 [ type_ "text"
                 , placeholder "Email"
@@ -146,10 +145,10 @@ viewForm model =
                 , value model.email
                 ]
                 []
+            , viewFormErrors Email model.errors
             ]
         , label []
             [ text "Password"
-            , viewFormErrors Password model.errors
             , input
                 [ type_ "password"
                 , placeholder "Password"
@@ -157,6 +156,7 @@ viewForm model =
                 , value model.password
                 ]
                 []
+            , viewFormErrors Password model.errors
             ]
         , button
             [ onClick SubmitForm

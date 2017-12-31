@@ -17,6 +17,12 @@ exampleComment =
         , "6" => "Replaced the <form> element with <div> and added \"onClick SubmitForm\" to the button"
         , "7" => "Restored the \"submit-on-enter\" behavior"
         , "8" => "Added validation while typing"
+        , "9" => "Created the helper \"viewInput\" that generalized the creation of input fields"
+        , "10" => "Added \"showErrors\" functionality that show error only after the first submit "
+        , "11" => "Added focus detection so that focus is evident also during history playback"
+        , "12" => "Added the icon to hide and show the password"
+        , "13" => "Added spinner while the app is waiting for an answer"
+        , "14" => "Added \"Floating Lable\""
         ]
 
 

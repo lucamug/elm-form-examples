@@ -30,6 +30,12 @@ viewIndex =
         , li [] [ a [ href "Example_6.html" ] [ text "Example_6.html" ] ]
         , li [] [ a [ href "Example_7.html" ] [ text "Example_7.html" ] ]
         , li [] [ a [ href "Example_8.html" ] [ text "Example_8.html" ] ]
+        , li [] [ a [ href "Example_9.html" ] [ text "Example_9.html" ] ]
+        , li [] [ a [ href "Example_10.html" ] [ text "Example_10.html" ] ]
+        , li [] [ a [ href "Example_11.html" ] [ text "Example_11.html" ] ]
+        , li [] [ a [ href "Example_12.html" ] [ text "Example_12.html" ] ]
+        , li [] [ a [ href "Example_13.html" ] [ text "Example_13.html" ] ]
+        , li [] [ a [ href "Example_14.html" ] [ text "Example_14.html" ] ]
         ]
 
 

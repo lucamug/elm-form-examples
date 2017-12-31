@@ -1,9 +1,10 @@
-module Main exposing (..)
+module Main exposing (main)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
+import Json.Decode as Decode
 import Json.Encode as Encode
 import Utils
 import Validate
@@ -11,7 +12,7 @@ import Validate
 
 exampleVersion : String
 exampleVersion =
-    "5"
+    "9"
 
 
 type alias Model =
@@ -70,7 +71,11 @@ update msg model =
                     )
 
         SetField field value ->
-            ( setField field value model, Cmd.none )
+            ( model
+                |> setField field value
+                |> setErrors
+            , Cmd.none
+            )
 
         Response (Ok response) ->
             ( { model | response = Just response }, Cmd.none )
@@ -81,6 +86,16 @@ update msg model =
 
 
 -- HELPERS
+
+
+setErrors : Model -> Model
+setErrors model =
+    case validate model of
+        [] ->
+            { model | errors = [] }
+
+        errors ->
+            { model | errors = errors }
 
 
 setField : FormField -> String -> Model -> Model
@@ -122,6 +137,19 @@ validate =
         ]
 
 
+onEnter : msg -> Attribute msg
+onEnter msg =
+    keyCode
+        |> Decode.andThen
+            (\key ->
+                if key == 13 then
+                    Decode.succeed msg
+                else
+                    Decode.fail "Not enter"
+            )
+        |> on "keyup"
+
+
 
 -- VIEWS
 
@@ -131,36 +159,42 @@ view model =
     Utils.view model exampleVersion viewForm
 
 
+viewInput : Model -> FormField -> String -> String -> Html Msg
+viewInput model formField inputType inputName =
+    label
+        []
+        [ text inputName
+        , input
+            [ type_ inputType
+            , placeholder inputName
+            , onInput <| SetField formField
+            , value <|
+                case formField of
+                    Email ->
+                        model.email
+
+                    Password ->
+                        model.password
+            ]
+            []
+        , viewFormErrors formField model.errors
+        ]
+
+
 viewForm : Model -> Html Msg
 viewForm model =
-    Html.form
-        [ onSubmit SubmitForm
-        , class "form-container"
+    Html.div
+        [ class "form-container"
+        , onEnter SubmitForm
         ]
-        [ label []
-            [ text "Email"
-            , input
-                [ type_ "text"
-                , placeholder "Email"
-                , onInput <| SetField Email
-                , value model.email
-                ]
-                []
-            , viewFormErrors Email model.errors
-            ]
-        , label []
-            [ text "Password"
-            , input
-                [ type_ "password"
-                , placeholder "Password"
-                , onInput <| SetField Password
-                , value model.password
-                ]
-                []
-            , viewFormErrors Password model.errors
-            ]
+        [ node "style" [] [ text "" ]
+        , viewInput model Email "text" "Email"
+        , viewInput model Password "password" "Password"
         , button
-            []
+            [ onClick SubmitForm
+            , classList
+                [ ( "disabled", not <| List.isEmpty model.errors ) ]
+            ]
             [ text "Submit" ]
         ]
 

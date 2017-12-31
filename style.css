@@ -18,6 +18,16 @@ a {
     background-color: #ddd;
     padding: 30px;
     box-shadow: inset 3px 3px 20px 10px #00000006;
+    position: relative;
+}
+
+.form-cover {
+    background-color: #dddddddd;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
 }
 .response-container {
     padding-top: 20px;
@@ -36,7 +46,7 @@ input {
     font-size: 24px;
     padding: 5px 10px;
     border: 0px;
-    border-bottom: 3px solid orange;
+    border-bottom: 2px solid orange;
     width: 100%;
     margin-top: 6px
 }
@@ -55,30 +65,91 @@ button {
     box-shadow: 3px 3px 20px 10px #00000006;
     border: 0px;
     font-size: 24px;
-    padding: 5px 10px;
+    padding: 5px 30px;
     color: white;
-    border-radius: 10px;
+    border-radius: 20px;
     margin: 15px 0;
     cursor: pointer;
+    border: 2px solid transparent;
 }
 button.disabled {
     background-color: #bbb;
     color: #aaa;
     cursor: not-allowed;
 }
-
 .formErrors {
     color: #c00;
     text-align: left;
     margin: 0;
-    padding-left: 15px;
+    padding-left: 0px;
+    height: 10px;
+    list-style: none;
+    font-size: 14px;
 }
 .formErrors li {
-    margin: 10px 0;
+    padding: 10px 0;
 }
 .home-container {
     text-align: left;
 }
 .footer {
     margin: 20px 0;
+}
+
+input:focus, input.focus    {
+    outline: #7ab4ff solid 2px;
+    outline-offset: 0px;
+    border-bottom: 2px solid transparent;
+}
+
+button:focus    {
+    outline: orange solid 0px;
+    outline-offset: 0px;
+    border: 2px solid #7ab4ff;
+}
+
+
+.inputFieldContainer {
+    position:relative;
+}
+.iconInsideField {
+    position: absolute;
+    right: 10px;
+    bottom: 0;
+    cursor: pointer;
+}
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.form-cover:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border-top: 2px solid orange;
+  border-right: 2px solid transparent;
+  animation: spinner .6s linear infinite;
+}
+.placeholder {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+    pointer-events: none;
+    font-size: 18px;
+    transition: all 0.2s;
+    color: #bbb;
+}
+.placeholder.upperPosition {
+    top: -17px;
+    left: 0px;
+    font-size: 15px;
+    color: #888;
 }
