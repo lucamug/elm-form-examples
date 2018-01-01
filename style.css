@@ -40,7 +40,7 @@ a {
     font-family: monospace;
 }
 
-input {
+input[type="text"], input[type="password"] {
     background-color: #eee;
     box-shadow: 3px 3px 20px 10px #00000006;
     font-size: 24px;
@@ -54,6 +54,13 @@ label {
     display: block;
     color: #888;
     margin-bottom: 40px;
+}
+
+label.checkbox {
+    margin-bottom: 10px;
+}
+label.disabled {
+    color: #bbb;
 }
 fieldset {
     border: 0px;
@@ -86,6 +93,12 @@ button.disabled {
     list-style: none;
     font-size: 14px;
 }
+.formMessage {
+    color: green;
+    height: 36px;
+    font-size: 14px;
+}
+
 .formErrors li {
     padding: 10px 0;
 }

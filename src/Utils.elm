@@ -23,6 +23,9 @@ exampleComment =
         , "12" => "Added the icon to hide and show the password"
         , "13" => "Added spinner while the app is waiting for an answer"
         , "14" => "Added \"Floating Lable\""
+        , "15" => "Added Checkboxes"
+        , "16" => "Encoded Checkboxes values into the Json for sending to the server"
+        , "17" => "Added maximum number of checkable fruits"
         ]
 
 
