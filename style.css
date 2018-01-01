@@ -5,7 +5,13 @@ body {
     font-family: sans-serif;
     background-color: #eee;
     color: #888;
-    margin: 30px;
+    margin: 20px;
+}
+
+@media screen and (min-width: 480px) {
+    body {
+        margin: 30px;
+    }
 }
 
 a {
@@ -58,10 +64,30 @@ label {
 
 label.checkbox {
     margin-bottom: 10px;
+    flex: 0 1 48%;
+    background-color: #eee;
+    padding: 5px;
+    font-size: 14px;
 }
+
+@media screen and (min-width: 480px) {
+    label.checkbox {
+        flex: 0 1 32%;
+    }
+}
+
 label.disabled {
-    color: #bbb;
+    opacity: 0.2;
 }
+label.checked {
+    box-shadow: inset 2px 2px 8px 0px #aaa;
+}
+.checkboxContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 fieldset {
     border: 0px;
     margin: 0;
@@ -165,4 +191,8 @@ button:focus    {
     left: 0px;
     font-size: 15px;
     color: #888;
+}
+.svgContainer {
+    width: 48px;
+    margin: 15px auto;
 }
