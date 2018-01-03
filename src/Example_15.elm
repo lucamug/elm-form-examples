@@ -256,7 +256,7 @@ viewInput model formField inputType inputName =
             , div
                 [ classList
                     [ ( "placeholder", True )
-                    , ( "upperPosition", hasFocus || (not hasFocus && content /= "") )
+                    , ( "upperPosition", hasFocus || content /= "" )
                     ]
                 ]
                 [ text inputName ]

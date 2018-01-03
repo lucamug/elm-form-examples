@@ -49,7 +49,7 @@ a {
     font-family: monospace;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="date"] {
     background-color: #eee;
     box-shadow: 3px 3px 20px 10px #00000006;
     font-size: 24px;

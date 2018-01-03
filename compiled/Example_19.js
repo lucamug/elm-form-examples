@@ -17379,7 +17379,7 @@ var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 												_0: {
 													ctor: '_Tuple2',
 													_0: 'upperPosition',
-													_1: hasFocus || ((!hasFocus) && (!_elm_lang$core$Native_Utils.eq(content, '')))
+													_1: hasFocus || (!_elm_lang$core$Native_Utils.eq(content, ''))
 												},
 												_1: {ctor: '[]'}
 											}

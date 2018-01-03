@@ -1,5 +1,7 @@
 module Main exposing (main)
 
+import Date
+import DatePicker
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -15,7 +17,7 @@ import Validate
 
 exampleVersion : String
 exampleVersion =
-    "18"
+    "19"
 
 
 type alias Model =
@@ -28,32 +30,48 @@ type alias Model =
     , showErrors : Bool
     , showPassword : Bool
     , formState : FormState
+    , date : Maybe Date.Date
+    , datePicker : DatePicker.DatePicker
+    , defaultSettings : DatePicker.Settings
     }
 
 
-initialModel : Model
-initialModel =
-    { errors = []
-    , email = ""
-    , password = ""
-    , fruits =
-        Dict.fromList
-            [ ( "Apple", False )
-            , ( "Banana", False )
-            , ( "Orange", False )
-            , ( "Pear", False )
-            , ( "Strawberry", False )
-            , ( "Cherry", False )
-            , ( "Grapes", False )
-            , ( "Watermelon", False )
-            , ( "Pineapple", False )
-            ]
-    , response = Nothing
-    , focus = Nothing
-    , showErrors = False
-    , showPassword = False
-    , formState = Editing
-    }
+init : ( Model, Cmd Msg )
+init =
+    let
+        isDisabled date =
+            Date.dayOfWeek date
+                |> flip List.member [ Date.Sat, Date.Sun ]
+
+        ( datePicker, datePickerFx ) =
+            DatePicker.init
+    in
+    ( { errors = []
+      , email = ""
+      , password = ""
+      , fruits =
+            Dict.fromList
+                [ ( "Apple", False )
+                , ( "Banana", False )
+                , ( "Orange", False )
+                , ( "Pear", False )
+                , ( "Strawberry", False )
+                , ( "Cherry", False )
+                , ( "Grapes", False )
+                , ( "Watermelon", False )
+                , ( "Pineapple", False )
+                ]
+      , response = Nothing
+      , focus = Nothing
+      , showErrors = False
+      , showPassword = False
+      , formState = Editing
+      , date = Nothing
+      , datePicker = datePicker
+      , defaultSettings = DatePicker.defaultSettings
+      }
+    , Cmd.map ToDatePicker datePickerFx
+    )
 
 
 type alias Error =
@@ -78,15 +96,12 @@ type Msg
     | OnBlur FormField
     | ToggleShowPasssword
     | ToggleFruit Fruit
+    | ToDatePicker DatePicker.Msg
 
 
 type FormField
     = Email
     | Password
-
-
-
--- UPDATE
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -132,9 +147,45 @@ update msg model =
         ToggleFruit fruit ->
             ( { model | fruits = toggle fruit model.fruits }, Cmd.none )
 
+        ToDatePicker msg ->
+            let
+                ( newDatePicker, _, mDate ) =
+                    DatePicker.update settings msg model.datePicker
+
+                date =
+                    case mDate of
+                        DatePicker.Changed date ->
+                            date
+
+                        _ ->
+                            model.date
+            in
+            ( { model
+                | date = date
+                , datePicker = newDatePicker
+              }
+            , Cmd.none
+            )
+
 
 
 -- HELPERS
+
+
+settings : DatePicker.Settings
+settings =
+    let
+        defaultSettings =
+            DatePicker.defaultSettings
+
+        isDisabled date =
+            Date.dayOfWeek date
+                |> flip List.member [ Date.Sat, Date.Sun ]
+    in
+    { defaultSettings
+        | isDisabled = isDisabled
+        , placeholder = ""
+    }
 
 
 toggle : comparable -> Dict.Dict comparable Bool -> Dict.Dict comparable Bool
@@ -234,6 +285,11 @@ onEnter msg =
         |> on "keyup"
 
 
+formatDate : Date.Date -> String
+formatDate d =
+    toString (Date.month d) ++ " " ++ toString (Date.day d) ++ ", " ++ toString (Date.year d)
+
+
 
 -- VIEWS
 
@@ -300,6 +356,10 @@ viewInput model formField inputType inputName =
 
 viewForm : Model -> Html Msg
 viewForm model =
+    let
+        dp =
+            model.datePicker
+    in
     div [ class "form-container" ]
         [ div
             [ onEnter SubmitForm
@@ -307,6 +367,34 @@ viewForm model =
             [ node "style" [] [ text "" ]
             , viewInput model Email "text" "Email"
             , viewInput model Password "password" "Password"
+            , label []
+                [ div [ class "inputFieldContainer" ]
+                    [ DatePicker.view model.date settings model.datePicker
+                        |> Html.map ToDatePicker
+                    , div
+                        [ classList
+                            [ ( "placeholder", True )
+                            , ( "upperPosition"
+                              , not (model.date == Nothing)
+                                    || DatePicker.isOpen model.datePicker
+                              )
+                            ]
+                        ]
+                        [ text
+                            (case model.date of
+                                Nothing ->
+                                    "Date"
+
+                                Just date ->
+                                    "Date: " ++ formatDate date
+                            )
+                        ]
+                    ]
+                ]
+            , label []
+                [ div [ class "inputFieldContainer" ]
+                    [ input [ type_ "date" ] [] ]
+                ]
             , div [ class "checkboxContainer" ]
                 (List.map
                     (\fruit ->
@@ -418,7 +506,7 @@ viewFormErrors model field errors =
 main : Program Never Model Msg
 main =
     program
-        { init = ( initialModel, Cmd.none )
+        { init = init
         , view = view
         , update = update
         , subscriptions = \_ -> Sub.none
