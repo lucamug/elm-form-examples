@@ -55,6 +55,7 @@ https://lucamug.github.io/elm-form-examples/Example_15.html
 https://lucamug.github.io/elm-form-examples/Example_16.html
 https://lucamug.github.io/elm-form-examples/Example_17.html
 https://lucamug.github.io/elm-form-examples/Example_18.html
+https://lucamug.github.io/elm-form-examples/Example_19.html
 
 # Code
 
@@ -84,6 +85,7 @@ https://github.com/lucamug/elm-form-examples/blob/master/src/Example_15.elm
 https://github.com/lucamug/elm-form-examples/blob/master/src/Example_16.elm
 https://github.com/lucamug/elm-form-examples/blob/master/src/Example_17.elm
 https://github.com/lucamug/elm-form-examples/blob/master/src/Example_18.elm
+https://github.com/lucamug/elm-form-examples/blob/master/src/Example_19.elm
 
 # Others
 
