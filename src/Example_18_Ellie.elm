@@ -9,7 +9,6 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 import Svg
 import Svg.Attributes as SA
-import Utils
 import Validate
 
 
@@ -205,7 +204,7 @@ postRequest model =
     Http.request
         { method = "POST"
         , headers = []
-        , url = Utils.urlMirrorService
+        , url = urlMirrorService
         , body = body
         , expect = Http.expectString
         , timeout = Nothing
@@ -240,7 +239,7 @@ onEnter msg =
 
 view : Model -> Html Msg
 view model =
-    Utils.viewUtils model exampleVersion viewForm
+    viewUtils model exampleVersion viewForm
 
 
 viewInput : Model -> FormField -> String -> String -> Html Msg
@@ -592,3 +591,102 @@ svgBanana =
         , Svg.path [ SA.fill "#f9d70b", SA.d "M9.6 47.6zM51.1 8.9a31 31 0 0 1-8 21.9c-13.7 15-25.7 17.8-32.8 17.8-1.4 0-2.6-.1-3.6-.3h.2c-1 .3-2 0-2.6-.5-.4 0-.6-.2-.6-.2v-.2c-.9-.7-1.5-1.6-1.8-1.6-.7 0-1.2 1.5-1.3 2.5 8.7 9.2 21.7 7.1 35.5-1C51.2 38.6 57.8 21.6 51 9z" ] []
         , Svg.path [ SA.fill "#b58c30", SA.d "M47.3 8.3l1.6-.4c.7-.2 1-1 .6-1.6a21.1 21.1 0 0 0-1.1-1.4l-2.5-4a1 1 0 0 0-1.4-.3l-.6.3a1 1 0 0 0-.3 1.4l2.1 4.1v.2l.4 1c.2.5.7.8 1.2.7z" ] []
         ]
+
+
+
+-- UTILS
+
+
+exampleComment : Dict.Dict String String
+exampleComment =
+    Dict.fromList
+        [ "index" => "Examples of Form built in elm."
+        , "1" => "First version: just an old simple form."
+        , "2" => "Changed the form to be à la Elm using \"application/x-www-form-urlencoded\" as encoding system"
+        , "3" => "Changed the encoding system to json"
+        , "4" => "Added validation"
+        , "5" => "Moved the field updates out of the update function"
+        , "6" => "Replaced the <form> element with <div> and added \"onClick SubmitForm\" to the button"
+        , "7" => "Restored the \"submit-on-enter\" behavior"
+        , "8" => "Added validation while typing"
+        , "9" => "Created the helper \"viewInput\" that generalized the creation of input fields"
+        , "10" => "Added \"showErrors\" functionality that show error only after the first submit "
+        , "11" => "Added focus detection so that focus is evident also during history playback"
+        , "12" => "Added the icon to hide and show the password"
+        , "13" => "Added spinner while the app is waiting for an answer"
+        , "14" => "Added \"Floating Label\""
+        , "15" => "Added Checkboxes"
+        , "16" => "Encoded Checkboxes values into the Json for sending to the server"
+        , "17" => "Added maximum number of checkable fruits"
+        , "18" => "Added svg fruit icons"
+        ]
+
+
+viewFooter : String -> Html msg
+viewFooter version =
+    div [ class "footer" ]
+        [ a [ href "https://github.com/lucamug/elm-form-examples" ]
+            [ text "[ code ] " ]
+        , a [ href "https://medium.com/@l.mugnaini/forms-in-elm-validation-tutorial-and-examples-2339830055da" ] [ text " [ article ]" ]
+        ]
+
+
+urlMirrorService : String
+urlMirrorService =
+    "http://httpbin.org/post"
+
+
+viewHeader : String -> Html msg
+viewHeader version =
+    div [ class "header" ]
+        [ h1 [] [ text ("Elm Forms - Example " ++ version) ]
+        , p [] [ text <| getComment version ]
+        ]
+
+
+viewSimple : String -> Html msg -> Html msg
+viewSimple exampleVersion viewForm =
+    div []
+        [ viewHeader exampleVersion
+        , viewForm
+        , viewFooter exampleVersion
+        ]
+
+
+viewUtils :
+    { a | response : Maybe String }
+    -> String
+    -> ({ a | response : Maybe String } -> Html msg)
+    -> Html msg
+viewUtils model exampleVersion viewForm =
+    div []
+        [ viewHeader exampleVersion
+        , viewForm model
+        , case model.response of
+            Just response ->
+                viewResponse response
+
+            Nothing ->
+                text ""
+        , viewFooter exampleVersion
+        ]
+
+
+viewResponse : String -> Html msg
+viewResponse response =
+    div [ class "response-container" ]
+        [ h2 [] [ text "Response" ]
+        , textarea []
+            [ text response ]
+        ]
+
+
+(=>) : a -> b -> ( a, b )
+(=>) =
+    (,)
+
+
+getComment : String -> String
+getComment version =
+    Dict.get version exampleComment
+        |> Maybe.withDefault ""

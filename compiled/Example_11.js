@@ -13383,8 +13383,24 @@ var _lucamug$elm_meta_json_decoder$Utils$exampleComment = _elm_lang$core$Dict$fr
 															_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '13', 'Added spinner while the app is waiting for an answer'),
 															_1: {
 																ctor: '::',
-																_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '14', 'Added \"Floating Lable\"'),
-																_1: {ctor: '[]'}
+																_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '14', 'Added \"Floating Label\"'),
+																_1: {
+																	ctor: '::',
+																	_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '15', 'Added Checkboxes'),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '16', 'Encoded Checkboxes values into the Json for sending to the server'),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '17', 'Added maximum number of checkable fruits'),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '18', 'Added svg fruit icons'),
+																				_1: {ctor: '[]'}
+																			}
+																		}
+																	}
+																}
 															}
 														}
 													}
@@ -13695,14 +13711,14 @@ var _lucamug$elm_meta_json_decoder$Main$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {errors: a, email: b, password: c, response: d, focus: e, showErrors: f};
 	});
+var _lucamug$elm_meta_json_decoder$Main$Response = function (a) {
+	return {ctor: 'Response', _0: a};
+};
 var _lucamug$elm_meta_json_decoder$Main$OnBlur = function (a) {
 	return {ctor: 'OnBlur', _0: a};
 };
 var _lucamug$elm_meta_json_decoder$Main$OnFocus = function (a) {
 	return {ctor: 'OnFocus', _0: a};
-};
-var _lucamug$elm_meta_json_decoder$Main$Response = function (a) {
-	return {ctor: 'Response', _0: a};
 };
 var _lucamug$elm_meta_json_decoder$Main$SetField = F2(
 	function (a, b) {

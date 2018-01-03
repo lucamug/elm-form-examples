@@ -22,7 +22,7 @@ type alias Model =
     { errors : List Error
     , email : String
     , password : String
-    , fruits : Dict.Dict String Bool
+    , fruits : Dict.Dict Fruit Bool
     , response : Maybe String
     , focus : Maybe FormField
     , showErrors : Bool

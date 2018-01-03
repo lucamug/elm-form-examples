@@ -1,4 +1,4 @@
-module Utils exposing (..)
+module Utils exposing (urlMirrorService, view, viewUtils)
 
 import Dict
 import Html exposing (..)
@@ -18,14 +18,16 @@ exampleComment =
         , "7" => "Restored the \"submit-on-enter\" behavior"
         , "8" => "Added validation while typing"
         , "9" => "Created the helper \"viewInput\" that generalized the creation of input fields"
-        , "10" => "Added \"showErrors\" functionality that show error only after the first submit "
-        , "11" => "Added focus detection so that focus is evident also during history playback"
-        , "12" => "Added the icon to hide and show the password"
-        , "13" => "Added spinner while the app is waiting for an answer"
-        , "14" => "Added \"Floating Lable\""
-        , "15" => "Added Checkboxes"
+        , "10" => "Adding \"showErrors\" functionality that show error only after the first submit "
+        , "11" => "Adding focus detection so that focus is evident also during history playback"
+        , "12" => "Adding the icon to hide and show the password"
+        , "13" => "Adding a spinner while the app is waiting for an answer"
+        , "14" => "Adding \"Floating Label\""
+        , "15" => "Adding Checkboxes"
         , "16" => "Encoded Checkboxes values into the Json for sending to the server"
-        , "17" => "Added maximum number of checkable fruits"
+        , "17" => "Adding maximum number of checkable fruits"
+        , "18" => "Adding svg fruit icons"
+        , "19" => "Adding a date picker"
         ]
 
 
@@ -60,12 +62,12 @@ viewSimple exampleVersion viewForm =
         ]
 
 
-view :
+viewUtils :
     { a | response : Maybe String }
     -> String
     -> ({ a | response : Maybe String } -> Html msg)
     -> Html msg
-view model exampleVersion viewForm =
+viewUtils model exampleVersion viewForm =
     div []
         [ viewHeader exampleVersion
         , viewForm model
@@ -77,6 +79,15 @@ view model exampleVersion viewForm =
                 text ""
         , viewFooter exampleVersion
         ]
+
+
+view :
+    { a | response : Maybe String }
+    -> String
+    -> ({ a | response : Maybe String } -> Html msg)
+    -> Html msg
+view =
+    viewUtils
 
 
 viewResponse : String -> Html msg

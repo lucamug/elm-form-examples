@@ -44,9 +44,9 @@ type Msg
     = NoOp
     | SubmitForm
     | SetField FormField String
-    | Response (Result Http.Error String)
     | OnFocus FormField
     | OnBlur FormField
+    | Response (Result Http.Error String)
 
 
 type FormField
