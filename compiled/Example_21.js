@@ -14236,6 +14236,10 @@ return {
 
 }();
 
+var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
+var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
+var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
+
 var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
 var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
 var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
@@ -14383,6 +14387,198 @@ var _elm_lang$core$Set$partition = F2(
 			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
 		};
 	});
+
+var _elm_lang$dom$Native_Dom = function() {
+
+var fakeNode = {
+	addEventListener: function() {},
+	removeEventListener: function() {}
+};
+
+var onDocument = on(typeof document !== 'undefined' ? document : fakeNode);
+var onWindow = on(typeof window !== 'undefined' ? window : fakeNode);
+
+function on(node)
+{
+	return function(eventName, decoder, toTask)
+	{
+		return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+
+			function performTask(event)
+			{
+				var result = A2(_elm_lang$core$Json_Decode$decodeValue, decoder, event);
+				if (result.ctor === 'Ok')
+				{
+					_elm_lang$core$Native_Scheduler.rawSpawn(toTask(result._0));
+				}
+			}
+
+			node.addEventListener(eventName, performTask);
+
+			return function()
+			{
+				node.removeEventListener(eventName, performTask);
+			};
+		});
+	};
+}
+
+var rAF = typeof requestAnimationFrame !== 'undefined'
+	? requestAnimationFrame
+	: function(callback) { callback(); };
+
+function withNode(id, doStuff)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		rAF(function()
+		{
+			var node = document.getElementById(id);
+			if (node === null)
+			{
+				callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'NotFound', _0: id }));
+				return;
+			}
+			callback(_elm_lang$core$Native_Scheduler.succeed(doStuff(node)));
+		});
+	});
+}
+
+
+// FOCUS
+
+function focus(id)
+{
+	return withNode(id, function(node) {
+		node.focus();
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function blur(id)
+{
+	return withNode(id, function(node) {
+		node.blur();
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+
+// SCROLLING
+
+function getScrollTop(id)
+{
+	return withNode(id, function(node) {
+		return node.scrollTop;
+	});
+}
+
+function setScrollTop(id, desiredScrollTop)
+{
+	return withNode(id, function(node) {
+		node.scrollTop = desiredScrollTop;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function toBottom(id)
+{
+	return withNode(id, function(node) {
+		node.scrollTop = node.scrollHeight;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function getScrollLeft(id)
+{
+	return withNode(id, function(node) {
+		return node.scrollLeft;
+	});
+}
+
+function setScrollLeft(id, desiredScrollLeft)
+{
+	return withNode(id, function(node) {
+		node.scrollLeft = desiredScrollLeft;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+function toRight(id)
+{
+	return withNode(id, function(node) {
+		node.scrollLeft = node.scrollWidth;
+		return _elm_lang$core$Native_Utils.Tuple0;
+	});
+}
+
+
+// SIZE
+
+function width(options, id)
+{
+	return withNode(id, function(node) {
+		switch (options.ctor)
+		{
+			case 'Content':
+				return node.scrollWidth;
+			case 'VisibleContent':
+				return node.clientWidth;
+			case 'VisibleContentWithBorders':
+				return node.offsetWidth;
+			case 'VisibleContentWithBordersAndMargins':
+				var rect = node.getBoundingClientRect();
+				return rect.right - rect.left;
+		}
+	});
+}
+
+function height(options, id)
+{
+	return withNode(id, function(node) {
+		switch (options.ctor)
+		{
+			case 'Content':
+				return node.scrollHeight;
+			case 'VisibleContent':
+				return node.clientHeight;
+			case 'VisibleContentWithBorders':
+				return node.offsetHeight;
+			case 'VisibleContentWithBordersAndMargins':
+				var rect = node.getBoundingClientRect();
+				return rect.bottom - rect.top;
+		}
+	});
+}
+
+return {
+	onDocument: F3(onDocument),
+	onWindow: F3(onWindow),
+
+	focus: focus,
+	blur: blur,
+
+	getScrollTop: getScrollTop,
+	setScrollTop: F2(setScrollTop),
+	getScrollLeft: getScrollLeft,
+	setScrollLeft: F2(setScrollLeft),
+	toBottom: toBottom,
+	toRight: toRight,
+
+	height: F2(height),
+	width: F2(width)
+};
+
+}();
+
+var _elm_lang$dom$Dom$blur = _elm_lang$dom$Native_Dom.blur;
+var _elm_lang$dom$Dom$focus = _elm_lang$dom$Native_Dom.focus;
+var _elm_lang$dom$Dom$NotFound = function (a) {
+	return {ctor: 'NotFound', _0: a};
+};
+
+var _elm_lang$dom$Dom_LowLevel$onWindow = _elm_lang$dom$Native_Dom.onWindow;
+var _elm_lang$dom$Dom_LowLevel$onDocument = _elm_lang$dom$Native_Dom.onDocument;
 
 var _elm_lang$http$Native_Http = function() {
 
@@ -14745,6 +14941,175 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
+var _elm_lang$keyboard$Keyboard$onSelfMsg = F3(
+	function (router, _p0, state) {
+		var _p1 = _p0;
+		var _p2 = A2(_elm_lang$core$Dict$get, _p1.category, state);
+		if (_p2.ctor === 'Nothing') {
+			return _elm_lang$core$Task$succeed(state);
+		} else {
+			var send = function (tagger) {
+				return A2(
+					_elm_lang$core$Platform$sendToApp,
+					router,
+					tagger(_p1.keyCode));
+			};
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p3) {
+					return _elm_lang$core$Task$succeed(state);
+				},
+				_elm_lang$core$Task$sequence(
+					A2(_elm_lang$core$List$map, send, _p2._0.taggers)));
+		}
+	});
+var _elm_lang$keyboard$Keyboard_ops = _elm_lang$keyboard$Keyboard_ops || {};
+_elm_lang$keyboard$Keyboard_ops['&>'] = F2(
+	function (task1, task2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (_p4) {
+				return task2;
+			},
+			task1);
+	});
+var _elm_lang$keyboard$Keyboard$init = _elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty);
+var _elm_lang$keyboard$Keyboard$categorizeHelpHelp = F2(
+	function (value, maybeValues) {
+		var _p5 = maybeValues;
+		if (_p5.ctor === 'Nothing') {
+			return _elm_lang$core$Maybe$Just(
+				{
+					ctor: '::',
+					_0: value,
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return _elm_lang$core$Maybe$Just(
+				{ctor: '::', _0: value, _1: _p5._0});
+		}
+	});
+var _elm_lang$keyboard$Keyboard$categorizeHelp = F2(
+	function (subs, subDict) {
+		categorizeHelp:
+		while (true) {
+			var _p6 = subs;
+			if (_p6.ctor === '[]') {
+				return subDict;
+			} else {
+				var _v4 = _p6._1,
+					_v5 = A3(
+					_elm_lang$core$Dict$update,
+					_p6._0._0,
+					_elm_lang$keyboard$Keyboard$categorizeHelpHelp(_p6._0._1),
+					subDict);
+				subs = _v4;
+				subDict = _v5;
+				continue categorizeHelp;
+			}
+		}
+	});
+var _elm_lang$keyboard$Keyboard$categorize = function (subs) {
+	return A2(_elm_lang$keyboard$Keyboard$categorizeHelp, subs, _elm_lang$core$Dict$empty);
+};
+var _elm_lang$keyboard$Keyboard$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$keyboard$Keyboard$subscription = _elm_lang$core$Native_Platform.leaf('Keyboard');
+var _elm_lang$keyboard$Keyboard$Watcher = F2(
+	function (a, b) {
+		return {taggers: a, pid: b};
+	});
+var _elm_lang$keyboard$Keyboard$Msg = F2(
+	function (a, b) {
+		return {category: a, keyCode: b};
+	});
+var _elm_lang$keyboard$Keyboard$onEffects = F3(
+	function (router, newSubs, oldState) {
+		var rightStep = F3(
+			function (category, taggers, task) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (state) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (pid) {
+								return _elm_lang$core$Task$succeed(
+									A3(
+										_elm_lang$core$Dict$insert,
+										category,
+										A2(_elm_lang$keyboard$Keyboard$Watcher, taggers, pid),
+										state));
+							},
+							_elm_lang$core$Process$spawn(
+								A3(
+									_elm_lang$dom$Dom_LowLevel$onDocument,
+									category,
+									_elm_lang$keyboard$Keyboard$keyCode,
+									function (_p7) {
+										return A2(
+											_elm_lang$core$Platform$sendToSelf,
+											router,
+											A2(_elm_lang$keyboard$Keyboard$Msg, category, _p7));
+									})));
+					},
+					task);
+			});
+		var bothStep = F4(
+			function (category, _p8, taggers, task) {
+				var _p9 = _p8;
+				return A2(
+					_elm_lang$core$Task$map,
+					A2(
+						_elm_lang$core$Dict$insert,
+						category,
+						A2(_elm_lang$keyboard$Keyboard$Watcher, taggers, _p9.pid)),
+					task);
+			});
+		var leftStep = F3(
+			function (category, _p10, task) {
+				var _p11 = _p10;
+				return A2(
+					_elm_lang$keyboard$Keyboard_ops['&>'],
+					_elm_lang$core$Process$kill(_p11.pid),
+					task);
+			});
+		return A6(
+			_elm_lang$core$Dict$merge,
+			leftStep,
+			bothStep,
+			rightStep,
+			oldState,
+			_elm_lang$keyboard$Keyboard$categorize(newSubs),
+			_elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty));
+	});
+var _elm_lang$keyboard$Keyboard$MySub = F2(
+	function (a, b) {
+		return {ctor: 'MySub', _0: a, _1: b};
+	});
+var _elm_lang$keyboard$Keyboard$presses = function (tagger) {
+	return _elm_lang$keyboard$Keyboard$subscription(
+		A2(_elm_lang$keyboard$Keyboard$MySub, 'keypress', tagger));
+};
+var _elm_lang$keyboard$Keyboard$downs = function (tagger) {
+	return _elm_lang$keyboard$Keyboard$subscription(
+		A2(_elm_lang$keyboard$Keyboard$MySub, 'keydown', tagger));
+};
+var _elm_lang$keyboard$Keyboard$ups = function (tagger) {
+	return _elm_lang$keyboard$Keyboard$subscription(
+		A2(_elm_lang$keyboard$Keyboard$MySub, 'keyup', tagger));
+};
+var _elm_lang$keyboard$Keyboard$subMap = F2(
+	function (func, _p12) {
+		var _p13 = _p12;
+		return A2(
+			_elm_lang$keyboard$Keyboard$MySub,
+			_p13._0,
+			function (_p14) {
+				return func(
+					_p13._1(_p14));
+			});
+	});
+_elm_lang$core$Native_Platform.effectManagers['Keyboard'] = {pkg: 'elm-lang/keyboard', init: _elm_lang$keyboard$Keyboard$init, onEffects: _elm_lang$keyboard$Keyboard$onEffects, onSelfMsg: _elm_lang$keyboard$Keyboard$onSelfMsg, tag: 'sub', subMap: _elm_lang$keyboard$Keyboard$subMap};
+
 var _elm_lang$svg$Svg$map = _elm_lang$virtual_dom$VirtualDom$map;
 var _elm_lang$svg$Svg$text = _elm_lang$virtual_dom$VirtualDom$text;
 var _elm_lang$svg$Svg$svgNamespace = A2(
@@ -15086,6 +15451,543 @@ var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$a
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
 
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$sectionConfig = function (_p0) {
+	var _p1 = _p0;
+	return {toId: _p1.toId, getData: _p1.getData, ul: _p1.ul, li: _p1.li};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewWithSectionsConfig = function (_p2) {
+	var _p3 = _p2;
+	return {toId: _p3.toId, ul: _p3.ul, li: _p3.li, section: _p3.section};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewConfig = function (_p4) {
+	var _p5 = _p4;
+	return {toId: _p5.toId, ul: _p5.ul, li: _p5.li};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$getPrevious = F3(
+	function (id, selectedId, resultId) {
+		return _elm_lang$core$Native_Utils.eq(selectedId, id) ? _elm_lang$core$Maybe$Just(id) : (_elm_lang$core$Native_Utils.eq(
+			A2(_elm_lang$core$Maybe$withDefault, '', resultId),
+			id) ? _elm_lang$core$Maybe$Just(selectedId) : resultId);
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$getNextItemId = F2(
+	function (ids, selectedId) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			selectedId,
+			A3(
+				_elm_lang$core$List$foldl,
+				_thebritican$elm_autocomplete$Autocomplete_Autocomplete$getPrevious(selectedId),
+				_elm_lang$core$Maybe$Nothing,
+				ids));
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$getPreviousItemId = F2(
+	function (ids, selectedId) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			selectedId,
+			A3(
+				_elm_lang$core$List$foldr,
+				_thebritican$elm_autocomplete$Autocomplete_Autocomplete$getPrevious(selectedId),
+				_elm_lang$core$Maybe$Nothing,
+				ids));
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$navigateWithKey = F3(
+	function (code, ids, maybeId) {
+		var _p6 = code;
+		switch (_p6) {
+			case 38:
+				return A2(
+					_elm_lang$core$Maybe$map,
+					_thebritican$elm_autocomplete$Autocomplete_Autocomplete$getPreviousItemId(ids),
+					maybeId);
+			case 40:
+				return A2(
+					_elm_lang$core$Maybe$map,
+					_thebritican$elm_autocomplete$Autocomplete_Autocomplete$getNextItemId(ids),
+					maybeId);
+			default:
+				return maybeId;
+		}
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetMouseStateWithId = F3(
+	function (separateSelections, id, state) {
+		return separateSelections ? {
+			key: state.key,
+			mouse: _elm_lang$core$Maybe$Just(id)
+		} : {
+			key: _elm_lang$core$Maybe$Just(id),
+			mouse: _elm_lang$core$Maybe$Just(id)
+		};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$updateConfig = function (_p7) {
+	var _p8 = _p7;
+	return {toId: _p8.toId, onKeyDown: _p8.onKeyDown, onTooLow: _p8.onTooLow, onTooHigh: _p8.onTooHigh, onMouseEnter: _p8.onMouseEnter, onMouseLeave: _p8.onMouseLeave, onMouseClick: _p8.onMouseClick, separateSelections: _p8.separateSelections};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$empty = {key: _elm_lang$core$Maybe$Nothing, mouse: _elm_lang$core$Maybe$Nothing};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$reset = F2(
+	function (_p10, _p9) {
+		var _p11 = _p10;
+		var _p12 = _p9;
+		return _p11.separateSelections ? {key: _elm_lang$core$Maybe$Nothing, mouse: _p12.mouse} : _thebritican$elm_autocomplete$Autocomplete_Autocomplete$empty;
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetToFirst = F3(
+	function (config, data, state) {
+		var _p13 = config;
+		var toId = _p13.toId;
+		var separateSelections = _p13.separateSelections;
+		var setFirstItem = F2(
+			function (datum, newState) {
+				return _elm_lang$core$Native_Utils.update(
+					newState,
+					{
+						key: _elm_lang$core$Maybe$Just(
+							toId(datum))
+					});
+			});
+		var _p14 = _elm_lang$core$List$head(data);
+		if (_p14.ctor === 'Nothing') {
+			return _thebritican$elm_autocomplete$Autocomplete_Autocomplete$empty;
+		} else {
+			var _p15 = _p14._0;
+			return separateSelections ? A2(
+				setFirstItem,
+				_p15,
+				A2(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$reset, config, state)) : A2(setFirstItem, _p15, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$empty);
+		}
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetToFirstItem = F4(
+	function (config, data, howManyToShow, state) {
+		return A3(
+			_thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetToFirst,
+			config,
+			A2(_elm_lang$core$List$take, howManyToShow, data),
+			state);
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetToLastItem = F4(
+	function (config, data, howManyToShow, state) {
+		var reversedData = _elm_lang$core$List$reverse(
+			A2(_elm_lang$core$List$take, howManyToShow, data));
+		return A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetToFirst, config, reversedData, state);
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$State = F2(
+	function (a, b) {
+		return {key: a, mouse: b};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$UpdateConfig = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {onKeyDown: a, onTooLow: b, onTooHigh: c, onMouseEnter: d, onMouseLeave: e, onMouseClick: f, toId: g, separateSelections: h};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$HtmlDetails = F2(
+	function (a, b) {
+		return {attributes: a, children: b};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$ViewConfig = F3(
+	function (a, b, c) {
+		return {toId: a, ul: b, li: c};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$ViewWithSectionsConfig = F4(
+	function (a, b, c, d) {
+		return {toId: a, ul: b, li: c, section: d};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$SectionConfig = F4(
+	function (a, b, c, d) {
+		return {toId: a, getData: b, ul: c, li: d};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$SectionNode = F3(
+	function (a, b, c) {
+		return {nodeType: a, attributes: b, children: c};
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$NoOp = {ctor: 'NoOp'};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$mapNeverToMsg = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Attributes$map,
+		function (_p16) {
+			return _thebritican$elm_autocomplete$Autocomplete_Autocomplete$NoOp;
+		},
+		msg);
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseClick = function (a) {
+	return {ctor: 'MouseClick', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseLeave = function (a) {
+	return {ctor: 'MouseLeave', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseEnter = function (a) {
+	return {ctor: 'MouseEnter', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewData = F3(
+	function (_p18, _p17, data) {
+		var _p19 = _p18;
+		var _p20 = _p17;
+		var id = _p19.toId(data);
+		var isSelected = function (maybeId) {
+			var _p21 = maybeId;
+			if (_p21.ctor === 'Just') {
+				return _elm_lang$core$Native_Utils.eq(_p21._0, id);
+			} else {
+				return false;
+			}
+		};
+		var listItemData = A3(
+			_p19.li,
+			isSelected(_p20.key),
+			isSelected(_p20.mouse),
+			data);
+		var customAttributes = A2(_elm_lang$core$List$map, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$mapNeverToMsg, listItemData.attributes);
+		var customLiAttr = A2(
+			_elm_lang$core$List$append,
+			customAttributes,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onMouseEnter(
+					_thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseEnter(id)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onMouseLeave(
+						_thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseLeave(id)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseClick(id)),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+		return A2(
+			_elm_lang$html$Html$li,
+			customLiAttr,
+			A2(
+				_elm_lang$core$List$map,
+				_elm_lang$html$Html$map(
+					function (html) {
+						return _thebritican$elm_autocomplete$Autocomplete_Autocomplete$NoOp;
+					}),
+				listItemData.children));
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewSection = F3(
+	function (config, state, section) {
+		var getKeyedItems = function (datum) {
+			return {
+				ctor: '_Tuple2',
+				_0: config.toId(datum),
+				_1: A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewData, config, state, datum)
+			};
+		};
+		var viewItemList = A2(
+			_elm_lang$html$Html_Keyed$ul,
+			A2(_elm_lang$core$List$map, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$mapNeverToMsg, config.ul),
+			A2(
+				_elm_lang$core$List$map,
+				getKeyedItems,
+				config.section.getData(section)));
+		var sectionNode = config.section.li(section);
+		var attributes = A2(_elm_lang$core$List$map, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$mapNeverToMsg, sectionNode.attributes);
+		var customChildren = A2(
+			_elm_lang$core$List$map,
+			_elm_lang$html$Html$map(
+				function (html) {
+					return _thebritican$elm_autocomplete$Autocomplete_Autocomplete$NoOp;
+				}),
+			sectionNode.children);
+		var children = A2(
+			_elm_lang$core$List$append,
+			customChildren,
+			{
+				ctor: '::',
+				_0: viewItemList,
+				_1: {ctor: '[]'}
+			});
+		return A2(
+			_elm_lang$html$Html$li,
+			attributes,
+			{
+				ctor: '::',
+				_0: A3(_elm_lang$html$Html$node, sectionNode.nodeType, attributes, children),
+				_1: {ctor: '[]'}
+			});
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewWithSections = F4(
+	function (config, howManyToShow, state, sections) {
+		var getKeyedItems = function (section) {
+			return {
+				ctor: '_Tuple2',
+				_0: config.section.toId(section),
+				_1: A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewSection, config, state, section)
+			};
+		};
+		return A2(
+			_elm_lang$html$Html_Keyed$ul,
+			A2(_elm_lang$core$List$map, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$mapNeverToMsg, config.section.ul),
+			A2(_elm_lang$core$List$map, getKeyedItems, sections));
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewItem = F3(
+	function (_p23, _p22, data) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		var id = _p24.toId(data);
+		var isSelected = function (maybeId) {
+			var _p26 = maybeId;
+			if (_p26.ctor === 'Just') {
+				return _elm_lang$core$Native_Utils.eq(_p26._0, id);
+			} else {
+				return false;
+			}
+		};
+		var listItemData = A3(
+			_p24.li,
+			isSelected(_p25.key),
+			isSelected(_p25.mouse),
+			data);
+		var customAttributes = A2(_elm_lang$core$List$map, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$mapNeverToMsg, listItemData.attributes);
+		var customLiAttr = A2(
+			_elm_lang$core$List$append,
+			customAttributes,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onMouseEnter(
+					_thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseEnter(id)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onMouseLeave(
+						_thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseLeave(id)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_thebritican$elm_autocomplete$Autocomplete_Autocomplete$MouseClick(id)),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+		return A2(
+			_elm_lang$html$Html$li,
+			customLiAttr,
+			A2(
+				_elm_lang$core$List$map,
+				_elm_lang$html$Html$map(
+					function (html) {
+						return _thebritican$elm_autocomplete$Autocomplete_Autocomplete$NoOp;
+					}),
+				listItemData.children));
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewList = F4(
+	function (config, howManyToShow, state, data) {
+		var getKeyedItems = function (datum) {
+			return {
+				ctor: '_Tuple2',
+				_0: config.toId(datum),
+				_1: A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewItem, config, state, datum)
+			};
+		};
+		var customUlAttr = A2(_elm_lang$core$List$map, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$mapNeverToMsg, config.ul);
+		return A2(
+			_elm_lang$html$Html_Keyed$ul,
+			customUlAttr,
+			A2(
+				_elm_lang$core$List$map,
+				getKeyedItems,
+				A2(_elm_lang$core$List$take, howManyToShow, data)));
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$view = F4(
+	function (config, howManyToShow, state, data) {
+		return A4(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewList, config, howManyToShow, state, data);
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$WentTooHigh = {ctor: 'WentTooHigh'};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$WentTooLow = {ctor: 'WentTooLow'};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$update = F5(
+	function (config, msg, howManyToShow, state, data) {
+		update:
+		while (true) {
+			var _p27 = msg;
+			switch (_p27.ctor) {
+				case 'KeyDown':
+					var _p28 = _p27._0;
+					var boundedList = A2(
+						_elm_lang$core$List$take,
+						howManyToShow,
+						A2(_elm_lang$core$List$map, config.toId, data));
+					var newKey = A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$navigateWithKey, _p28, boundedList, state.key);
+					if (_elm_lang$core$Native_Utils.eq(newKey, state.key) && _elm_lang$core$Native_Utils.eq(_p28, 38)) {
+						var _v15 = config,
+							_v16 = _thebritican$elm_autocomplete$Autocomplete_Autocomplete$WentTooHigh,
+							_v17 = howManyToShow,
+							_v18 = state,
+							_v19 = data;
+						config = _v15;
+						msg = _v16;
+						howManyToShow = _v17;
+						state = _v18;
+						data = _v19;
+						continue update;
+					} else {
+						if (_elm_lang$core$Native_Utils.eq(newKey, state.key) && _elm_lang$core$Native_Utils.eq(_p28, 40)) {
+							var _v20 = config,
+								_v21 = _thebritican$elm_autocomplete$Autocomplete_Autocomplete$WentTooLow,
+								_v22 = howManyToShow,
+								_v23 = state,
+								_v24 = data;
+							config = _v20;
+							msg = _v21;
+							howManyToShow = _v22;
+							state = _v23;
+							data = _v24;
+							continue update;
+						} else {
+							if (config.separateSelections) {
+								return {
+									ctor: '_Tuple2',
+									_0: _elm_lang$core$Native_Utils.update(
+										state,
+										{key: newKey}),
+									_1: A2(config.onKeyDown, _p28, newKey)
+								};
+							} else {
+								return {
+									ctor: '_Tuple2',
+									_0: {key: newKey, mouse: newKey},
+									_1: A2(config.onKeyDown, _p28, newKey)
+								};
+							}
+						}
+					}
+				case 'WentTooLow':
+					return {ctor: '_Tuple2', _0: state, _1: config.onTooLow};
+				case 'WentTooHigh':
+					return {ctor: '_Tuple2', _0: state, _1: config.onTooHigh};
+				case 'MouseEnter':
+					var _p29 = _p27._0;
+					return {
+						ctor: '_Tuple2',
+						_0: A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetMouseStateWithId, config.separateSelections, _p29, state),
+						_1: config.onMouseEnter(_p29)
+					};
+				case 'MouseLeave':
+					var _p30 = _p27._0;
+					return {
+						ctor: '_Tuple2',
+						_0: A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetMouseStateWithId, config.separateSelections, _p30, state),
+						_1: config.onMouseLeave(_p30)
+					};
+				case 'MouseClick':
+					var _p31 = _p27._0;
+					return {
+						ctor: '_Tuple2',
+						_0: A3(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetMouseStateWithId, config.separateSelections, _p31, state),
+						_1: config.onMouseClick(_p31)
+					};
+				default:
+					return {ctor: '_Tuple2', _0: state, _1: _elm_lang$core$Maybe$Nothing};
+			}
+		}
+	});
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$KeyDown = function (a) {
+	return {ctor: 'KeyDown', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete_Autocomplete$subscription = _elm_lang$keyboard$Keyboard$downs(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$KeyDown);
+
+var _thebritican$elm_autocomplete$Autocomplete$HtmlDetails = F2(
+	function (a, b) {
+		return {attributes: a, children: b};
+	});
+var _thebritican$elm_autocomplete$Autocomplete$SectionNode = F3(
+	function (a, b, c) {
+		return {nodeType: a, attributes: b, children: c};
+	});
+var _thebritican$elm_autocomplete$Autocomplete$State = function (a) {
+	return {ctor: 'State', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete$empty = _thebritican$elm_autocomplete$Autocomplete$State(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$empty);
+var _thebritican$elm_autocomplete$Autocomplete$reset = F2(
+	function (_p1, _p0) {
+		var _p2 = _p1;
+		var _p3 = _p0;
+		return _thebritican$elm_autocomplete$Autocomplete$State(
+			A2(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$reset, _p2._0, _p3._0));
+	});
+var _thebritican$elm_autocomplete$Autocomplete$resetToFirstItem = F4(
+	function (_p5, data, howManyToShow, _p4) {
+		var _p6 = _p5;
+		var _p7 = _p4;
+		return _thebritican$elm_autocomplete$Autocomplete$State(
+			A4(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetToFirstItem, _p6._0, data, howManyToShow, _p7._0));
+	});
+var _thebritican$elm_autocomplete$Autocomplete$resetToLastItem = F4(
+	function (_p9, data, howManyToShow, _p8) {
+		var _p10 = _p9;
+		var _p11 = _p8;
+		return _thebritican$elm_autocomplete$Autocomplete$State(
+			A4(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$resetToLastItem, _p10._0, data, howManyToShow, _p11._0));
+	});
+var _thebritican$elm_autocomplete$Autocomplete$update = F5(
+	function (_p14, _p13, howManyToShow, _p12, data) {
+		var _p15 = _p14;
+		var _p16 = _p13;
+		var _p17 = _p12;
+		var _p18 = A5(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$update, _p15._0, _p16._0, howManyToShow, _p17._0, data);
+		var newState = _p18._0;
+		var maybeMsg = _p18._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _thebritican$elm_autocomplete$Autocomplete$State(newState),
+			_1: maybeMsg
+		};
+	});
+var _thebritican$elm_autocomplete$Autocomplete$Msg = function (a) {
+	return {ctor: 'Msg', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete$subscription = A2(_elm_lang$core$Platform_Sub$map, _thebritican$elm_autocomplete$Autocomplete$Msg, _thebritican$elm_autocomplete$Autocomplete_Autocomplete$subscription);
+var _thebritican$elm_autocomplete$Autocomplete$view = F4(
+	function (_p20, howManyToShow, _p19, data) {
+		var _p21 = _p20;
+		var _p22 = _p19;
+		return A2(
+			_elm_lang$html$Html$map,
+			_thebritican$elm_autocomplete$Autocomplete$Msg,
+			A4(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$view, _p21._0, howManyToShow, _p22._0, data));
+	});
+var _thebritican$elm_autocomplete$Autocomplete$viewWithSections = F4(
+	function (_p24, howManyToShow, _p23, sections) {
+		var _p25 = _p24;
+		var _p26 = _p23;
+		return A2(
+			_elm_lang$html$Html$map,
+			_thebritican$elm_autocomplete$Autocomplete$Msg,
+			A4(_thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewWithSections, _p25._0, howManyToShow, _p26._0, sections));
+	});
+var _thebritican$elm_autocomplete$Autocomplete$UpdateConfig = function (a) {
+	return {ctor: 'UpdateConfig', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete$updateConfig = function (config) {
+	return _thebritican$elm_autocomplete$Autocomplete$UpdateConfig(
+		_thebritican$elm_autocomplete$Autocomplete_Autocomplete$updateConfig(config));
+};
+var _thebritican$elm_autocomplete$Autocomplete$ViewConfig = function (a) {
+	return {ctor: 'ViewConfig', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete$viewConfig = function (config) {
+	return _thebritican$elm_autocomplete$Autocomplete$ViewConfig(
+		_thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewConfig(config));
+};
+var _thebritican$elm_autocomplete$Autocomplete$ViewWithSectionsConfig = function (a) {
+	return {ctor: 'ViewWithSectionsConfig', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete$viewWithSectionsConfig = function (config) {
+	return _thebritican$elm_autocomplete$Autocomplete$ViewWithSectionsConfig(
+		function () {
+			var _p27 = config.section;
+			return _thebritican$elm_autocomplete$Autocomplete_Autocomplete$viewWithSectionsConfig(
+				_elm_lang$core$Native_Utils.update(
+					config,
+					{section: _p27._0}));
+		}());
+};
+var _thebritican$elm_autocomplete$Autocomplete$SectionConfig = function (a) {
+	return {ctor: 'SectionConfig', _0: a};
+};
+var _thebritican$elm_autocomplete$Autocomplete$sectionConfig = function (section) {
+	return _thebritican$elm_autocomplete$Autocomplete$SectionConfig(
+		_thebritican$elm_autocomplete$Autocomplete_Autocomplete$sectionConfig(section));
+};
+
 var _lucamug$elm_meta_json_decoder$Utils_ops = _lucamug$elm_meta_json_decoder$Utils_ops || {};
 _lucamug$elm_meta_json_decoder$Utils_ops['=>'] = F2(
 	function (v0, v1) {
@@ -15225,7 +16127,15 @@ var _lucamug$elm_meta_json_decoder$Utils$exampleComment = _elm_lang$core$Dict$fr
 																				_1: {
 																					ctor: '::',
 																					_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '19', 'Adding a date picker'),
-																					_1: {ctor: '[]'}
+																					_1: {
+																						ctor: '::',
+																						_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '20', 'Adding HTML date'),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '21', 'Adding Autocomplete field'),
+																							_1: {ctor: '[]'}
+																						}
+																					}
 																				}
 																			}
 																		}
@@ -15444,6 +16354,81 @@ var _rtfeldman$elm_validate$Validate$all = function (validators) {
 	return validator;
 };
 
+var _lucamug$elm_meta_json_decoder$Main$viewConfig = function () {
+	var customizedLi = F3(
+		function (keySelected, mouseSelected, menuItem) {
+			return {
+				attributes: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$classList(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'autocomplete-item', _1: true},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'key-selected', _1: keySelected || mouseSelected},
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$id(menuItem.name),
+						_1: {ctor: '[]'}
+					}
+				},
+				children: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(menuItem.name),
+					_1: {ctor: '[]'}
+				}
+			};
+		});
+	return _thebritican$elm_autocomplete$Autocomplete$viewConfig(
+		{
+			toId: function (_) {
+				return _.name;
+			},
+			ul: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('autocomplete-list'),
+				_1: {ctor: '[]'}
+			},
+			li: customizedLi
+		});
+}();
+var _lucamug$elm_meta_json_decoder$Main$acceptableItems = F2(
+	function (programmingLanguage, autocomMenuItems) {
+		var lowerQuery = _elm_lang$core$String$toLower(programmingLanguage);
+		return A2(
+			_elm_lang$core$List$filter,
+			function (_p0) {
+				return A2(
+					_elm_lang$core$String$contains,
+					lowerQuery,
+					_elm_lang$core$String$toLower(
+						function (_) {
+							return _.name;
+						}(_p0)));
+			},
+			autocomMenuItems);
+	});
+var _lucamug$elm_meta_json_decoder$Main$resetMenu = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{autocomState: _thebritican$elm_autocomplete$Autocomplete$empty, autocomShowMenu: false});
+};
+var _lucamug$elm_meta_json_decoder$Main$removeSelection = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing});
+};
+var _lucamug$elm_meta_json_decoder$Main$resetInput = function (model) {
+	return _lucamug$elm_meta_json_decoder$Main$resetMenu(
+		_lucamug$elm_meta_json_decoder$Main$removeSelection(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{programmingLanguage: ''})));
+};
 var _lucamug$elm_meta_json_decoder$Main$svgBanana = A2(
 	_elm_lang$svg$Svg$svg,
 	{
@@ -16966,22 +17951,22 @@ var _lucamug$elm_meta_json_decoder$Main$viewFormErrors = F3(
 			},
 			A2(
 				_elm_lang$core$List$map,
-				function (_p0) {
-					var _p1 = _p0;
+				function (_p1) {
+					var _p2 = _p1;
 					return A2(
 						_elm_lang$html$Html$li,
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p1._1),
+							_0: _elm_lang$html$Html$text(_p2._1),
 							_1: {ctor: '[]'}
 						});
 				},
 				A2(
 					_elm_lang$core$List$filter,
-					function (_p2) {
-						var _p3 = _p2;
-						return _elm_lang$core$Native_Utils.eq(_p3._0, field);
+					function (_p3) {
+						var _p4 = _p3;
+						return _elm_lang$core$Native_Utils.eq(_p4._0, field);
 					},
 					errors))) : A2(
 			_elm_lang$html$Html$ul,
@@ -17003,8 +17988,8 @@ var _lucamug$elm_meta_json_decoder$Main$viewSvgFor = function (fruit) {
 		{
 			ctor: '::',
 			_0: function () {
-				var _p4 = fruit;
-				switch (_p4) {
+				var _p5 = fruit;
+				switch (_p5) {
 					case 'Apple':
 						return _lucamug$elm_meta_json_decoder$Main$svgApple;
 					case 'Banana':
@@ -17123,8 +18108,8 @@ var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
 };
 var _lucamug$elm_meta_json_decoder$Main$setField = F3(
 	function (field, value, model) {
-		var _p5 = field;
-		if (_p5.ctor === 'Email') {
+		var _p6 = field;
+		if (_p6.ctor === 'Email') {
 			return _elm_lang$core$Native_Utils.update(
 				model,
 				{email: value});
@@ -17140,9 +18125,9 @@ var _lucamug$elm_meta_json_decoder$Main$toggle = F2(
 			_elm_lang$core$Dict$update,
 			key,
 			function (oldValue) {
-				var _p6 = oldValue;
-				if (_p6.ctor === 'Just') {
-					return _elm_lang$core$Maybe$Just(!_p6._0);
+				var _p7 = oldValue;
+				if (_p7.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(!_p7._0);
 				} else {
 					return _elm_lang$core$Maybe$Nothing;
 				}
@@ -17170,7 +18155,7 @@ var _lucamug$elm_meta_json_decoder$Main$settings = function () {
 		defaultSettings,
 		{isDisabled: isDisabled, placeholder: ''});
 }();
-var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '19';
+var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '21';
 var _lucamug$elm_meta_json_decoder$Main$Model = function (a) {
 	return function (b) {
 		return function (c) {
@@ -17183,7 +18168,17 @@ var _lucamug$elm_meta_json_decoder$Main$Model = function (a) {
 									return function (j) {
 										return function (k) {
 											return function (l) {
-												return {errors: a, email: b, password: c, fruits: d, response: e, focus: f, showErrors: g, showPassword: h, formState: i, date: j, datePicker: k, defaultSettings: l};
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return function (q) {
+																	return {errors: a, response: b, focus: c, showErrors: d, showPassword: e, formState: f, email: g, password: h, date: i, programmingLanguage: j, fruits: k, datePicker: l, autocomMenuItems: m, autocomState: n, autocomHowManyToShow: o, autocomSelectedMenuItem: p, autocomShowMenu: q};
+																};
+															};
+														};
+													};
+												};
 											};
 										};
 									};
@@ -17196,15 +18191,1076 @@ var _lucamug$elm_meta_json_decoder$Main$Model = function (a) {
 		};
 	};
 };
+var _lucamug$elm_meta_json_decoder$Main$MenuItem = function (a) {
+	return {name: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$getMenuItemAtId = F2(
+	function (autocomMenuItems, id) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			_lucamug$elm_meta_json_decoder$Main$MenuItem(''),
+			_elm_lang$core$List$head(
+				A2(
+					_elm_lang$core$List$filter,
+					function (menuItem) {
+						return _elm_lang$core$Native_Utils.eq(menuItem.name, id);
+					},
+					autocomMenuItems)));
+	});
+var _lucamug$elm_meta_json_decoder$Main$setQuery = F2(
+	function (model, id) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				programmingLanguage: function (_) {
+					return _.name;
+				}(
+					A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, id)),
+				autocomSelectedMenuItem: _elm_lang$core$Maybe$Just(
+					A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, id))
+			});
+	});
+var _lucamug$elm_meta_json_decoder$Main$menuItems = {
+	ctor: '::',
+	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('4th Dimension/4D'),
+	_1: {
+		ctor: '::',
+		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ABAP'),
+		_1: {
+			ctor: '::',
+			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ABC'),
+			_1: {
+				ctor: '::',
+				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ActionScript'),
+				_1: {
+					ctor: '::',
+					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ada'),
+					_1: {
+						ctor: '::',
+						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Agilent VEE'),
+						_1: {
+							ctor: '::',
+							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Algol'),
+							_1: {
+								ctor: '::',
+								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Alice'),
+								_1: {
+									ctor: '::',
+									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Angelscript'),
+									_1: {
+										ctor: '::',
+										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Apex'),
+										_1: {
+											ctor: '::',
+											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('APL'),
+											_1: {
+												ctor: '::',
+												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AppleScript'),
+												_1: {
+													ctor: '::',
+													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Arc'),
+													_1: {
+														ctor: '::',
+														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Arduino'),
+														_1: {
+															ctor: '::',
+															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ASP'),
+															_1: {
+																ctor: '::',
+																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AspectJ'),
+																_1: {
+																	ctor: '::',
+																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Assembly'),
+																	_1: {
+																		ctor: '::',
+																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ATLAS'),
+																		_1: {
+																			ctor: '::',
+																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Augeas'),
+																			_1: {
+																				ctor: '::',
+																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AutoHotkey'),
+																				_1: {
+																					ctor: '::',
+																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AutoIt'),
+																					_1: {
+																						ctor: '::',
+																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AutoLISP'),
+																						_1: {
+																							ctor: '::',
+																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Automator'),
+																							_1: {
+																								ctor: '::',
+																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Avenue'),
+																								_1: {
+																									ctor: '::',
+																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Awk'),
+																									_1: {
+																										ctor: '::',
+																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Bash'),
+																										_1: {
+																											ctor: '::',
+																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('(Visual) Basic'),
+																											_1: {
+																												ctor: '::',
+																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('bc'),
+																												_1: {
+																													ctor: '::',
+																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('BCPL'),
+																													_1: {
+																														ctor: '::',
+																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('BETA'),
+																														_1: {
+																															ctor: '::',
+																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('BlitzMax'),
+																															_1: {
+																																ctor: '::',
+																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Boo'),
+																																_1: {
+																																	ctor: '::',
+																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Bourne Shell'),
+																																	_1: {
+																																		ctor: '::',
+																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Bro'),
+																																		_1: {
+																																			ctor: '::',
+																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C'),
+																																			_1: {
+																																				ctor: '::',
+																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C Shell'),
+																																				_1: {
+																																					ctor: '::',
+																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C#'),
+																																					_1: {
+																																						ctor: '::',
+																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C++'),
+																																						_1: {
+																																							ctor: '::',
+																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C++/CLI'),
+																																							_1: {
+																																								ctor: '::',
+																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C-Omega'),
+																																								_1: {
+																																									ctor: '::',
+																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Caml'),
+																																									_1: {
+																																										ctor: '::',
+																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ceylon'),
+																																										_1: {
+																																											ctor: '::',
+																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CFML'),
+																																											_1: {
+																																												ctor: '::',
+																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('cg'),
+																																												_1: {
+																																													ctor: '::',
+																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ch'),
+																																													_1: {
+																																														ctor: '::',
+																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CHILL'),
+																																														_1: {
+																																															ctor: '::',
+																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CIL'),
+																																															_1: {
+																																																ctor: '::',
+																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CL (OS/400)'),
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clarion'),
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clean'),
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clipper'),
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clojure'),
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CLU'),
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('COBOL'),
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Cobra'),
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CoffeeScript'),
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ColdFusion'),
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('COMAL'),
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Common Lisp'),
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Coq'),
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('cT'),
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Curl'),
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('D'),
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Dart'),
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('DCL'),
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('DCPU-16 ASM'),
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Delphi/Object Pascal'),
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('DiBOL'),
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Dylan'),
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('E'),
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('eC'),
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ecl'),
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ECMAScript'),
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('EGL'),
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Eiffel'),
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Elixir'),
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Elm'),
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Emacs Lisp'),
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Erlang'),
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Etoys'),
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Euphoria'),
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('EXEC'),
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('F#'),
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Factor'),
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Falcon'),
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fancy'),
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fantom'),
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Felix'),
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Forth'),
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fortran'),
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fortress'),
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('(Visual) FoxPro'),
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Gambas'),
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('GNU Octave'),
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Go'),
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Google AppsScript'),
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Gosu'),
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Groovy'),
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Haskell'),
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('haXe'),
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Heron'),
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('HPL'),
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('HyperTalk'),
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Icon'),
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('IDL'),
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Inform'),
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Informix-4GL'),
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('INTERCAL'),
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Io'),
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ioke'),
+																																																																																																														_1: {
+																																																																																																															ctor: '::',
+																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('J'),
+																																																																																																															_1: {
+																																																																																																																ctor: '::',
+																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('J#'),
+																																																																																																																_1: {
+																																																																																																																	ctor: '::',
+																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JADE'),
+																																																																																																																	_1: {
+																																																																																																																		ctor: '::',
+																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Java'),
+																																																																																																																		_1: {
+																																																																																																																			ctor: '::',
+																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Java FX Script'),
+																																																																																																																			_1: {
+																																																																																																																				ctor: '::',
+																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JavaScript'),
+																																																																																																																				_1: {
+																																																																																																																					ctor: '::',
+																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JScript'),
+																																																																																																																					_1: {
+																																																																																																																						ctor: '::',
+																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JScript.NET'),
+																																																																																																																						_1: {
+																																																																																																																							ctor: '::',
+																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Julia'),
+																																																																																																																							_1: {
+																																																																																																																								ctor: '::',
+																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Korn Shell'),
+																																																																																																																								_1: {
+																																																																																																																									ctor: '::',
+																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Kotlin'),
+																																																																																																																									_1: {
+																																																																																																																										ctor: '::',
+																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('LabVIEW'),
+																																																																																																																										_1: {
+																																																																																																																											ctor: '::',
+																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ladder Logic'),
+																																																																																																																											_1: {
+																																																																																																																												ctor: '::',
+																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lasso'),
+																																																																																																																												_1: {
+																																																																																																																													ctor: '::',
+																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Limbo'),
+																																																																																																																													_1: {
+																																																																																																																														ctor: '::',
+																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lingo'),
+																																																																																																																														_1: {
+																																																																																																																															ctor: '::',
+																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lisp'),
+																																																																																																																															_1: {
+																																																																																																																																ctor: '::',
+																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Logo'),
+																																																																																																																																_1: {
+																																																																																																																																	ctor: '::',
+																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Logtalk'),
+																																																																																																																																	_1: {
+																																																																																																																																		ctor: '::',
+																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('LotusScript'),
+																																																																																																																																		_1: {
+																																																																																																																																			ctor: '::',
+																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('LPC'),
+																																																																																																																																			_1: {
+																																																																																																																																				ctor: '::',
+																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lua'),
+																																																																																																																																				_1: {
+																																																																																																																																					ctor: '::',
+																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lustre'),
+																																																																																																																																					_1: {
+																																																																																																																																						ctor: '::',
+																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('M4'),
+																																																																																																																																						_1: {
+																																																																																																																																							ctor: '::',
+																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MAD'),
+																																																																																																																																							_1: {
+																																																																																																																																								ctor: '::',
+																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Magic'),
+																																																																																																																																								_1: {
+																																																																																																																																									ctor: '::',
+																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Magik'),
+																																																																																																																																									_1: {
+																																																																																																																																										ctor: '::',
+																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Malbolge'),
+																																																																																																																																										_1: {
+																																																																																																																																											ctor: '::',
+																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MANTIS'),
+																																																																																																																																											_1: {
+																																																																																																																																												ctor: '::',
+																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Maple'),
+																																																																																																																																												_1: {
+																																																																																																																																													ctor: '::',
+																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Mathematica'),
+																																																																																																																																													_1: {
+																																																																																																																																														ctor: '::',
+																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MATLAB'),
+																																																																																																																																														_1: {
+																																																																																																																																															ctor: '::',
+																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Max/MSP'),
+																																																																																																																																															_1: {
+																																																																																																																																																ctor: '::',
+																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MAXScript'),
+																																																																																																																																																_1: {
+																																																																																																																																																	ctor: '::',
+																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MEL'),
+																																																																																																																																																	_1: {
+																																																																																																																																																		ctor: '::',
+																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Mercury'),
+																																																																																																																																																		_1: {
+																																																																																																																																																			ctor: '::',
+																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Mirah'),
+																																																																																																																																																			_1: {
+																																																																																																																																																				ctor: '::',
+																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Miva'),
+																																																																																																																																																				_1: {
+																																																																																																																																																					ctor: '::',
+																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ML'),
+																																																																																																																																																					_1: {
+																																																																																																																																																						ctor: '::',
+																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Monkey'),
+																																																																																																																																																						_1: {
+																																																																																																																																																							ctor: '::',
+																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Modula-2'),
+																																																																																																																																																							_1: {
+																																																																																																																																																								ctor: '::',
+																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Modula-3'),
+																																																																																																																																																								_1: {
+																																																																																																																																																									ctor: '::',
+																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MOO'),
+																																																																																																																																																									_1: {
+																																																																																																																																																										ctor: '::',
+																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Moto'),
+																																																																																																																																																										_1: {
+																																																																																																																																																											ctor: '::',
+																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MS-DOS Batch'),
+																																																																																																																																																											_1: {
+																																																																																																																																																												ctor: '::',
+																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MUMPS'),
+																																																																																																																																																												_1: {
+																																																																																																																																																													ctor: '::',
+																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NATURAL'),
+																																																																																																																																																													_1: {
+																																																																																																																																																														ctor: '::',
+																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Nemerle'),
+																																																																																																																																																														_1: {
+																																																																																																																																																															ctor: '::',
+																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Nimrod'),
+																																																																																																																																																															_1: {
+																																																																																																																																																																ctor: '::',
+																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NQC'),
+																																																																																																																																																																_1: {
+																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NSIS'),
+																																																																																																																																																																	_1: {
+																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Nu'),
+																																																																																																																																																																		_1: {
+																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NXT-G'),
+																																																																																																																																																																			_1: {
+																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Oberon'),
+																																																																																																																																																																				_1: {
+																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Object Rexx'),
+																																																																																																																																																																					_1: {
+																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Objective-C'),
+																																																																																																																																																																						_1: {
+																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Objective-J'),
+																																																																																																																																																																							_1: {
+																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OCaml'),
+																																																																																																																																																																								_1: {
+																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Occam'),
+																																																																																																																																																																									_1: {
+																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ooc'),
+																																																																																																																																																																										_1: {
+																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Opa'),
+																																																																																																																																																																											_1: {
+																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OpenCL'),
+																																																																																																																																																																												_1: {
+																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OpenEdge ABL'),
+																																																																																																																																																																													_1: {
+																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OPL'),
+																																																																																																																																																																														_1: {
+																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Oz'),
+																																																																																																																																																																															_1: {
+																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Paradox'),
+																																																																																																																																																																																_1: {
+																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Parrot'),
+																																																																																																																																																																																	_1: {
+																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pascal'),
+																																																																																																																																																																																		_1: {
+																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Perl'),
+																																																																																																																																																																																			_1: {
+																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PHP'),
+																																																																																																																																																																																				_1: {
+																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pike'),
+																																																																																																																																																																																					_1: {
+																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PILOT'),
+																																																																																																																																																																																						_1: {
+																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PL/I'),
+																																																																																																																																																																																							_1: {
+																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PL/SQL'),
+																																																																																																																																																																																								_1: {
+																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pliant'),
+																																																																																																																																																																																									_1: {
+																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PostScript'),
+																																																																																																																																																																																										_1: {
+																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('POV-Ray'),
+																																																																																																																																																																																											_1: {
+																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PowerBasic'),
+																																																																																																																																																																																												_1: {
+																																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PowerScript'),
+																																																																																																																																																																																													_1: {
+																																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PowerShell'),
+																																																																																																																																																																																														_1: {
+																																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Processing'),
+																																																																																																																																																																																															_1: {
+																																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Prolog'),
+																																																																																																																																																																																																_1: {
+																																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Puppet'),
+																																																																																																																																																																																																	_1: {
+																																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pure Data'),
+																																																																																																																																																																																																		_1: {
+																																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Python'),
+																																																																																																																																																																																																			_1: {
+																																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Q'),
+																																																																																																																																																																																																				_1: {
+																																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('R'),
+																																																																																																																																																																																																					_1: {
+																																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Racket'),
+																																																																																																																																																																																																						_1: {
+																																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('REALBasic'),
+																																																																																																																																																																																																							_1: {
+																																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('REBOL'),
+																																																																																																																																																																																																								_1: {
+																																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Revolution'),
+																																																																																																																																																																																																									_1: {
+																																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('REXX'),
+																																																																																																																																																																																																										_1: {
+																																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('RPG (OS/400)'),
+																																																																																																																																																																																																											_1: {
+																																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ruby'),
+																																																																																																																																																																																																												_1: {
+																																																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Rust'),
+																																																																																																																																																																																																													_1: {
+																																																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('S'),
+																																																																																																																																																																																																														_1: {
+																																																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('S-PLUS'),
+																																																																																																																																																																																																															_1: {
+																																																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SAS'),
+																																																																																																																																																																																																																_1: {
+																																																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Sather'),
+																																																																																																																																																																																																																	_1: {
+																																																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scala'),
+																																																																																																																																																																																																																		_1: {
+																																																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scheme'),
+																																																																																																																																																																																																																			_1: {
+																																																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scilab'),
+																																																																																																																																																																																																																				_1: {
+																																																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scratch'),
+																																																																																																																																																																																																																					_1: {
+																																																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('sed'),
+																																																																																																																																																																																																																						_1: {
+																																																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Seed7'),
+																																																																																																																																																																																																																							_1: {
+																																																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Self'),
+																																																																																																																																																																																																																								_1: {
+																																																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Shell'),
+																																																																																																																																																																																																																									_1: {
+																																																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SIGNAL'),
+																																																																																																																																																																																																																										_1: {
+																																																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Simula'),
+																																																																																																																																																																																																																											_1: {
+																																																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Simulink'),
+																																																																																																																																																																																																																												_1: {
+																																																																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Slate'),
+																																																																																																																																																																																																																													_1: {
+																																																																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Smalltalk'),
+																																																																																																																																																																																																																														_1: {
+																																																																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Smarty'),
+																																																																																																																																																																																																																															_1: {
+																																																																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SPARK'),
+																																																																																																																																																																																																																																_1: {
+																																																																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SPSS'),
+																																																																																																																																																																																																																																	_1: {
+																																																																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SQR'),
+																																																																																																																																																																																																																																		_1: {
+																																																																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Squeak'),
+																																																																																																																																																																																																																																			_1: {
+																																																																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Squirrel'),
+																																																																																																																																																																																																																																				_1: {
+																																																																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Standard ML'),
+																																																																																																																																																																																																																																					_1: {
+																																																																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Suneido'),
+																																																																																																																																																																																																																																						_1: {
+																																																																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SuperCollider'),
+																																																																																																																																																																																																																																							_1: {
+																																																																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('TACL'),
+																																																																																																																																																																																																																																								_1: {
+																																																																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Tcl'),
+																																																																																																																																																																																																																																									_1: {
+																																																																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Tex'),
+																																																																																																																																																																																																																																										_1: {
+																																																																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('thinBasic'),
+																																																																																																																																																																																																																																											_1: {
+																																																																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('TOM'),
+																																																																																																																																																																																																																																												_1: {
+																																																																																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Transact-SQL'),
+																																																																																																																																																																																																																																													_1: {
+																																																																																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Turing'),
+																																																																																																																																																																																																																																														_1: {
+																																																																																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('TypeScript'),
+																																																																																																																																																																																																																																															_1: {
+																																																																																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Vala/Genie'),
+																																																																																																																																																																																																																																																_1: {
+																																																																																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('VBScript'),
+																																																																																																																																																																																																																																																	_1: {
+																																																																																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Verilog'),
+																																																																																																																																																																																																																																																		_1: {
+																																																																																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('VHDL'),
+																																																																																																																																																																																																																																																			_1: {
+																																																																																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('VimL'),
+																																																																																																																																																																																																																																																				_1: {
+																																																																																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Visual Basic .NET'),
+																																																																																																																																																																																																																																																					_1: {
+																																																																																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('WebDNA'),
+																																																																																																																																																																																																																																																						_1: {
+																																																																																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Whitespace'),
+																																																																																																																																																																																																																																																							_1: {
+																																																																																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('X10'),
+																																																																																																																																																																																																																																																								_1: {
+																																																																																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('xBase'),
+																																																																																																																																																																																																																																																									_1: {
+																																																																																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XBase++'),
+																																																																																																																																																																																																																																																										_1: {
+																																																																																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Xen'),
+																																																																																																																																																																																																																																																											_1: {
+																																																																																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XPL'),
+																																																																																																																																																																																																																																																												_1: {
+																																																																																																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XSLT'),
+																																																																																																																																																																																																																																																													_1: {
+																																																																																																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XQuery'),
+																																																																																																																																																																																																																																																														_1: {
+																																																																																																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('yacc'),
+																																																																																																																																																																																																																																																															_1: {
+																																																																																																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Yorick'),
+																																																																																																																																																																																																																																																																_1: {
+																																																																																																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Z shell, MenuItem '),
+																																																																																																																																																																																																																																																																	_1: {ctor: '[]'}
+																																																																																																																																																																																																																																																																}
+																																																																																																																																																																																																																																																															}
+																																																																																																																																																																																																																																																														}
+																																																																																																																																																																																																																																																													}
+																																																																																																																																																																																																																																																												}
+																																																																																																																																																																																																																																																											}
+																																																																																																																																																																																																																																																										}
+																																																																																																																																																																																																																																																									}
+																																																																																																																																																																																																																																																								}
+																																																																																																																																																																																																																																																							}
+																																																																																																																																																																																																																																																						}
+																																																																																																																																																																																																																																																					}
+																																																																																																																																																																																																																																																				}
+																																																																																																																																																																																																																																																			}
+																																																																																																																																																																																																																																																		}
+																																																																																																																																																																																																																																																	}
+																																																																																																																																																																																																																																																}
+																																																																																																																																																																																																																																															}
+																																																																																																																																																																																																																																														}
+																																																																																																																																																																																																																																													}
+																																																																																																																																																																																																																																												}
+																																																																																																																																																																																																																																											}
+																																																																																																																																																																																																																																										}
+																																																																																																																																																																																																																																									}
+																																																																																																																																																																																																																																								}
+																																																																																																																																																																																																																																							}
+																																																																																																																																																																																																																																						}
+																																																																																																																																																																																																																																					}
+																																																																																																																																																																																																																																				}
+																																																																																																																																																																																																																																			}
+																																																																																																																																																																																																																																		}
+																																																																																																																																																																																																																																	}
+																																																																																																																																																																																																																																}
+																																																																																																																																																																																																																															}
+																																																																																																																																																																																																																														}
+																																																																																																																																																																																																																													}
+																																																																																																																																																																																																																												}
+																																																																																																																																																																																																																											}
+																																																																																																																																																																																																																										}
+																																																																																																																																																																																																																									}
+																																																																																																																																																																																																																								}
+																																																																																																																																																																																																																							}
+																																																																																																																																																																																																																						}
+																																																																																																																																																																																																																					}
+																																																																																																																																																																																																																				}
+																																																																																																																																																																																																																			}
+																																																																																																																																																																																																																		}
+																																																																																																																																																																																																																	}
+																																																																																																																																																																																																																}
+																																																																																																																																																																																																															}
+																																																																																																																																																																																																														}
+																																																																																																																																																																																																													}
+																																																																																																																																																																																																												}
+																																																																																																																																																																																																											}
+																																																																																																																																																																																																										}
+																																																																																																																																																																																																									}
+																																																																																																																																																																																																								}
+																																																																																																																																																																																																							}
+																																																																																																																																																																																																						}
+																																																																																																																																																																																																					}
+																																																																																																																																																																																																				}
+																																																																																																																																																																																																			}
+																																																																																																																																																																																																		}
+																																																																																																																																																																																																	}
+																																																																																																																																																																																																}
+																																																																																																																																																																																															}
+																																																																																																																																																																																														}
+																																																																																																																																																																																													}
+																																																																																																																																																																																												}
+																																																																																																																																																																																											}
+																																																																																																																																																																																										}
+																																																																																																																																																																																									}
+																																																																																																																																																																																								}
+																																																																																																																																																																																							}
+																																																																																																																																																																																						}
+																																																																																																																																																																																					}
+																																																																																																																																																																																				}
+																																																																																																																																																																																			}
+																																																																																																																																																																																		}
+																																																																																																																																																																																	}
+																																																																																																																																																																																}
+																																																																																																																																																																															}
+																																																																																																																																																																														}
+																																																																																																																																																																													}
+																																																																																																																																																																												}
+																																																																																																																																																																											}
+																																																																																																																																																																										}
+																																																																																																																																																																									}
+																																																																																																																																																																								}
+																																																																																																																																																																							}
+																																																																																																																																																																						}
+																																																																																																																																																																					}
+																																																																																																																																																																				}
+																																																																																																																																																																			}
+																																																																																																																																																																		}
+																																																																																																																																																																	}
+																																																																																																																																																																}
+																																																																																																																																																															}
+																																																																																																																																																														}
+																																																																																																																																																													}
+																																																																																																																																																												}
+																																																																																																																																																											}
+																																																																																																																																																										}
+																																																																																																																																																									}
+																																																																																																																																																								}
+																																																																																																																																																							}
+																																																																																																																																																						}
+																																																																																																																																																					}
+																																																																																																																																																				}
+																																																																																																																																																			}
+																																																																																																																																																		}
+																																																																																																																																																	}
+																																																																																																																																																}
+																																																																																																																																															}
+																																																																																																																																														}
+																																																																																																																																													}
+																																																																																																																																												}
+																																																																																																																																											}
+																																																																																																																																										}
+																																																																																																																																									}
+																																																																																																																																								}
+																																																																																																																																							}
+																																																																																																																																						}
+																																																																																																																																					}
+																																																																																																																																				}
+																																																																																																																																			}
+																																																																																																																																		}
+																																																																																																																																	}
+																																																																																																																																}
+																																																																																																																															}
+																																																																																																																														}
+																																																																																																																													}
+																																																																																																																												}
+																																																																																																																											}
+																																																																																																																										}
+																																																																																																																									}
+																																																																																																																								}
+																																																																																																																							}
+																																																																																																																						}
+																																																																																																																					}
+																																																																																																																				}
+																																																																																																																			}
+																																																																																																																		}
+																																																																																																																	}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
 var _lucamug$elm_meta_json_decoder$Main$Fetching = {ctor: 'Fetching'};
 var _lucamug$elm_meta_json_decoder$Main$Editing = {ctor: 'Editing'};
+var _lucamug$elm_meta_json_decoder$Main$MsgAutocom = function (a) {
+	return {ctor: 'MsgAutocom', _0: a};
+};
 var _lucamug$elm_meta_json_decoder$Main$ToDatePicker = function (a) {
 	return {ctor: 'ToDatePicker', _0: a};
 };
 var _lucamug$elm_meta_json_decoder$Main$init = function () {
-	var _p7 = _elm_community$elm_datepicker$DatePicker$init;
-	var datePicker = _p7._0;
-	var datePickerFx = _p7._1;
+	var _p8 = _elm_community$elm_datepicker$DatePicker$init;
+	var datePicker = _p8._0;
+	var datePickerFx = _p8._1;
 	var isDisabled = function (date) {
 		return A3(
 			_elm_lang$core$Basics$flip,
@@ -17271,7 +19327,12 @@ var _lucamug$elm_meta_json_decoder$Main$init = function () {
 			formState: _lucamug$elm_meta_json_decoder$Main$Editing,
 			date: _elm_lang$core$Maybe$Nothing,
 			datePicker: datePicker,
-			defaultSettings: _elm_community$elm_datepicker$DatePicker$defaultSettings
+			autocomMenuItems: _lucamug$elm_meta_json_decoder$Main$menuItems,
+			autocomState: _thebritican$elm_autocomplete$Autocomplete$empty,
+			autocomHowManyToShow: 5,
+			programmingLanguage: '',
+			autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing,
+			autocomShowMenu: false
 		},
 		_1: A2(_elm_lang$core$Platform_Cmd$map, _lucamug$elm_meta_json_decoder$Main$ToDatePicker, datePickerFx)
 	};
@@ -17299,17 +19360,17 @@ var _lucamug$elm_meta_json_decoder$Main$Password = {ctor: 'Password'};
 var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 	function (model, formField, inputType, inputName) {
 		var content = function () {
-			var _p8 = formField;
-			if (_p8.ctor === 'Email') {
+			var _p9 = formField;
+			if (_p9.ctor === 'Email') {
 				return model.email;
 			} else {
 				return model.password;
 			}
 		}();
 		var hasFocus = function () {
-			var _p9 = model.focus;
-			if (_p9.ctor === 'Just') {
-				return _elm_lang$core$Native_Utils.eq(_p9._0, formField);
+			var _p10 = model.focus;
+			if (_p10.ctor === 'Just') {
+				return _elm_lang$core$Native_Utils.eq(_p10._0, formField);
 			} else {
 				return false;
 			}
@@ -17424,30 +19485,30 @@ var _lucamug$elm_meta_json_decoder$Main$Email = {ctor: 'Email'};
 var _lucamug$elm_meta_json_decoder$Main$validate = _rtfeldman$elm_validate$Validate$all(
 	{
 		ctor: '::',
-		_0: function (_p10) {
+		_0: function (_p11) {
 			return A2(
 				_rtfeldman$elm_validate$Validate$ifBlank,
 				{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Email, _1: 'Email can\'t be blank.'},
 				function (_) {
 					return _.email;
-				}(_p10));
+				}(_p11));
 		},
 		_1: {
 			ctor: '::',
-			_0: function (_p11) {
+			_0: function (_p12) {
 				return A2(
 					_rtfeldman$elm_validate$Validate$ifBlank,
 					{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Password, _1: 'Password can\'t be blank.'},
 					function (_) {
 						return _.password;
-					}(_p11));
+					}(_p12));
 			},
 			_1: {ctor: '[]'}
 		}
 	});
 var _lucamug$elm_meta_json_decoder$Main$setErrors = function (model) {
-	var _p12 = _lucamug$elm_meta_json_decoder$Main$validate(model);
-	if (_p12.ctor === '[]') {
+	var _p13 = _lucamug$elm_meta_json_decoder$Main$validate(model);
+	if (_p13.ctor === '[]') {
 		return _elm_lang$core$Native_Utils.update(
 			model,
 			{
@@ -17456,18 +19517,237 @@ var _lucamug$elm_meta_json_decoder$Main$setErrors = function (model) {
 	} else {
 		return _elm_lang$core$Native_Utils.update(
 			model,
-			{errors: _p12});
+			{errors: _p13});
 	}
 };
+var _lucamug$elm_meta_json_decoder$Main$NoOpAutocom = {ctor: 'NoOpAutocom'};
+var _lucamug$elm_meta_json_decoder$Main$Reset = {ctor: 'Reset'};
+var _lucamug$elm_meta_json_decoder$Main$OnFocusAutocom = {ctor: 'OnFocusAutocom'};
+var _lucamug$elm_meta_json_decoder$Main$HandleEscape = {ctor: 'HandleEscape'};
+var _lucamug$elm_meta_json_decoder$Main$PreviewMenuItem = function (a) {
+	return {ctor: 'PreviewMenuItem', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$SelectMenuItemMouse = function (a) {
+	return {ctor: 'SelectMenuItemMouse', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$SelectMenuItemKeyboard = function (a) {
+	return {ctor: 'SelectMenuItemKeyboard', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$Wrap = function (a) {
+	return {ctor: 'Wrap', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$updateConfig = _thebritican$elm_autocomplete$Autocomplete$updateConfig(
+	{
+		toId: function (_) {
+			return _.name;
+		},
+		onKeyDown: F2(
+			function (code, maybeId) {
+				return (_elm_lang$core$Native_Utils.eq(code, 38) || _elm_lang$core$Native_Utils.eq(code, 40)) ? A2(
+					_elm_lang$core$Maybe$map,
+					function (_p14) {
+						return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+							_lucamug$elm_meta_json_decoder$Main$PreviewMenuItem(_p14));
+					},
+					maybeId) : (_elm_lang$core$Native_Utils.eq(code, 13) ? A2(
+					_elm_lang$core$Maybe$map,
+					function (_p15) {
+						return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+							_lucamug$elm_meta_json_decoder$Main$SelectMenuItemKeyboard(_p15));
+					},
+					maybeId) : _elm_lang$core$Maybe$Just(
+					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$Reset)));
+			}),
+		onTooLow: _elm_lang$core$Maybe$Just(
+			function (_p16) {
+				return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+					_lucamug$elm_meta_json_decoder$Main$Wrap(_p16));
+			}(false)),
+		onTooHigh: _elm_lang$core$Maybe$Just(
+			function (_p17) {
+				return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+					_lucamug$elm_meta_json_decoder$Main$Wrap(_p17));
+			}(true)),
+		onMouseEnter: function (id) {
+			return _elm_lang$core$Maybe$Just(
+				function (_p18) {
+					return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+						_lucamug$elm_meta_json_decoder$Main$PreviewMenuItem(_p18));
+				}(id));
+		},
+		onMouseLeave: function (_p19) {
+			return _elm_lang$core$Maybe$Nothing;
+		},
+		onMouseClick: function (id) {
+			return _elm_lang$core$Maybe$Just(
+				function (_p20) {
+					return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+						_lucamug$elm_meta_json_decoder$Main$SelectMenuItemMouse(_p20));
+				}(id));
+		},
+		separateSelections: false
+	});
+var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
+	function (msg, model) {
+		var _p21 = msg;
+		switch (_p21.ctor) {
+			case 'SetQuery':
+				var _p23 = _p21._0;
+				var autocomShowMenu = function (_p22) {
+					return !_elm_lang$core$List$isEmpty(_p22);
+				}(
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, _p23, model.autocomMenuItems));
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{programmingLanguage: _p23, autocomShowMenu: autocomShowMenu, autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing}),
+					{ctor: '[]'});
+			case 'SetAutoState':
+				var _p24 = A5(
+					_thebritican$elm_autocomplete$Autocomplete$update,
+					_lucamug$elm_meta_json_decoder$Main$updateConfig,
+					_p21._0,
+					model.autocomHowManyToShow,
+					model.autocomState,
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems));
+				var newState = _p24._0;
+				var maybeMsg = _p24._1;
+				var newModel = _elm_lang$core$Native_Utils.update(
+					model,
+					{autocomState: newState});
+				var _p25 = maybeMsg;
+				if (_p25.ctor === 'Nothing') {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						newModel,
+						{ctor: '[]'});
+				} else {
+					return A2(_lucamug$elm_meta_json_decoder$Main$update, _p25._0, newModel);
+				}
+			case 'Wrap':
+				var _p26 = model.autocomSelectedMenuItem;
+				if (_p26.ctor === 'Just') {
+					return A2(
+						_lucamug$elm_meta_json_decoder$Main$update,
+						_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$Reset),
+						model);
+				} else {
+					return _p21._0 ? A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{
+								autocomState: A4(
+									_thebritican$elm_autocomplete$Autocomplete$resetToLastItem,
+									_lucamug$elm_meta_json_decoder$Main$updateConfig,
+									A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems),
+									model.autocomHowManyToShow,
+									model.autocomState),
+								autocomSelectedMenuItem: _elm_lang$core$List$head(
+									_elm_lang$core$List$reverse(
+										A2(
+											_elm_lang$core$List$take,
+											model.autocomHowManyToShow,
+											A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems))))
+							}),
+						{ctor: '[]'}) : A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{
+								autocomState: A4(
+									_thebritican$elm_autocomplete$Autocomplete$resetToFirstItem,
+									_lucamug$elm_meta_json_decoder$Main$updateConfig,
+									A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems),
+									model.autocomHowManyToShow,
+									model.autocomState),
+								autocomSelectedMenuItem: _elm_lang$core$List$head(
+									A2(
+										_elm_lang$core$List$take,
+										model.autocomHowManyToShow,
+										A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems)))
+							}),
+						{ctor: '[]'});
+				}
+			case 'SelectMenuItemKeyboard':
+				var newModel = _lucamug$elm_meta_json_decoder$Main$resetMenu(
+					A2(_lucamug$elm_meta_json_decoder$Main$setQuery, model, _p21._0));
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					newModel,
+					{ctor: '[]'});
+			case 'SelectMenuItemMouse':
+				var newModel = _lucamug$elm_meta_json_decoder$Main$resetMenu(
+					A2(_lucamug$elm_meta_json_decoder$Main$setQuery, model, _p21._0));
+				return {
+					ctor: '_Tuple2',
+					_0: newModel,
+					_1: A2(
+						_elm_lang$core$Task$attempt,
+						function (_p27) {
+							return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$NoOpAutocom);
+						},
+						_elm_lang$dom$Dom$focus('president-input'))
+				};
+			case 'PreviewMenuItem':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							autocomSelectedMenuItem: _elm_lang$core$Maybe$Just(
+								A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, _p21._0))
+						}),
+					{ctor: '[]'});
+			case 'OnFocusAutocom':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+			case 'HandleEscape':
+				var validOptions = !_elm_lang$core$List$isEmpty(
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems));
+				var handleEscape = validOptions ? _lucamug$elm_meta_json_decoder$Main$resetMenu(
+					_lucamug$elm_meta_json_decoder$Main$removeSelection(model)) : _lucamug$elm_meta_json_decoder$Main$resetInput(model);
+				var escapedModel = function () {
+					var _p28 = model.autocomSelectedMenuItem;
+					if (_p28.ctor === 'Just') {
+						return _elm_lang$core$Native_Utils.eq(model.programmingLanguage, _p28._0.name) ? _lucamug$elm_meta_json_decoder$Main$resetInput(model) : handleEscape;
+					} else {
+						return handleEscape;
+					}
+				}();
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					escapedModel,
+					{ctor: '[]'});
+			case 'Reset':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							autocomState: A2(_thebritican$elm_autocomplete$Autocomplete$reset, _lucamug$elm_meta_json_decoder$Main$updateConfig, model.autocomState),
+							autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing
+						}),
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+		}
+	});
 var _lucamug$elm_meta_json_decoder$Main$update = F2(
 	function (msg, model) {
-		var _p13 = A2(_elm_lang$core$Debug$log, 'msg', msg);
-		switch (_p13.ctor) {
+		var _p29 = A2(_elm_lang$core$Debug$log, 'msg', msg);
+		switch (_p29.ctor) {
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'SubmitForm':
-				var _p14 = _lucamug$elm_meta_json_decoder$Main$validate(model);
-				if (_p14.ctor === '[]') {
+				var _p30 = _lucamug$elm_meta_json_decoder$Main$validate(model);
+				if (_p30.ctor === '[]') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -17487,7 +19767,7 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{errors: _p14, showErrors: true}),
+							{errors: _p30, showErrors: true}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
@@ -17495,17 +19775,17 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 				return {
 					ctor: '_Tuple2',
 					_0: _lucamug$elm_meta_json_decoder$Main$setErrors(
-						A3(_lucamug$elm_meta_json_decoder$Main$setField, _p13._0, _p13._1, model)),
+						A3(_lucamug$elm_meta_json_decoder$Main$setField, _p29._0, _p29._1, model)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Response':
-				if (_p13._0.ctor === 'Ok') {
+				if (_p29._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								response: _elm_lang$core$Maybe$Just(_p13._0._0),
+								response: _elm_lang$core$Maybe$Just(_p29._0._0),
 								formState: _lucamug$elm_meta_json_decoder$Main$Editing
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
@@ -17517,7 +19797,7 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 							model,
 							{
 								response: _elm_lang$core$Maybe$Just(
-									_elm_lang$core$Basics$toString(_p13._0._0)),
+									_elm_lang$core$Basics$toString(_p29._0._0)),
 								formState: _lucamug$elm_meta_json_decoder$Main$Editing
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
@@ -17529,7 +19809,7 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							focus: _elm_lang$core$Maybe$Just(_p13._0)
+							focus: _elm_lang$core$Maybe$Just(_p29._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -17555,18 +19835,18 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							fruits: A2(_lucamug$elm_meta_json_decoder$Main$toggle, _p13._0, model.fruits)
+							fruits: A2(_lucamug$elm_meta_json_decoder$Main$toggle, _p29._0, model.fruits)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
-				var _p15 = A3(_elm_community$elm_datepicker$DatePicker$update, _lucamug$elm_meta_json_decoder$Main$settings, _p13._0, model.datePicker);
-				var newDatePicker = _p15._0;
-				var mDate = _p15._2;
+			case 'ToDatePicker':
+				var _p31 = A3(_elm_community$elm_datepicker$DatePicker$update, _lucamug$elm_meta_json_decoder$Main$settings, _p29._0, model.datePicker);
+				var newDatePicker = _p31._0;
+				var mDate = _p31._2;
 				var date = function () {
-					var _p16 = mDate;
-					if (_p16.ctor === 'Changed') {
-						return _p16._0;
+					var _p32 = mDate;
+					if (_p32.ctor === 'Changed') {
+						return _p32._0;
 					} else {
 						return model.date;
 					}
@@ -17578,8 +19858,177 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 						{date: date, datePicker: newDatePicker}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			default:
+				return A2(_lucamug$elm_meta_json_decoder$Main$updateAutocom, _p29._0, model);
 		}
 	});
+var _lucamug$elm_meta_json_decoder$Main$SetAutoState = function (a) {
+	return {ctor: 'SetAutoState', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$subscriptions = function (model) {
+	return A2(
+		_elm_lang$core$Platform_Sub$map,
+		function (_p33) {
+			return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+				_lucamug$elm_meta_json_decoder$Main$SetAutoState(_p33));
+		},
+		_thebritican$elm_autocomplete$Autocomplete$subscription);
+};
+var _lucamug$elm_meta_json_decoder$Main$viewMenu = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('autocomplete-menu'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$map,
+				function (_p34) {
+					return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+						_lucamug$elm_meta_json_decoder$Main$SetAutoState(_p34));
+				},
+				A4(
+					_thebritican$elm_autocomplete$Autocomplete$view,
+					_lucamug$elm_meta_json_decoder$Main$viewConfig,
+					model.autocomHowManyToShow,
+					model.autocomState,
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems))),
+			_1: {ctor: '[]'}
+		});
+};
+var _lucamug$elm_meta_json_decoder$Main$SetQuery = function (a) {
+	return {ctor: 'SetQuery', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$viewAutocom = function (model) {
+	var activeDescendant = function (attributes) {
+		var _p35 = model.autocomSelectedMenuItem;
+		if (_p35.ctor === 'Just') {
+			return {
+				ctor: '::',
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-activedescendant', _p35._0.name),
+				_1: attributes
+			};
+		} else {
+			return attributes;
+		}
+	};
+	var programmingLanguage = function () {
+		var _p36 = model.autocomSelectedMenuItem;
+		if (_p36.ctor === 'Just') {
+			return _p36._0.name;
+		} else {
+			return model.programmingLanguage;
+		}
+	}();
+	var menu = model.autocomShowMenu ? {
+		ctor: '::',
+		_0: _lucamug$elm_meta_json_decoder$Main$viewMenu(model),
+		_1: {ctor: '[]'}
+	} : {ctor: '[]'};
+	var fromResult = function (result) {
+		var _p37 = result;
+		if (_p37.ctor === 'Ok') {
+			return _elm_lang$core$Json_Decode$succeed(_p37._0);
+		} else {
+			return _elm_lang$core$Json_Decode$fail(_p37._0);
+		}
+	};
+	var dec = A2(
+		_elm_lang$core$Json_Decode$andThen,
+		fromResult,
+		A2(
+			_elm_lang$core$Json_Decode$map,
+			function (code) {
+				return (_elm_lang$core$Native_Utils.eq(code, 38) || _elm_lang$core$Native_Utils.eq(code, 40)) ? _elm_lang$core$Result$Ok(
+					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$NoOpAutocom)) : (_elm_lang$core$Native_Utils.eq(code, 27) ? _elm_lang$core$Result$Ok(
+					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$HandleEscape)) : _elm_lang$core$Result$Err('not handling that key'));
+			},
+			_elm_lang$html$Html_Events$keyCode));
+	var options = {preventDefault: true, stopPropagation: false};
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$List$append,
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$input,
+					activeDescendant(
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('text'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onInput(
+									function (_p38) {
+										return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+											_lucamug$elm_meta_json_decoder$Main$SetQuery(_p38));
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onFocus(
+										_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$OnFocusAutocom)),
+									_1: {
+										ctor: '::',
+										_0: A3(_elm_lang$html$Html_Events$onWithOptions, 'keydown', options, dec),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$value(programmingLanguage),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$id('president-input'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('autocomplete-input'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$autocomplete(false),
+														_1: {
+															ctor: '::',
+															_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-owns', 'list-of-presidents'),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html_Attributes$attribute,
+																	'aria-expanded',
+																	_elm_lang$core$String$toLower(
+																		_elm_lang$core$Basics$toString(model.autocomShowMenu))),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html_Attributes$attribute,
+																		'aria-haspopup',
+																		_elm_lang$core$String$toLower(
+																			_elm_lang$core$Basics$toString(model.autocomShowMenu))),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'combobox'),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-autocomplete', 'list'),
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}),
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			},
+			menu));
+};
 var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 	var dp = model.datePicker;
 	return A2(
@@ -17661,14 +20110,14 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 															ctor: '::',
 															_0: _elm_lang$html$Html$text(
 																function () {
-																	var _p17 = model.date;
-																	if (_p17.ctor === 'Nothing') {
+																	var _p39 = model.date;
+																	if (_p39.ctor === 'Nothing') {
 																		return 'Date';
 																	} else {
 																		return A2(
 																			_elm_lang$core$Basics_ops['++'],
 																			'Date: ',
-																			_lucamug$elm_meta_json_decoder$Main$formatDate(_p17._0));
+																			_lucamug$elm_meta_json_decoder$Main$formatDate(_p39._0));
 																	}
 																}()),
 															_1: {ctor: '[]'}
@@ -17722,18 +20171,7 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 															},
 															{
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$a,
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$href('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date'),
-																		_1: {ctor: '[]'}
-																	},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('HTML5 Date'),
-																		_1: {ctor: '[]'}
-																	}),
+																_0: _elm_lang$html$Html$text('HTML5 Date'),
 																_1: {ctor: '[]'}
 															}),
 														_1: {ctor: '[]'}
@@ -17744,128 +20182,174 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$div,
+											_elm_lang$html$Html$label,
+											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('checkboxContainer'),
-												_1: {ctor: '[]'}
-											},
-											A2(
-												_elm_lang$core$List$map,
-												function (fruit) {
-													var value = A2(_elm_lang$core$Dict$get, fruit, model.fruits);
-													var isDisabled = _lucamug$elm_meta_json_decoder$Main$fruitsQuantityHaveReachedTheLimit(model.fruits) && (!A2(_elm_lang$core$Maybe$withDefault, false, value));
-													var isChecked = A2(_elm_lang$core$Maybe$withDefault, false, value);
-													return A2(
-														_elm_lang$html$Html$label,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$classList(
-																{
-																	ctor: '::',
-																	_0: {ctor: '_Tuple2', _0: 'checkbox', _1: true},
-																	_1: {
-																		ctor: '::',
-																		_0: {ctor: '_Tuple2', _0: 'disabled', _1: isDisabled},
-																		_1: {
-																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 'checked', _1: isChecked},
-																			_1: {ctor: '[]'}
-																		}
-																	}
-																}),
-															_1: {ctor: '[]'}
-														},
-														{
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('inputFieldContainer'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _lucamug$elm_meta_json_decoder$Main$viewAutocom(model),
+														_1: {
 															ctor: '::',
 															_0: A2(
-																_elm_lang$html$Html$input,
+																_elm_lang$html$Html$div,
 																{
 																	ctor: '::',
-																	_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
-																	_1: {
-																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$checked(isChecked),
-																		_1: {
+																	_0: _elm_lang$html$Html_Attributes$classList(
+																		{
 																			ctor: '::',
-																			_0: _elm_lang$html$Html_Attributes$disabled(isDisabled),
+																			_0: {ctor: '_Tuple2', _0: 'placeholder', _1: true},
 																			_1: {
 																				ctor: '::',
-																				_0: _elm_lang$html$Html_Events$onClick(
-																					_lucamug$elm_meta_json_decoder$Main$ToggleFruit(fruit)),
+																				_0: {ctor: '_Tuple2', _0: 'upperPosition', _1: true},
 																				_1: {ctor: '[]'}
 																			}
-																		}
-																	}
-																},
-																{ctor: '[]'}),
-															_1: {
-																ctor: '::',
-																_0: _elm_lang$html$Html$text(
-																	A2(_elm_lang$core$Basics_ops['++'], ' ', fruit)),
-																_1: {
-																	ctor: '::',
-																	_0: _lucamug$elm_meta_json_decoder$Main$viewSvgFor(fruit),
+																		}),
 																	_1: {ctor: '[]'}
-																}
-															}
-														});
-												},
-												_elm_lang$core$Dict$keys(model.fruits))),
+																},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('Programming Lanugage'),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
+													}),
+												_1: {ctor: '[]'}
+											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
 												_elm_lang$html$Html$div,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('formMessage'),
+													_0: _elm_lang$html$Html_Attributes$class('checkboxContainer'),
 													_1: {ctor: '[]'}
 												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															'Select max ',
-															A2(
-																_elm_lang$core$Basics_ops['++'],
-																_elm_lang$core$Basics$toString(_lucamug$elm_meta_json_decoder$Main$maxFruitSelectable),
-																A2(
-																	_elm_lang$core$Basics_ops['++'],
-																	' fruits - Selected: ',
-																	_elm_lang$core$Basics$toString(
-																		_elm_lang$core$List$length(
-																			_lucamug$elm_meta_json_decoder$Main$filteredFruits(model.fruits))))))),
-													_1: {ctor: '[]'}
-												}),
+												A2(
+													_elm_lang$core$List$map,
+													function (fruit) {
+														var value = A2(_elm_lang$core$Dict$get, fruit, model.fruits);
+														var isDisabled = _lucamug$elm_meta_json_decoder$Main$fruitsQuantityHaveReachedTheLimit(model.fruits) && (!A2(_elm_lang$core$Maybe$withDefault, false, value));
+														var isChecked = A2(_elm_lang$core$Maybe$withDefault, false, value);
+														return A2(
+															_elm_lang$html$Html$label,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$classList(
+																	{
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 'checkbox', _1: true},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 'disabled', _1: isDisabled},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 'checked', _1: isChecked},
+																				_1: {ctor: '[]'}
+																			}
+																		}
+																	}),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$input,
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$type_('checkbox'),
+																		_1: {
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$checked(isChecked),
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html_Attributes$disabled(isDisabled),
+																				_1: {
+																					ctor: '::',
+																					_0: _elm_lang$html$Html_Events$onClick(
+																						_lucamug$elm_meta_json_decoder$Main$ToggleFruit(fruit)),
+																					_1: {ctor: '[]'}
+																				}
+																			}
+																		}
+																	},
+																	{ctor: '[]'}),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text(
+																		A2(_elm_lang$core$Basics_ops['++'], ' ', fruit)),
+																	_1: {
+																		ctor: '::',
+																		_0: _lucamug$elm_meta_json_decoder$Main$viewSvgFor(fruit),
+																		_1: {ctor: '[]'}
+																	}
+																}
+															});
+													},
+													_elm_lang$core$Dict$keys(model.fruits))),
 											_1: {
 												ctor: '::',
 												_0: A2(
-													_elm_lang$html$Html$button,
+													_elm_lang$html$Html$div,
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(_lucamug$elm_meta_json_decoder$Main$SubmitForm),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$classList(
-																{
-																	ctor: '::',
-																	_0: {
-																		ctor: '_Tuple2',
-																		_0: 'disabled',
-																		_1: (!_elm_lang$core$List$isEmpty(model.errors)) && model.showErrors
-																	},
-																	_1: {ctor: '[]'}
-																}),
-															_1: {ctor: '[]'}
-														}
+														_0: _elm_lang$html$Html_Attributes$class('formMessage'),
+														_1: {ctor: '[]'}
 													},
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html$text('Submit'),
+														_0: _elm_lang$html$Html$text(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																'Select max ',
+																A2(
+																	_elm_lang$core$Basics_ops['++'],
+																	_elm_lang$core$Basics$toString(_lucamug$elm_meta_json_decoder$Main$maxFruitSelectable),
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		' fruits - Selected: ',
+																		_elm_lang$core$Basics$toString(
+																			_elm_lang$core$List$length(
+																				_lucamug$elm_meta_json_decoder$Main$filteredFruits(model.fruits))))))),
 														_1: {ctor: '[]'}
 													}),
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$button,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onClick(_lucamug$elm_meta_json_decoder$Main$SubmitForm),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$classList(
+																	{
+																		ctor: '::',
+																		_0: {
+																			ctor: '_Tuple2',
+																			_0: 'disabled',
+																			_1: (!_elm_lang$core$List$isEmpty(model.errors)) && model.showErrors
+																		},
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {ctor: '[]'}
+															}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Submit'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -17892,19 +20376,12 @@ var _lucamug$elm_meta_json_decoder$Main$view = function (model) {
 	return A3(_lucamug$elm_meta_json_decoder$Utils$viewUtils, model, _lucamug$elm_meta_json_decoder$Main$exampleVersion, _lucamug$elm_meta_json_decoder$Main$viewForm);
 };
 var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
-	{
-		init: _lucamug$elm_meta_json_decoder$Main$init,
-		view: _lucamug$elm_meta_json_decoder$Main$view,
-		update: _lucamug$elm_meta_json_decoder$Main$update,
-		subscriptions: function (_p18) {
-			return _elm_lang$core$Platform_Sub$none;
-		}
-	})();
+	{init: _lucamug$elm_meta_json_decoder$Main$init, view: _lucamug$elm_meta_json_decoder$Main$view, update: _lucamug$elm_meta_json_decoder$Main$update, subscriptions: _lucamug$elm_meta_json_decoder$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _lucamug$elm_meta_json_decoder$Main$main !== 'undefined') {
-    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"DatePicker.Msg":{"args":[],"tags":{"MouseUp":[],"Focus":[],"Text":["String"],"MouseDown":[],"Blur":[],"ChangeFocus":["Date.Date"],"CurrentDate":["Date.Date"],"Pick":["Maybe.Maybe Date.Date"],"SubmitText":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Main.Msg":{"args":[],"tags":{"OnFocus":["Main.FormField"],"SetField":["Main.FormField","String"],"Response":["Result.Result Http.Error String"],"ToggleFruit":["Main.Fruit"],"SubmitForm":[],"ToggleShowPasssword":[],"OnBlur":["Main.FormField"],"NoOp":[],"ToDatePicker":["DatePicker.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.FormField":{"args":[],"tags":{"Email":[],"Password":[]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.Fruit":{"args":[],"type":"String"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"DatePicker.Msg":{"args":[],"tags":{"MouseUp":[],"Focus":[],"Text":["String"],"MouseDown":[],"Blur":[],"ChangeFocus":["Date.Date"],"CurrentDate":["Date.Date"],"Pick":["Maybe.Maybe Date.Date"],"SubmitText":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Autocomplete.Msg":{"args":[],"tags":{"Msg":["Autocomplete.Autocomplete.Msg"]}},"Autocomplete.Autocomplete.Msg":{"args":[],"tags":{"MouseLeave":["String"],"WentTooHigh":[],"WentTooLow":[],"MouseClick":["String"],"KeyDown":["Char.KeyCode"],"NoOp":[],"MouseEnter":["String"]}},"Main.Msg":{"args":[],"tags":{"OnFocus":["Main.FormField"],"SetField":["Main.FormField","String"],"Response":["Result.Result Http.Error String"],"ToggleFruit":["Main.Fruit"],"MsgAutocom":["Main.MsgAutocom"],"SubmitForm":[],"ToggleShowPasssword":[],"OnBlur":["Main.FormField"],"NoOp":[],"ToDatePicker":["DatePicker.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Main.MsgAutocom":{"args":[],"tags":{"PreviewMenuItem":["String"],"SelectMenuItemMouse":["String"],"NoOpAutocom":[],"HandleEscape":[],"Wrap":["Bool"],"SetAutoState":["Autocomplete.Msg"],"Reset":[],"SetQuery":["String"],"OnFocusAutocom":[],"SelectMenuItemKeyboard":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.FormField":{"args":[],"tags":{"Email":[],"Password":[]}}},"aliases":{"Char.KeyCode":{"args":[],"type":"Int"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.Fruit":{"args":[],"type":"String"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

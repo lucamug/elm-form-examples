@@ -28,6 +28,8 @@ exampleComment =
         , "17" => "Adding maximum number of checkable fruits"
         , "18" => "Adding svg fruit icons"
         , "19" => "Adding a date picker"
+        , "20" => "Adding HTML date"
+        , "21" => "Adding Autocomplete field"
         ]
 
 

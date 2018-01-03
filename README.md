@@ -98,3 +98,7 @@ https://github.com/thebritican/elm-autocomplete/tree/master/examples
 ## DatePicker
 
 https://ellie-app.com/qzppX44YGa1/0
+
+## Richard
+
+https://www.reddit.com/r/elm/comments/5jd2xn/how_to_structure_elm_with_multiple_models/dbkpgbd/

@@ -207,6 +207,7 @@ button:focus {
     left: 0px;
     font-size: 15px;
     color: #888;
+    pointer-events: auto;
 }
 
 .svgContainer {
@@ -347,4 +348,78 @@ button:focus {
 
 .elm-datepicker--other-month.elm-datepicker--picked {
     color: white;
+}
+
+.autocomplete-menu {
+    position: relative;
+    margin-top: 5px;
+    background: white;
+    color: black;
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+}
+
+.autocomplete-item {
+    display: block;
+    padding: 5px 10px;
+    border-bottom: 1px solid #DDD;
+    cursor: pointer;
+}
+
+.key-selected {
+    background-color: #afceff;
+}
+
+.mouse-selected {
+    background-color: #ececec;
+}
+
+.autocomplete-list {
+    list-style: none;
+    padding: 0;
+    margin: auto;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.autocomplete-list-with-sections {
+    list-style: none;
+    padding: 0;
+    margin: auto;
+}
+
+.autocomplete-input {
+    min-width: 120px;
+    color: black;
+    font-size: 12px;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.autocomplete-section-list {
+    list-style: none;
+    padding: 0;
+    margin: auto;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.autocomplete-section-item {
+    display: block;
+    padding: 0;
+}
+
+.autocomplete-section-box {
+    display: block;
+    padding: 0;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
+}
+
+.autocomplete-section-text {
+    display: flex;
+    justify-content: center;
 }
