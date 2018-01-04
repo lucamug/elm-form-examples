@@ -351,7 +351,9 @@ button:focus {
 }
 
 .autocomplete-menu {
-    position: relative;
+    position: absolute;
+    left: 0;    
+    right: 0;
     margin-top: 5px;
     background: white;
     color: black;

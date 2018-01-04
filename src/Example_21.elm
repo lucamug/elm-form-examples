@@ -324,18 +324,12 @@ formatDate d =
 
 
 
--- VIEWS
+{- content return the value of an input field as it is
+   stored in the model
+-}
 
 
-view : Model -> Html Msg
-view model =
-    Utils.viewUtils model exampleVersion viewForm
-
-
-content :
-    Model
-    -> FormField
-    -> String
+content : Model -> FormField -> String
 content model formField =
     case formField of
         Email ->
@@ -348,9 +342,25 @@ content model formField =
             model.programmingLanguage
 
 
+
+{- upperPosition is used to move the Floating Label
+   above the input field when the input field has
+   focus or is not empty
+-}
+
+
 upperPosition : Model -> FormField -> Bool
 upperPosition model formField =
     hasFocus model.focus formField || content model formField /= ""
+
+
+
+-- VIEWS
+
+
+view : Model -> Html Msg
+view model =
+    Utils.viewUtils model exampleVersion viewForm
 
 
 viewInput : Model -> FormField -> String -> String -> Html Msg
