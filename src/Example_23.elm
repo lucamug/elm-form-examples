@@ -99,7 +99,7 @@ init =
       -- AUTOCOMPLETE
       , autocomMenuItems = menuItems
       , autocomState = Autocomplete.empty
-      , autocomHowManyToShow = 5
+      , autocomHowManyToShow = 10
       , autocomSelectedMenuItem = Nothing
       , autocomShowMenu = False
       }
@@ -394,6 +394,10 @@ viewInput model field inputType inputName =
                     type_ "text"
                   else
                     type_ inputType
+                , if field == Email then
+                    autofocus True
+                  else
+                    autofocus False
                 , classList
                     [ ( "focus", hasFocus model.focus field ) ]
                 , onInput <| OnInput field
@@ -850,14 +854,18 @@ updateAutocom msg model =
         SetAutoState autoMsg ->
             let
                 ( newState, maybeMsg ) =
-                    Autocomplete.update updateConfig autoMsg model.autocomHowManyToShow model.autocomState (acceptableItems model.fieldProgrammingLanguage model.autocomMenuItems)
+                    if model.focus == Just ProgrammingLanguage then
+                        Autocomplete.update updateConfig autoMsg model.autocomHowManyToShow model.autocomState (acceptableItems model.fieldProgrammingLanguage model.autocomMenuItems)
+                    else
+                        -- Ignore the keys up and donw if the field doesn't have focus
+                        ( model.autocomState, Nothing )
 
                 newModel =
                     { model | autocomState = newState }
             in
             case maybeMsg of
                 Nothing ->
-                    newModel ! []
+                    ( newModel, Cmd.none )
 
                 Just updateMsg ->
                     update updateMsg newModel
@@ -959,8 +967,8 @@ removeSelection model =
 
 
 getMenuItemAtId : List MenuItem -> String -> MenuItem
-getMenuItemAtId autocomMenuItems id =
-    List.filter (\menuItem -> menuItem.name == id) autocomMenuItems
+getMenuItemAtId menuItems id =
+    List.filter (\menuItem -> menuItem.name == id) menuItems
         |> List.head
         |> Maybe.withDefault (MenuItem "")
 
@@ -990,6 +998,7 @@ viewAutocom model =
         dec =
             Decode.map
                 (\code ->
+                    -- 38 arrow up, 40 arrow down
                     if code == 38 || code == 40 then
                         Ok (MsgAutocom NoOpAutocom)
                     else if code == 27 then

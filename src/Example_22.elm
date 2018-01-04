@@ -394,6 +394,10 @@ viewInput model field inputType inputName =
                     type_ "text"
                   else
                     type_ inputType
+                , if field == Email then
+                    autofocus True
+                  else
+                    autofocus False
                 , classList
                     [ ( "focus", hasFocus model.focus field ) ]
                 , onInput <| OnInput field

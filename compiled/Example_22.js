@@ -19414,6 +19414,56 @@ var _lucamug$elm_meta_json_decoder$Main$SubmitForm = {ctor: 'SubmitForm'};
 var _lucamug$elm_meta_json_decoder$Main$NoOp = {ctor: 'NoOp'};
 var _lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage = {ctor: 'ProgrammingLanguage'};
 var _lucamug$elm_meta_json_decoder$Main$Password = {ctor: 'Password'};
+var _lucamug$elm_meta_json_decoder$Main$Email = {ctor: 'Email'};
+var _lucamug$elm_meta_json_decoder$Main$validate = _rtfeldman$elm_validate$Validate$all(
+	{
+		ctor: '::',
+		_0: function (_p12) {
+			return A2(
+				_rtfeldman$elm_validate$Validate$ifBlank,
+				{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Email, _1: 'Email can\'t be blank.'},
+				function (_) {
+					return _.fieldEmail;
+				}(_p12));
+		},
+		_1: {
+			ctor: '::',
+			_0: function (_p13) {
+				return A2(
+					_rtfeldman$elm_validate$Validate$ifBlank,
+					{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Password, _1: 'Password can\'t be blank.'},
+					function (_) {
+						return _.fieldPassword;
+					}(_p13));
+			},
+			_1: {
+				ctor: '::',
+				_0: function (_p14) {
+					return A2(
+						_rtfeldman$elm_validate$Validate$ifBlank,
+						{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage, _1: 'Programming Language can\'t be blank.'},
+						function (_) {
+							return _.fieldProgrammingLanguage;
+						}(_p14));
+				},
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _lucamug$elm_meta_json_decoder$Main$setErrors = function (model) {
+	var _p15 = _lucamug$elm_meta_json_decoder$Main$validate(model);
+	if (_p15.ctor === '[]') {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				errors: {ctor: '[]'}
+			});
+	} else {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{errors: _p15});
+	}
+};
 var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 	function (model, field, inputType, inputName) {
 		return A2(
@@ -19437,33 +19487,37 @@ var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 								_0: (_elm_lang$core$Native_Utils.eq(field, _lucamug$elm_meta_json_decoder$Main$Password) && model.showPassword) ? _elm_lang$html$Html_Attributes$type_('text') : _elm_lang$html$Html_Attributes$type_(inputType),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$classList(
-										{
-											ctor: '::',
-											_0: {
-												ctor: '_Tuple2',
-												_0: 'focus',
-												_1: A2(_lucamug$elm_meta_json_decoder$Main$hasFocus, model.focus, field)
-											},
-											_1: {ctor: '[]'}
-										}),
+									_0: _elm_lang$core$Native_Utils.eq(field, _lucamug$elm_meta_json_decoder$Main$Email) ? _elm_lang$html$Html_Attributes$autofocus(true) : _elm_lang$html$Html_Attributes$autofocus(false),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onInput(
-											_lucamug$elm_meta_json_decoder$Main$OnInput(field)),
+										_0: _elm_lang$html$Html_Attributes$classList(
+											{
+												ctor: '::',
+												_0: {
+													ctor: '_Tuple2',
+													_0: 'focus',
+													_1: A2(_lucamug$elm_meta_json_decoder$Main$hasFocus, model.focus, field)
+												},
+												_1: {ctor: '[]'}
+											}),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onFocus(
-												_lucamug$elm_meta_json_decoder$Main$OnFocus(field)),
+											_0: _elm_lang$html$Html_Events$onInput(
+												_lucamug$elm_meta_json_decoder$Main$OnInput(field)),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onBlur(
-													_lucamug$elm_meta_json_decoder$Main$OnBlur(field)),
+												_0: _elm_lang$html$Html_Events$onFocus(
+													_lucamug$elm_meta_json_decoder$Main$OnFocus(field)),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$value(
-														A2(_lucamug$elm_meta_json_decoder$Main$content, model, field)),
-													_1: {ctor: '[]'}
+													_0: _elm_lang$html$Html_Events$onBlur(
+														_lucamug$elm_meta_json_decoder$Main$OnBlur(field)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$value(
+															A2(_lucamug$elm_meta_json_decoder$Main$content, model, field)),
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										}
@@ -19527,56 +19581,6 @@ var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 				}
 			});
 	});
-var _lucamug$elm_meta_json_decoder$Main$Email = {ctor: 'Email'};
-var _lucamug$elm_meta_json_decoder$Main$validate = _rtfeldman$elm_validate$Validate$all(
-	{
-		ctor: '::',
-		_0: function (_p12) {
-			return A2(
-				_rtfeldman$elm_validate$Validate$ifBlank,
-				{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Email, _1: 'Email can\'t be blank.'},
-				function (_) {
-					return _.fieldEmail;
-				}(_p12));
-		},
-		_1: {
-			ctor: '::',
-			_0: function (_p13) {
-				return A2(
-					_rtfeldman$elm_validate$Validate$ifBlank,
-					{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$Password, _1: 'Password can\'t be blank.'},
-					function (_) {
-						return _.fieldPassword;
-					}(_p13));
-			},
-			_1: {
-				ctor: '::',
-				_0: function (_p14) {
-					return A2(
-						_rtfeldman$elm_validate$Validate$ifBlank,
-						{ctor: '_Tuple2', _0: _lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage, _1: 'Programming Language can\'t be blank.'},
-						function (_) {
-							return _.fieldProgrammingLanguage;
-						}(_p14));
-				},
-				_1: {ctor: '[]'}
-			}
-		}
-	});
-var _lucamug$elm_meta_json_decoder$Main$setErrors = function (model) {
-	var _p15 = _lucamug$elm_meta_json_decoder$Main$validate(model);
-	if (_p15.ctor === '[]') {
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{
-				errors: {ctor: '[]'}
-			});
-	} else {
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{errors: _p15});
-	}
-};
 var _lucamug$elm_meta_json_decoder$Main$NoOpAutocom = {ctor: 'NoOpAutocom'};
 var _lucamug$elm_meta_json_decoder$Main$Reset = {ctor: 'Reset'};
 var _lucamug$elm_meta_json_decoder$Main$OnBlurAutocom = {ctor: 'OnBlurAutocom'};
