@@ -18015,6 +18015,33 @@ var _lucamug$elm_meta_json_decoder$Main$viewSvgFor = function (fruit) {
 			_1: {ctor: '[]'}
 		});
 };
+var _lucamug$elm_meta_json_decoder$Main$hasFocus = F2(
+	function (modelFocus, formField) {
+		var _p6 = modelFocus;
+		if (_p6.ctor === 'Just') {
+			return _elm_lang$core$Native_Utils.eq(_p6._0, formField);
+		} else {
+			return false;
+		}
+	});
+var _lucamug$elm_meta_json_decoder$Main$content = F2(
+	function (model, formField) {
+		var _p7 = formField;
+		switch (_p7.ctor) {
+			case 'Email':
+				return model.email;
+			case 'Password':
+				return model.password;
+			default:
+				return model.programmingLanguage;
+		}
+	});
+var _lucamug$elm_meta_json_decoder$Main$upperPosition = F2(
+	function (model, formField) {
+		return A2(_lucamug$elm_meta_json_decoder$Main$hasFocus, model.focus, formField) || (!_elm_lang$core$Native_Utils.eq(
+			A2(_lucamug$elm_meta_json_decoder$Main$content, model, formField),
+			''));
+	});
 var _lucamug$elm_meta_json_decoder$Main$formatDate = function (d) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
@@ -18108,15 +18135,20 @@ var _lucamug$elm_meta_json_decoder$Main$postRequest = function (model) {
 };
 var _lucamug$elm_meta_json_decoder$Main$setField = F3(
 	function (field, value, model) {
-		var _p6 = field;
-		if (_p6.ctor === 'Email') {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{email: value});
-		} else {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{password: value});
+		var _p8 = field;
+		switch (_p8.ctor) {
+			case 'Email':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{email: value});
+			case 'Password':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{password: value});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{programmingLanguage: value});
 		}
 	});
 var _lucamug$elm_meta_json_decoder$Main$toggle = F2(
@@ -18125,9 +18157,9 @@ var _lucamug$elm_meta_json_decoder$Main$toggle = F2(
 			_elm_lang$core$Dict$update,
 			key,
 			function (oldValue) {
-				var _p7 = oldValue;
-				if (_p7.ctor === 'Just') {
-					return _elm_lang$core$Maybe$Just(!_p7._0);
+				var _p9 = oldValue;
+				if (_p9.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(!_p9._0);
 				} else {
 					return _elm_lang$core$Maybe$Nothing;
 				}
@@ -19258,9 +19290,9 @@ var _lucamug$elm_meta_json_decoder$Main$ToDatePicker = function (a) {
 	return {ctor: 'ToDatePicker', _0: a};
 };
 var _lucamug$elm_meta_json_decoder$Main$init = function () {
-	var _p8 = _elm_community$elm_datepicker$DatePicker$init;
-	var datePicker = _p8._0;
-	var datePickerFx = _p8._1;
+	var _p10 = _elm_community$elm_datepicker$DatePicker$init;
+	var datePicker = _p10._0;
+	var datePickerFx = _p10._1;
 	var isDisabled = function (date) {
 		return A3(
 			_elm_lang$core$Basics$flip,
@@ -19356,25 +19388,10 @@ var _lucamug$elm_meta_json_decoder$Main$SetField = F2(
 	});
 var _lucamug$elm_meta_json_decoder$Main$SubmitForm = {ctor: 'SubmitForm'};
 var _lucamug$elm_meta_json_decoder$Main$NoOp = {ctor: 'NoOp'};
+var _lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage = {ctor: 'ProgrammingLanguage'};
 var _lucamug$elm_meta_json_decoder$Main$Password = {ctor: 'Password'};
 var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 	function (model, formField, inputType, inputName) {
-		var content = function () {
-			var _p9 = formField;
-			if (_p9.ctor === 'Email') {
-				return model.email;
-			} else {
-				return model.password;
-			}
-		}();
-		var hasFocus = function () {
-			var _p10 = model.focus;
-			if (_p10.ctor === 'Just') {
-				return _elm_lang$core$Native_Utils.eq(_p10._0, formField);
-			} else {
-				return false;
-			}
-		}();
 		return A2(
 			_elm_lang$html$Html$label,
 			{ctor: '[]'},
@@ -19399,7 +19416,11 @@ var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 									_0: _elm_lang$html$Html_Attributes$classList(
 										{
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'focus', _1: hasFocus},
+											_0: {
+												ctor: '_Tuple2',
+												_0: 'focus',
+												_1: A2(_lucamug$elm_meta_json_decoder$Main$hasFocus, model.focus, formField)
+											},
 											_1: {ctor: '[]'}
 										}),
 									_1: {
@@ -19416,7 +19437,8 @@ var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 													_lucamug$elm_meta_json_decoder$Main$OnBlur(formField)),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$value(content),
+													_0: _elm_lang$html$Html_Attributes$value(
+														A2(_lucamug$elm_meta_json_decoder$Main$content, model, formField)),
 													_1: {ctor: '[]'}
 												}
 											}
@@ -19440,7 +19462,7 @@ var _lucamug$elm_meta_json_decoder$Main$viewInput = F4(
 												_0: {
 													ctor: '_Tuple2',
 													_0: 'upperPosition',
-													_1: hasFocus || (!_elm_lang$core$Native_Utils.eq(content, ''))
+													_1: A2(_lucamug$elm_meta_json_decoder$Main$upperPosition, model, formField)
 												},
 												_1: {ctor: '[]'}
 											}
@@ -19522,6 +19544,7 @@ var _lucamug$elm_meta_json_decoder$Main$setErrors = function (model) {
 };
 var _lucamug$elm_meta_json_decoder$Main$NoOpAutocom = {ctor: 'NoOpAutocom'};
 var _lucamug$elm_meta_json_decoder$Main$Reset = {ctor: 'Reset'};
+var _lucamug$elm_meta_json_decoder$Main$OnBlurAutocom = {ctor: 'OnBlurAutocom'};
 var _lucamug$elm_meta_json_decoder$Main$OnFocusAutocom = {ctor: 'OnFocusAutocom'};
 var _lucamug$elm_meta_json_decoder$Main$HandleEscape = {ctor: 'HandleEscape'};
 var _lucamug$elm_meta_json_decoder$Main$PreviewMenuItem = function (a) {
@@ -19700,11 +19723,6 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 								A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, _p21._0))
 						}),
 					{ctor: '[]'});
-			case 'OnFocusAutocom':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
-					{ctor: '[]'});
 			case 'HandleEscape':
 				var validOptions = !_elm_lang$core$List$isEmpty(
 					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.programmingLanguage, model.autocomMenuItems));
@@ -19732,6 +19750,16 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 							autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing
 						}),
 					{ctor: '[]'});
+			case 'OnFocusAutocom':
+				return A2(
+					_lucamug$elm_meta_json_decoder$Main$update,
+					_lucamug$elm_meta_json_decoder$Main$OnFocus(_lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage),
+					model);
+			case 'OnBlurAutocom':
+				return A2(
+					_lucamug$elm_meta_json_decoder$Main$update,
+					_lucamug$elm_meta_json_decoder$Main$OnBlur(_lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage),
+					model);
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -19974,43 +20002,61 @@ var _lucamug$elm_meta_json_decoder$Main$viewAutocom = function (model) {
 										_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$OnFocusAutocom)),
 									_1: {
 										ctor: '::',
-										_0: A3(_elm_lang$html$Html_Events$onWithOptions, 'keydown', options, dec),
+										_0: _elm_lang$html$Html_Events$onBlur(
+											_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$OnBlurAutocom)),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$value(programmingLanguage),
+											_0: A3(_elm_lang$html$Html_Events$onWithOptions, 'keydown', options, dec),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$id('president-input'),
+												_0: _elm_lang$html$Html_Attributes$value(programmingLanguage),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('autocomplete-input'),
+													_0: _elm_lang$html$Html_Attributes$id('president-input'),
 													_1: {
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$autocomplete(false),
+														_0: _elm_lang$html$Html_Attributes$classList(
+															{
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 'autocomplete-input', _1: true},
+																_1: {
+																	ctor: '::',
+																	_0: {
+																		ctor: '_Tuple2',
+																		_0: 'focus',
+																		_1: A2(_lucamug$elm_meta_json_decoder$Main$hasFocus, model.focus, _lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage)
+																	},
+																	_1: {ctor: '[]'}
+																}
+															}),
 														_1: {
 															ctor: '::',
-															_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-owns', 'list-of-presidents'),
+															_0: _elm_lang$html$Html_Attributes$autocomplete(false),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html_Attributes$attribute,
-																	'aria-expanded',
-																	_elm_lang$core$String$toLower(
-																		_elm_lang$core$Basics$toString(model.autocomShowMenu))),
+																_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-owns', 'list-of-presidents'),
 																_1: {
 																	ctor: '::',
 																	_0: A2(
 																		_elm_lang$html$Html_Attributes$attribute,
-																		'aria-haspopup',
+																		'aria-expanded',
 																		_elm_lang$core$String$toLower(
 																			_elm_lang$core$Basics$toString(model.autocomShowMenu))),
 																	_1: {
 																		ctor: '::',
-																		_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'combobox'),
+																		_0: A2(
+																			_elm_lang$html$Html_Attributes$attribute,
+																			'aria-haspopup',
+																			_elm_lang$core$String$toLower(
+																				_elm_lang$core$Basics$toString(model.autocomShowMenu))),
 																		_1: {
 																			ctor: '::',
-																			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-autocomplete', 'list'),
-																			_1: {ctor: '[]'}
+																			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'combobox'),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-autocomplete', 'list'),
+																				_1: {ctor: '[]'}
+																			}
 																		}
 																	}
 																}
@@ -20208,7 +20254,11 @@ var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
 																			_0: {ctor: '_Tuple2', _0: 'placeholder', _1: true},
 																			_1: {
 																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 'upperPosition', _1: true},
+																				_0: {
+																					ctor: '_Tuple2',
+																					_0: 'upperPosition',
+																					_1: A2(_lucamug$elm_meta_json_decoder$Main$upperPosition, model, _lucamug$elm_meta_json_decoder$Main$ProgrammingLanguage)
+																				},
 																				_1: {ctor: '[]'}
 																			}
 																		}),
@@ -20381,7 +20431,7 @@ var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _lucamug$elm_meta_json_decoder$Main$main !== 'undefined') {
-    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"DatePicker.Msg":{"args":[],"tags":{"MouseUp":[],"Focus":[],"Text":["String"],"MouseDown":[],"Blur":[],"ChangeFocus":["Date.Date"],"CurrentDate":["Date.Date"],"Pick":["Maybe.Maybe Date.Date"],"SubmitText":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Autocomplete.Msg":{"args":[],"tags":{"Msg":["Autocomplete.Autocomplete.Msg"]}},"Autocomplete.Autocomplete.Msg":{"args":[],"tags":{"MouseLeave":["String"],"WentTooHigh":[],"WentTooLow":[],"MouseClick":["String"],"KeyDown":["Char.KeyCode"],"NoOp":[],"MouseEnter":["String"]}},"Main.Msg":{"args":[],"tags":{"OnFocus":["Main.FormField"],"SetField":["Main.FormField","String"],"Response":["Result.Result Http.Error String"],"ToggleFruit":["Main.Fruit"],"MsgAutocom":["Main.MsgAutocom"],"SubmitForm":[],"ToggleShowPasssword":[],"OnBlur":["Main.FormField"],"NoOp":[],"ToDatePicker":["DatePicker.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Main.MsgAutocom":{"args":[],"tags":{"PreviewMenuItem":["String"],"SelectMenuItemMouse":["String"],"NoOpAutocom":[],"HandleEscape":[],"Wrap":["Bool"],"SetAutoState":["Autocomplete.Msg"],"Reset":[],"SetQuery":["String"],"OnFocusAutocom":[],"SelectMenuItemKeyboard":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.FormField":{"args":[],"tags":{"Email":[],"Password":[]}}},"aliases":{"Char.KeyCode":{"args":[],"type":"Int"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.Fruit":{"args":[],"type":"String"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"DatePicker.Msg":{"args":[],"tags":{"MouseUp":[],"Focus":[],"Text":["String"],"MouseDown":[],"Blur":[],"ChangeFocus":["Date.Date"],"CurrentDate":["Date.Date"],"Pick":["Maybe.Maybe Date.Date"],"SubmitText":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Date.Date":{"args":[],"tags":{"Date":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Autocomplete.Msg":{"args":[],"tags":{"Msg":["Autocomplete.Autocomplete.Msg"]}},"Autocomplete.Autocomplete.Msg":{"args":[],"tags":{"MouseLeave":["String"],"WentTooHigh":[],"WentTooLow":[],"MouseClick":["String"],"KeyDown":["Char.KeyCode"],"NoOp":[],"MouseEnter":["String"]}},"Main.Msg":{"args":[],"tags":{"OnFocus":["Main.FormField"],"SetField":["Main.FormField","String"],"Response":["Result.Result Http.Error String"],"ToggleFruit":["Main.Fruit"],"MsgAutocom":["Main.MsgAutocom"],"SubmitForm":[],"ToggleShowPasssword":[],"OnBlur":["Main.FormField"],"NoOp":[],"ToDatePicker":["DatePicker.Msg"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Main.MsgAutocom":{"args":[],"tags":{"PreviewMenuItem":["String"],"SelectMenuItemMouse":["String"],"NoOpAutocom":[],"HandleEscape":[],"OnBlurAutocom":[],"Wrap":["Bool"],"SetAutoState":["Autocomplete.Msg"],"Reset":[],"SetQuery":["String"],"OnFocusAutocom":[],"SelectMenuItemKeyboard":["String"]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.FormField":{"args":[],"tags":{"Email":[],"Password":[],"ProgrammingLanguage":[]}}},"aliases":{"Char.KeyCode":{"args":[],"type":"Int"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.Fruit":{"args":[],"type":"String"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

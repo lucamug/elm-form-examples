@@ -127,6 +127,7 @@ type Msg
 type FormField
     = Email
     | Password
+    | ProgrammingLanguage
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -250,6 +251,9 @@ setField field value model =
         Password ->
             { model | password = value }
 
+        ProgrammingLanguage ->
+            { model | programmingLanguage = value }
+
 
 filteredFruits : Dict.Dict comparable Bool -> List comparable
 filteredFruits fruits =
@@ -328,25 +332,29 @@ view model =
     Utils.viewUtils model exampleVersion viewForm
 
 
+content :
+    Model
+    -> FormField
+    -> String
+content model formField =
+    case formField of
+        Email ->
+            model.email
+
+        Password ->
+            model.password
+
+        ProgrammingLanguage ->
+            model.programmingLanguage
+
+
+upperPosition : Model -> FormField -> Bool
+upperPosition model formField =
+    hasFocus model.focus formField || content model formField /= ""
+
+
 viewInput : Model -> FormField -> String -> String -> Html Msg
 viewInput model formField inputType inputName =
-    let
-        hasFocus =
-            case model.focus of
-                Just focusedField ->
-                    focusedField == formField
-
-                Nothing ->
-                    False
-
-        content =
-            case formField of
-                Email ->
-                    model.email
-
-                Password ->
-                    model.password
-    in
     label
         []
         [ div [ class "inputFieldContainer" ]
@@ -355,17 +363,18 @@ viewInput model formField inputType inputName =
                     type_ "text"
                   else
                     type_ inputType
-                , classList [ ( "focus", hasFocus ) ]
+                , classList
+                    [ ( "focus", hasFocus model.focus formField ) ]
                 , onInput <| SetField formField
                 , onFocus <| OnFocus formField
                 , onBlur <| OnBlur formField
-                , value content
+                , value <| content model formField
                 ]
                 []
             , div
                 [ classList
                     [ ( "placeholder", True )
-                    , ( "upperPosition", hasFocus || content /= "" )
+                    , ( "upperPosition", upperPosition model formField )
                     ]
                 ]
                 [ text inputName ]
@@ -381,6 +390,16 @@ viewInput model formField inputType inputName =
             ]
         , viewFormErrors model formField model.errors
         ]
+
+
+hasFocus : Maybe FormField -> FormField -> Bool
+hasFocus modelFocus formField =
+    case modelFocus of
+        Just focusedField ->
+            focusedField == formField
+
+        Nothing ->
+            False
 
 
 viewForm : Model -> Html Msg
@@ -441,7 +460,7 @@ viewForm model =
                     , div
                         [ classList
                             [ ( "placeholder", True )
-                            , ( "upperPosition", True )
+                            , ( "upperPosition", upperPosition model ProgrammingLanguage )
                             ]
                         ]
                         [ text "Programming Lanugage" ]
@@ -756,6 +775,7 @@ type MsgAutocom
     | PreviewMenuItem String
     | HandleEscape
     | OnFocusAutocom
+    | OnBlurAutocom
     | Reset
     | NoOpAutocom
 
@@ -823,9 +843,6 @@ updateAutocom msg model =
         PreviewMenuItem id ->
             { model | autocomSelectedMenuItem = Just <| getMenuItemAtId model.autocomMenuItems id } ! []
 
-        OnFocusAutocom ->
-            model ! []
-
         HandleEscape ->
             let
                 validOptions =
@@ -856,6 +873,12 @@ updateAutocom msg model =
 
         Reset ->
             { model | autocomState = Autocomplete.reset updateConfig model.autocomState, autocomSelectedMenuItem = Nothing } ! []
+
+        OnFocusAutocom ->
+            update (OnFocus ProgrammingLanguage) model
+
+        OnBlurAutocom ->
+            update (OnBlur ProgrammingLanguage) model
 
         NoOpAutocom ->
             model ! []
@@ -956,10 +979,14 @@ viewAutocom model =
                     [ type_ "text"
                     , onInput (MsgAutocom << SetQuery)
                     , onFocus (MsgAutocom OnFocusAutocom)
+                    , onBlur (MsgAutocom OnBlurAutocom)
                     , onWithOptions "keydown" options dec
                     , value programmingLanguage
                     , id "president-input"
-                    , class "autocomplete-input"
+                    , classList
+                        [ ( "autocomplete-input", True )
+                        , ( "focus", hasFocus model.focus ProgrammingLanguage )
+                        ]
                     , autocomplete False
                     , attribute "aria-owns" "list-of-presidents"
                     , attribute "aria-expanded" <| String.toLower <| toString model.autocomShowMenu

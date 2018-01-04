@@ -56,6 +56,8 @@ https://lucamug.github.io/elm-form-examples/Example_16.html
 https://lucamug.github.io/elm-form-examples/Example_17.html
 https://lucamug.github.io/elm-form-examples/Example_18.html
 https://lucamug.github.io/elm-form-examples/Example_19.html
+https://lucamug.github.io/elm-form-examples/Example_20.html
+https://lucamug.github.io/elm-form-examples/Example_21.html
 
 # Code
 
@@ -86,6 +88,8 @@ https://github.com/lucamug/elm-form-examples/blob/master/src/Example_16.elm
 https://github.com/lucamug/elm-form-examples/blob/master/src/Example_17.elm
 https://github.com/lucamug/elm-form-examples/blob/master/src/Example_18.elm
 https://github.com/lucamug/elm-form-examples/blob/master/src/Example_19.elm
+https://github.com/lucamug/elm-form-examples/blob/master/src/Example_20.elm
+https://github.com/lucamug/elm-form-examples/blob/master/src/Example_21.elm
 
 # Others
 
@@ -102,3 +106,5 @@ https://ellie-app.com/qzppX44YGa1/0
 ## Richard
 
 https://www.reddit.com/r/elm/comments/5jd2xn/how_to_structure_elm_with_multiple_models/dbkpgbd/
+http://leaverou.github.io/awesomplete/
+http://gregziegan.com/elm-autocomplete/
