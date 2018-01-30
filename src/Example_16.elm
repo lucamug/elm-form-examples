@@ -168,7 +168,7 @@ setField field value model =
             { model | password = value }
 
 
-filteredFruits : Dict.Dict comparable Bool -> List comparable
+filteredFruits : Dict.Dict Fruit Bool -> List Fruit
 filteredFruits fruits =
     Dict.keys
         (Dict.filter (\key value -> value) fruits)

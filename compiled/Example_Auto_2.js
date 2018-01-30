@@ -13537,1093 +13537,258 @@ var _thebritican$elm_autocomplete$Autocomplete$sectionConfig = function (section
 		_thebritican$elm_autocomplete$Autocomplete_Autocomplete$sectionConfig(section));
 };
 
-var _lucamug$elm_meta_json_decoder$Main$viewConfig = function () {
-	var customizedLi = F3(
-		function (keySelected, mouseSelected, menuItem) {
-			return {
-				attributes: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$classList(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'autocomplete-item', _1: true},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'key-selected', _1: keySelected || mouseSelected},
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$id(menuItem.name),
-						_1: {ctor: '[]'}
-					}
-				},
-				children: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(menuItem.name),
-					_1: {ctor: '[]'}
-				}
-			};
-		});
-	return _thebritican$elm_autocomplete$Autocomplete$viewConfig(
-		{
-			toId: function (_) {
-				return _.name;
-			},
-			ul: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('autocomplete-list'),
-				_1: {ctor: '[]'}
-			},
-			li: customizedLi
-		});
-}();
-var _lucamug$elm_meta_json_decoder$Main$acceptableItems = F2(
-	function (autocomQuery, autocomMenuItems) {
-		var lowerQuery = _elm_lang$core$String$toLower(autocomQuery);
-		return A2(
-			_elm_lang$core$List$filter,
-			function (_p0) {
-				return A2(
-					_elm_lang$core$String$contains,
-					lowerQuery,
-					_elm_lang$core$String$toLower(
-						function (_) {
-							return _.name;
-						}(_p0)));
-			},
-			autocomMenuItems);
-	});
-var _lucamug$elm_meta_json_decoder$Main$resetMenu = function (model) {
-	return _elm_lang$core$Native_Utils.update(
-		model,
-		{autocomState: _thebritican$elm_autocomplete$Autocomplete$empty, autocomShowMenu: false});
-};
-var _lucamug$elm_meta_json_decoder$Main$removeSelection = function (model) {
-	return _elm_lang$core$Native_Utils.update(
-		model,
-		{autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing});
-};
-var _lucamug$elm_meta_json_decoder$Main$resetInput = function (model) {
-	return _lucamug$elm_meta_json_decoder$Main$resetMenu(
-		_lucamug$elm_meta_json_decoder$Main$removeSelection(
-			_elm_lang$core$Native_Utils.update(
-				model,
-				{autocomQuery: ''})));
-};
-var _lucamug$elm_meta_json_decoder$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {autocomMenuItems: a, autocomState: b, autocomHowManyToShow: c, autocomQuery: d, autocomSelectedMenuItem: e, autocomShowMenu: f};
-	});
-var _lucamug$elm_meta_json_decoder$Main$MenuItem = function (a) {
-	return {name: a};
-};
-var _lucamug$elm_meta_json_decoder$Main$getMenuItemAtId = F2(
-	function (autocomMenuItems, id) {
-		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			_lucamug$elm_meta_json_decoder$Main$MenuItem(''),
-			_elm_lang$core$List$head(
-				A2(
-					_elm_lang$core$List$filter,
-					function (menuItem) {
-						return _elm_lang$core$Native_Utils.eq(menuItem.name, id);
-					},
-					autocomMenuItems)));
-	});
-var _lucamug$elm_meta_json_decoder$Main$setQuery = F2(
-	function (model, id) {
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{
-				autocomQuery: function (_) {
-					return _.name;
-				}(
-					A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, id)),
-				autocomSelectedMenuItem: _elm_lang$core$Maybe$Just(
-					A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, id))
-			});
-	});
-var _lucamug$elm_meta_json_decoder$Main$menuItems = {
+var _lucamug$elm_meta_json_decoder$Main$menuItems2 = {
 	ctor: '::',
-	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('4th Dimension/4D'),
+	_0: 'ABAP',
 	_1: {
 		ctor: '::',
-		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ABAP'),
+		_0: 'ABC',
 		_1: {
 			ctor: '::',
-			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ABC'),
+			_0: 'ActionScript',
 			_1: {
 				ctor: '::',
-				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ActionScript'),
+				_0: 'Ada',
 				_1: {
 					ctor: '::',
-					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ada'),
+					_0: 'Agilent VEE',
 					_1: {
 						ctor: '::',
-						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Agilent VEE'),
+						_0: 'Algol',
 						_1: {
 							ctor: '::',
-							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Algol'),
+							_0: 'Alice',
 							_1: {
 								ctor: '::',
-								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Alice'),
+								_0: 'Angelscript',
 								_1: {
 									ctor: '::',
-									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Angelscript'),
+									_0: 'Apex',
 									_1: {
 										ctor: '::',
-										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Apex'),
+										_0: 'APL',
 										_1: {
 											ctor: '::',
-											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('APL'),
+											_0: 'AppleScript',
 											_1: {
 												ctor: '::',
-												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AppleScript'),
+												_0: 'Arc',
 												_1: {
 													ctor: '::',
-													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Arc'),
+													_0: 'Arduino',
 													_1: {
 														ctor: '::',
-														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Arduino'),
+														_0: 'ASP',
 														_1: {
 															ctor: '::',
-															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ASP'),
+															_0: 'AspectJ',
 															_1: {
 																ctor: '::',
-																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AspectJ'),
+																_0: 'Assembly',
 																_1: {
 																	ctor: '::',
-																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Assembly'),
+																	_0: 'ATLAS',
 																	_1: {
 																		ctor: '::',
-																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ATLAS'),
+																		_0: 'Augeas',
 																		_1: {
 																			ctor: '::',
-																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Augeas'),
+																			_0: 'AutoHotkey',
 																			_1: {
 																				ctor: '::',
-																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AutoHotkey'),
+																				_0: 'AutoIt',
 																				_1: {
 																					ctor: '::',
-																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AutoIt'),
+																					_0: 'AutoLISP',
 																					_1: {
 																						ctor: '::',
-																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('AutoLISP'),
+																						_0: 'Automator',
 																						_1: {
 																							ctor: '::',
-																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Automator'),
+																							_0: 'Avenue',
 																							_1: {
 																								ctor: '::',
-																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Avenue'),
+																								_0: 'Awk',
 																								_1: {
 																									ctor: '::',
-																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Awk'),
+																									_0: 'Elm',
+																									_1: {ctor: '[]'}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _lucamug$elm_meta_json_decoder$Main$menuItems1 = {
+	ctor: '::',
+	_0: 'Alabama',
+	_1: {
+		ctor: '::',
+		_0: 'Alaska',
+		_1: {
+			ctor: '::',
+			_0: 'Arizona',
+			_1: {
+				ctor: '::',
+				_0: 'Arkansas',
+				_1: {
+					ctor: '::',
+					_0: 'California',
+					_1: {
+						ctor: '::',
+						_0: 'Colorado',
+						_1: {
+							ctor: '::',
+							_0: 'Connecticut',
+							_1: {
+								ctor: '::',
+								_0: 'Delaware',
+								_1: {
+									ctor: '::',
+									_0: 'Florida',
+									_1: {
+										ctor: '::',
+										_0: 'Georgia',
+										_1: {
+											ctor: '::',
+											_0: 'Hawaii',
+											_1: {
+												ctor: '::',
+												_0: 'Idaho',
+												_1: {
+													ctor: '::',
+													_0: 'Illinois',
+													_1: {
+														ctor: '::',
+														_0: 'Indiana',
+														_1: {
+															ctor: '::',
+															_0: 'Iowa',
+															_1: {
+																ctor: '::',
+																_0: 'Kansas',
+																_1: {
+																	ctor: '::',
+																	_0: 'Kentucky',
+																	_1: {
+																		ctor: '::',
+																		_0: 'Louisiana',
+																		_1: {
+																			ctor: '::',
+																			_0: 'Maine',
+																			_1: {
+																				ctor: '::',
+																				_0: 'Maryland',
+																				_1: {
+																					ctor: '::',
+																					_0: 'Massachusetts',
+																					_1: {
+																						ctor: '::',
+																						_0: 'Michigan',
+																						_1: {
+																							ctor: '::',
+																							_0: 'Minnesota',
+																							_1: {
+																								ctor: '::',
+																								_0: 'Mississippi',
+																								_1: {
+																									ctor: '::',
+																									_0: 'Missouri',
 																									_1: {
 																										ctor: '::',
-																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Bash'),
+																										_0: 'Montana',
 																										_1: {
 																											ctor: '::',
-																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('(Visual) Basic'),
+																											_0: 'Nebraska',
 																											_1: {
 																												ctor: '::',
-																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('bc'),
+																												_0: 'Nevada',
 																												_1: {
 																													ctor: '::',
-																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('BCPL'),
+																													_0: 'New Hampshire',
 																													_1: {
 																														ctor: '::',
-																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('BETA'),
+																														_0: 'New Jersey',
 																														_1: {
 																															ctor: '::',
-																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('BlitzMax'),
+																															_0: 'New Mexico',
 																															_1: {
 																																ctor: '::',
-																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Boo'),
+																																_0: 'New York',
 																																_1: {
 																																	ctor: '::',
-																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Bourne Shell'),
+																																	_0: 'North Carolina',
 																																	_1: {
 																																		ctor: '::',
-																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Bro'),
+																																		_0: 'North Dakota',
 																																		_1: {
 																																			ctor: '::',
-																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C'),
+																																			_0: 'Ohio',
 																																			_1: {
 																																				ctor: '::',
-																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C Shell'),
+																																				_0: 'Oklahoma',
 																																				_1: {
 																																					ctor: '::',
-																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C#'),
+																																					_0: 'Oregon',
 																																					_1: {
 																																						ctor: '::',
-																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C++'),
+																																						_0: 'Pennsylvania',
 																																						_1: {
 																																							ctor: '::',
-																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C++/CLI'),
+																																							_0: 'Rhode Island',
 																																							_1: {
 																																								ctor: '::',
-																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('C-Omega'),
+																																								_0: 'South Carolina',
 																																								_1: {
 																																									ctor: '::',
-																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Caml'),
+																																									_0: 'South Dakota',
 																																									_1: {
 																																										ctor: '::',
-																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ceylon'),
+																																										_0: 'Tennessee',
 																																										_1: {
 																																											ctor: '::',
-																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CFML'),
+																																											_0: 'Texas',
 																																											_1: {
 																																												ctor: '::',
-																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('cg'),
+																																												_0: 'Utah',
 																																												_1: {
 																																													ctor: '::',
-																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ch'),
+																																													_0: 'Vermont',
 																																													_1: {
 																																														ctor: '::',
-																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CHILL'),
+																																														_0: 'Virginia',
 																																														_1: {
 																																															ctor: '::',
-																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CIL'),
+																																															_0: 'Washington',
 																																															_1: {
 																																																ctor: '::',
-																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CL (OS/400)'),
+																																																_0: 'West Virginia',
 																																																_1: {
 																																																	ctor: '::',
-																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clarion'),
+																																																	_0: 'Wisconsin',
 																																																	_1: {
 																																																		ctor: '::',
-																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clean'),
-																																																		_1: {
-																																																			ctor: '::',
-																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clipper'),
-																																																			_1: {
-																																																				ctor: '::',
-																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Clojure'),
-																																																				_1: {
-																																																					ctor: '::',
-																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CLU'),
-																																																					_1: {
-																																																						ctor: '::',
-																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('COBOL'),
-																																																						_1: {
-																																																							ctor: '::',
-																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Cobra'),
-																																																							_1: {
-																																																								ctor: '::',
-																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('CoffeeScript'),
-																																																								_1: {
-																																																									ctor: '::',
-																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ColdFusion'),
-																																																									_1: {
-																																																										ctor: '::',
-																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('COMAL'),
-																																																										_1: {
-																																																											ctor: '::',
-																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Common Lisp'),
-																																																											_1: {
-																																																												ctor: '::',
-																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Coq'),
-																																																												_1: {
-																																																													ctor: '::',
-																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('cT'),
-																																																													_1: {
-																																																														ctor: '::',
-																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Curl'),
-																																																														_1: {
-																																																															ctor: '::',
-																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('D'),
-																																																															_1: {
-																																																																ctor: '::',
-																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Dart'),
-																																																																_1: {
-																																																																	ctor: '::',
-																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('DCL'),
-																																																																	_1: {
-																																																																		ctor: '::',
-																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('DCPU-16 ASM'),
-																																																																		_1: {
-																																																																			ctor: '::',
-																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Delphi/Object Pascal'),
-																																																																			_1: {
-																																																																				ctor: '::',
-																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('DiBOL'),
-																																																																				_1: {
-																																																																					ctor: '::',
-																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Dylan'),
-																																																																					_1: {
-																																																																						ctor: '::',
-																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('E'),
-																																																																						_1: {
-																																																																							ctor: '::',
-																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('eC'),
-																																																																							_1: {
-																																																																								ctor: '::',
-																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ecl'),
-																																																																								_1: {
-																																																																									ctor: '::',
-																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ECMAScript'),
-																																																																									_1: {
-																																																																										ctor: '::',
-																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('EGL'),
-																																																																										_1: {
-																																																																											ctor: '::',
-																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Eiffel'),
-																																																																											_1: {
-																																																																												ctor: '::',
-																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Elixir'),
-																																																																												_1: {
-																																																																													ctor: '::',
-																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Elm'),
-																																																																													_1: {
-																																																																														ctor: '::',
-																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Emacs Lisp'),
-																																																																														_1: {
-																																																																															ctor: '::',
-																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Erlang'),
-																																																																															_1: {
-																																																																																ctor: '::',
-																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Etoys'),
-																																																																																_1: {
-																																																																																	ctor: '::',
-																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Euphoria'),
-																																																																																	_1: {
-																																																																																		ctor: '::',
-																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('EXEC'),
-																																																																																		_1: {
-																																																																																			ctor: '::',
-																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('F#'),
-																																																																																			_1: {
-																																																																																				ctor: '::',
-																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Factor'),
-																																																																																				_1: {
-																																																																																					ctor: '::',
-																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Falcon'),
-																																																																																					_1: {
-																																																																																						ctor: '::',
-																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fancy'),
-																																																																																						_1: {
-																																																																																							ctor: '::',
-																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fantom'),
-																																																																																							_1: {
-																																																																																								ctor: '::',
-																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Felix'),
-																																																																																								_1: {
-																																																																																									ctor: '::',
-																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Forth'),
-																																																																																									_1: {
-																																																																																										ctor: '::',
-																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fortran'),
-																																																																																										_1: {
-																																																																																											ctor: '::',
-																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Fortress'),
-																																																																																											_1: {
-																																																																																												ctor: '::',
-																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('(Visual) FoxPro'),
-																																																																																												_1: {
-																																																																																													ctor: '::',
-																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Gambas'),
-																																																																																													_1: {
-																																																																																														ctor: '::',
-																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('GNU Octave'),
-																																																																																														_1: {
-																																																																																															ctor: '::',
-																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Go'),
-																																																																																															_1: {
-																																																																																																ctor: '::',
-																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Google AppsScript'),
-																																																																																																_1: {
-																																																																																																	ctor: '::',
-																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Gosu'),
-																																																																																																	_1: {
-																																																																																																		ctor: '::',
-																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Groovy'),
-																																																																																																		_1: {
-																																																																																																			ctor: '::',
-																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Haskell'),
-																																																																																																			_1: {
-																																																																																																				ctor: '::',
-																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('haXe'),
-																																																																																																				_1: {
-																																																																																																					ctor: '::',
-																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Heron'),
-																																																																																																					_1: {
-																																																																																																						ctor: '::',
-																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('HPL'),
-																																																																																																						_1: {
-																																																																																																							ctor: '::',
-																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('HyperTalk'),
-																																																																																																							_1: {
-																																																																																																								ctor: '::',
-																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Icon'),
-																																																																																																								_1: {
-																																																																																																									ctor: '::',
-																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('IDL'),
-																																																																																																									_1: {
-																																																																																																										ctor: '::',
-																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Inform'),
-																																																																																																										_1: {
-																																																																																																											ctor: '::',
-																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Informix-4GL'),
-																																																																																																											_1: {
-																																																																																																												ctor: '::',
-																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('INTERCAL'),
-																																																																																																												_1: {
-																																																																																																													ctor: '::',
-																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Io'),
-																																																																																																													_1: {
-																																																																																																														ctor: '::',
-																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ioke'),
-																																																																																																														_1: {
-																																																																																																															ctor: '::',
-																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('J'),
-																																																																																																															_1: {
-																																																																																																																ctor: '::',
-																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('J#'),
-																																																																																																																_1: {
-																																																																																																																	ctor: '::',
-																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JADE'),
-																																																																																																																	_1: {
-																																																																																																																		ctor: '::',
-																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Java'),
-																																																																																																																		_1: {
-																																																																																																																			ctor: '::',
-																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Java FX Script'),
-																																																																																																																			_1: {
-																																																																																																																				ctor: '::',
-																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JavaScript'),
-																																																																																																																				_1: {
-																																																																																																																					ctor: '::',
-																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JScript'),
-																																																																																																																					_1: {
-																																																																																																																						ctor: '::',
-																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('JScript.NET'),
-																																																																																																																						_1: {
-																																																																																																																							ctor: '::',
-																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Julia'),
-																																																																																																																							_1: {
-																																																																																																																								ctor: '::',
-																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Korn Shell'),
-																																																																																																																								_1: {
-																																																																																																																									ctor: '::',
-																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Kotlin'),
-																																																																																																																									_1: {
-																																																																																																																										ctor: '::',
-																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('LabVIEW'),
-																																																																																																																										_1: {
-																																																																																																																											ctor: '::',
-																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ladder Logic'),
-																																																																																																																											_1: {
-																																																																																																																												ctor: '::',
-																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lasso'),
-																																																																																																																												_1: {
-																																																																																																																													ctor: '::',
-																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Limbo'),
-																																																																																																																													_1: {
-																																																																																																																														ctor: '::',
-																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lingo'),
-																																																																																																																														_1: {
-																																																																																																																															ctor: '::',
-																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lisp'),
-																																																																																																																															_1: {
-																																																																																																																																ctor: '::',
-																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Logo'),
-																																																																																																																																_1: {
-																																																																																																																																	ctor: '::',
-																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Logtalk'),
-																																																																																																																																	_1: {
-																																																																																																																																		ctor: '::',
-																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('LotusScript'),
-																																																																																																																																		_1: {
-																																																																																																																																			ctor: '::',
-																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('LPC'),
-																																																																																																																																			_1: {
-																																																																																																																																				ctor: '::',
-																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lua'),
-																																																																																																																																				_1: {
-																																																																																																																																					ctor: '::',
-																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Lustre'),
-																																																																																																																																					_1: {
-																																																																																																																																						ctor: '::',
-																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('M4'),
-																																																																																																																																						_1: {
-																																																																																																																																							ctor: '::',
-																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MAD'),
-																																																																																																																																							_1: {
-																																																																																																																																								ctor: '::',
-																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Magic'),
-																																																																																																																																								_1: {
-																																																																																																																																									ctor: '::',
-																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Magik'),
-																																																																																																																																									_1: {
-																																																																																																																																										ctor: '::',
-																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Malbolge'),
-																																																																																																																																										_1: {
-																																																																																																																																											ctor: '::',
-																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MANTIS'),
-																																																																																																																																											_1: {
-																																																																																																																																												ctor: '::',
-																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Maple'),
-																																																																																																																																												_1: {
-																																																																																																																																													ctor: '::',
-																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Mathematica'),
-																																																																																																																																													_1: {
-																																																																																																																																														ctor: '::',
-																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MATLAB'),
-																																																																																																																																														_1: {
-																																																																																																																																															ctor: '::',
-																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Max/MSP'),
-																																																																																																																																															_1: {
-																																																																																																																																																ctor: '::',
-																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MAXScript'),
-																																																																																																																																																_1: {
-																																																																																																																																																	ctor: '::',
-																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MEL'),
-																																																																																																																																																	_1: {
-																																																																																																																																																		ctor: '::',
-																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Mercury'),
-																																																																																																																																																		_1: {
-																																																																																																																																																			ctor: '::',
-																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Mirah'),
-																																																																																																																																																			_1: {
-																																																																																																																																																				ctor: '::',
-																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Miva'),
-																																																																																																																																																				_1: {
-																																																																																																																																																					ctor: '::',
-																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ML'),
-																																																																																																																																																					_1: {
-																																																																																																																																																						ctor: '::',
-																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Monkey'),
-																																																																																																																																																						_1: {
-																																																																																																																																																							ctor: '::',
-																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Modula-2'),
-																																																																																																																																																							_1: {
-																																																																																																																																																								ctor: '::',
-																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Modula-3'),
-																																																																																																																																																								_1: {
-																																																																																																																																																									ctor: '::',
-																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MOO'),
-																																																																																																																																																									_1: {
-																																																																																																																																																										ctor: '::',
-																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Moto'),
-																																																																																																																																																										_1: {
-																																																																																																																																																											ctor: '::',
-																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MS-DOS Batch'),
-																																																																																																																																																											_1: {
-																																																																																																																																																												ctor: '::',
-																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('MUMPS'),
-																																																																																																																																																												_1: {
-																																																																																																																																																													ctor: '::',
-																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NATURAL'),
-																																																																																																																																																													_1: {
-																																																																																																																																																														ctor: '::',
-																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Nemerle'),
-																																																																																																																																																														_1: {
-																																																																																																																																																															ctor: '::',
-																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Nimrod'),
-																																																																																																																																																															_1: {
-																																																																																																																																																																ctor: '::',
-																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NQC'),
-																																																																																																																																																																_1: {
-																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NSIS'),
-																																																																																																																																																																	_1: {
-																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Nu'),
-																																																																																																																																																																		_1: {
-																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('NXT-G'),
-																																																																																																																																																																			_1: {
-																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Oberon'),
-																																																																																																																																																																				_1: {
-																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Object Rexx'),
-																																																																																																																																																																					_1: {
-																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Objective-C'),
-																																																																																																																																																																						_1: {
-																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Objective-J'),
-																																																																																																																																																																							_1: {
-																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OCaml'),
-																																																																																																																																																																								_1: {
-																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Occam'),
-																																																																																																																																																																									_1: {
-																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('ooc'),
-																																																																																																																																																																										_1: {
-																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Opa'),
-																																																																																																																																																																											_1: {
-																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OpenCL'),
-																																																																																																																																																																												_1: {
-																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OpenEdge ABL'),
-																																																																																																																																																																													_1: {
-																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('OPL'),
-																																																																																																																																																																														_1: {
-																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Oz'),
-																																																																																																																																																																															_1: {
-																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Paradox'),
-																																																																																																																																																																																_1: {
-																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Parrot'),
-																																																																																																																																																																																	_1: {
-																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pascal'),
-																																																																																																																																																																																		_1: {
-																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Perl'),
-																																																																																																																																																																																			_1: {
-																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PHP'),
-																																																																																																																																																																																				_1: {
-																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pike'),
-																																																																																																																																																																																					_1: {
-																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PILOT'),
-																																																																																																																																																																																						_1: {
-																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PL/I'),
-																																																																																																																																																																																							_1: {
-																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PL/SQL'),
-																																																																																																																																																																																								_1: {
-																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pliant'),
-																																																																																																																																																																																									_1: {
-																																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PostScript'),
-																																																																																																																																																																																										_1: {
-																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('POV-Ray'),
-																																																																																																																																																																																											_1: {
-																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PowerBasic'),
-																																																																																																																																																																																												_1: {
-																																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PowerScript'),
-																																																																																																																																																																																													_1: {
-																																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('PowerShell'),
-																																																																																																																																																																																														_1: {
-																																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Processing'),
-																																																																																																																																																																																															_1: {
-																																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Prolog'),
-																																																																																																																																																																																																_1: {
-																																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Puppet'),
-																																																																																																																																																																																																	_1: {
-																																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Pure Data'),
-																																																																																																																																																																																																		_1: {
-																																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Python'),
-																																																																																																																																																																																																			_1: {
-																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Q'),
-																																																																																																																																																																																																				_1: {
-																																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('R'),
-																																																																																																																																																																																																					_1: {
-																																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Racket'),
-																																																																																																																																																																																																						_1: {
-																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('REALBasic'),
-																																																																																																																																																																																																							_1: {
-																																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('REBOL'),
-																																																																																																																																																																																																								_1: {
-																																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Revolution'),
-																																																																																																																																																																																																									_1: {
-																																																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('REXX'),
-																																																																																																																																																																																																										_1: {
-																																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('RPG (OS/400)'),
-																																																																																																																																																																																																											_1: {
-																																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Ruby'),
-																																																																																																																																																																																																												_1: {
-																																																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Rust'),
-																																																																																																																																																																																																													_1: {
-																																																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('S'),
-																																																																																																																																																																																																														_1: {
-																																																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('S-PLUS'),
-																																																																																																																																																																																																															_1: {
-																																																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SAS'),
-																																																																																																																																																																																																																_1: {
-																																																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Sather'),
-																																																																																																																																																																																																																	_1: {
-																																																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scala'),
-																																																																																																																																																																																																																		_1: {
-																																																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scheme'),
-																																																																																																																																																																																																																			_1: {
-																																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scilab'),
-																																																																																																																																																																																																																				_1: {
-																																																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Scratch'),
-																																																																																																																																																																																																																					_1: {
-																																																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('sed'),
-																																																																																																																																																																																																																						_1: {
-																																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Seed7'),
-																																																																																																																																																																																																																							_1: {
-																																																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Self'),
-																																																																																																																																																																																																																								_1: {
-																																																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Shell'),
-																																																																																																																																																																																																																									_1: {
-																																																																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SIGNAL'),
-																																																																																																																																																																																																																										_1: {
-																																																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Simula'),
-																																																																																																																																																																																																																											_1: {
-																																																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Simulink'),
-																																																																																																																																																																																																																												_1: {
-																																																																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Slate'),
-																																																																																																																																																																																																																													_1: {
-																																																																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Smalltalk'),
-																																																																																																																																																																																																																														_1: {
-																																																																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Smarty'),
-																																																																																																																																																																																																																															_1: {
-																																																																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SPARK'),
-																																																																																																																																																																																																																																_1: {
-																																																																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SPSS'),
-																																																																																																																																																																																																																																	_1: {
-																																																																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SQR'),
-																																																																																																																																																																																																																																		_1: {
-																																																																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Squeak'),
-																																																																																																																																																																																																																																			_1: {
-																																																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Squirrel'),
-																																																																																																																																																																																																																																				_1: {
-																																																																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Standard ML'),
-																																																																																																																																																																																																																																					_1: {
-																																																																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Suneido'),
-																																																																																																																																																																																																																																						_1: {
-																																																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('SuperCollider'),
-																																																																																																																																																																																																																																							_1: {
-																																																																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('TACL'),
-																																																																																																																																																																																																																																								_1: {
-																																																																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Tcl'),
-																																																																																																																																																																																																																																									_1: {
-																																																																																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Tex'),
-																																																																																																																																																																																																																																										_1: {
-																																																																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('thinBasic'),
-																																																																																																																																																																																																																																											_1: {
-																																																																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('TOM'),
-																																																																																																																																																																																																																																												_1: {
-																																																																																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Transact-SQL'),
-																																																																																																																																																																																																																																													_1: {
-																																																																																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Turing'),
-																																																																																																																																																																																																																																														_1: {
-																																																																																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('TypeScript'),
-																																																																																																																																																																																																																																															_1: {
-																																																																																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Vala/Genie'),
-																																																																																																																																																																																																																																																_1: {
-																																																																																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('VBScript'),
-																																																																																																																																																																																																																																																	_1: {
-																																																																																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																																																																																		_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Verilog'),
-																																																																																																																																																																																																																																																		_1: {
-																																																																																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																																																																																			_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('VHDL'),
-																																																																																																																																																																																																																																																			_1: {
-																																																																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																																																																				_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('VimL'),
-																																																																																																																																																																																																																																																				_1: {
-																																																																																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																																																																																					_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Visual Basic .NET'),
-																																																																																																																																																																																																																																																					_1: {
-																																																																																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																																																																																						_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('WebDNA'),
-																																																																																																																																																																																																																																																						_1: {
-																																																																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																																																																							_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Whitespace'),
-																																																																																																																																																																																																																																																							_1: {
-																																																																																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																																																																																								_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('X10'),
-																																																																																																																																																																																																																																																								_1: {
-																																																																																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																																																																																									_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('xBase'),
-																																																																																																																																																																																																																																																									_1: {
-																																																																																																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																																																																																																										_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XBase++'),
-																																																																																																																																																																																																																																																										_1: {
-																																																																																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																																																																																											_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Xen'),
-																																																																																																																																																																																																																																																											_1: {
-																																																																																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																																																																																												_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XPL'),
-																																																																																																																																																																																																																																																												_1: {
-																																																																																																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																																																																																																													_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XSLT'),
-																																																																																																																																																																																																																																																													_1: {
-																																																																																																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																																																																																																														_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('XQuery'),
-																																																																																																																																																																																																																																																														_1: {
-																																																																																																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																																																																																																															_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('yacc'),
-																																																																																																																																																																																																																																																															_1: {
-																																																																																																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																																																																																																_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Yorick'),
-																																																																																																																																																																																																																																																																_1: {
-																																																																																																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																																																																																																	_0: _lucamug$elm_meta_json_decoder$Main$MenuItem('Z shell, MenuItem '),
-																																																																																																																																																																																																																																																																	_1: {ctor: '[]'}
-																																																																																																																																																																																																																																																																}
-																																																																																																																																																																																																																																																															}
-																																																																																																																																																																																																																																																														}
-																																																																																																																																																																																																																																																													}
-																																																																																																																																																																																																																																																												}
-																																																																																																																																																																																																																																																											}
-																																																																																																																																																																																																																																																										}
-																																																																																																																																																																																																																																																									}
-																																																																																																																																																																																																																																																								}
-																																																																																																																																																																																																																																																							}
-																																																																																																																																																																																																																																																						}
-																																																																																																																																																																																																																																																					}
-																																																																																																																																																																																																																																																				}
-																																																																																																																																																																																																																																																			}
-																																																																																																																																																																																																																																																		}
-																																																																																																																																																																																																																																																	}
-																																																																																																																																																																																																																																																}
-																																																																																																																																																																																																																																															}
-																																																																																																																																																																																																																																														}
-																																																																																																																																																																																																																																													}
-																																																																																																																																																																																																																																												}
-																																																																																																																																																																																																																																											}
-																																																																																																																																																																																																																																										}
-																																																																																																																																																																																																																																									}
-																																																																																																																																																																																																																																								}
-																																																																																																																																																																																																																																							}
-																																																																																																																																																																																																																																						}
-																																																																																																																																																																																																																																					}
-																																																																																																																																																																																																																																				}
-																																																																																																																																																																																																																																			}
-																																																																																																																																																																																																																																		}
-																																																																																																																																																																																																																																	}
-																																																																																																																																																																																																																																}
-																																																																																																																																																																																																																															}
-																																																																																																																																																																																																																														}
-																																																																																																																																																																																																																													}
-																																																																																																																																																																																																																												}
-																																																																																																																																																																																																																											}
-																																																																																																																																																																																																																										}
-																																																																																																																																																																																																																									}
-																																																																																																																																																																																																																								}
-																																																																																																																																																																																																																							}
-																																																																																																																																																																																																																						}
-																																																																																																																																																																																																																					}
-																																																																																																																																																																																																																				}
-																																																																																																																																																																																																																			}
-																																																																																																																																																																																																																		}
-																																																																																																																																																																																																																	}
-																																																																																																																																																																																																																}
-																																																																																																																																																																																																															}
-																																																																																																																																																																																																														}
-																																																																																																																																																																																																													}
-																																																																																																																																																																																																												}
-																																																																																																																																																																																																											}
-																																																																																																																																																																																																										}
-																																																																																																																																																																																																									}
-																																																																																																																																																																																																								}
-																																																																																																																																																																																																							}
-																																																																																																																																																																																																						}
-																																																																																																																																																																																																					}
-																																																																																																																																																																																																				}
-																																																																																																																																																																																																			}
-																																																																																																																																																																																																		}
-																																																																																																																																																																																																	}
-																																																																																																																																																																																																}
-																																																																																																																																																																																															}
-																																																																																																																																																																																														}
-																																																																																																																																																																																													}
-																																																																																																																																																																																												}
-																																																																																																																																																																																											}
-																																																																																																																																																																																										}
-																																																																																																																																																																																									}
-																																																																																																																																																																																								}
-																																																																																																																																																																																							}
-																																																																																																																																																																																						}
-																																																																																																																																																																																					}
-																																																																																																																																																																																				}
-																																																																																																																																																																																			}
-																																																																																																																																																																																		}
-																																																																																																																																																																																	}
-																																																																																																																																																																																}
-																																																																																																																																																																															}
-																																																																																																																																																																														}
-																																																																																																																																																																													}
-																																																																																																																																																																												}
-																																																																																																																																																																											}
-																																																																																																																																																																										}
-																																																																																																																																																																									}
-																																																																																																																																																																								}
-																																																																																																																																																																							}
-																																																																																																																																																																						}
-																																																																																																																																																																					}
-																																																																																																																																																																				}
-																																																																																																																																																																			}
-																																																																																																																																																																		}
-																																																																																																																																																																	}
-																																																																																																																																																																}
-																																																																																																																																																															}
-																																																																																																																																																														}
-																																																																																																																																																													}
-																																																																																																																																																												}
-																																																																																																																																																											}
-																																																																																																																																																										}
-																																																																																																																																																									}
-																																																																																																																																																								}
-																																																																																																																																																							}
-																																																																																																																																																						}
-																																																																																																																																																					}
-																																																																																																																																																				}
-																																																																																																																																																			}
-																																																																																																																																																		}
-																																																																																																																																																	}
-																																																																																																																																																}
-																																																																																																																																															}
-																																																																																																																																														}
-																																																																																																																																													}
-																																																																																																																																												}
-																																																																																																																																											}
-																																																																																																																																										}
-																																																																																																																																									}
-																																																																																																																																								}
-																																																																																																																																							}
-																																																																																																																																						}
-																																																																																																																																					}
-																																																																																																																																				}
-																																																																																																																																			}
-																																																																																																																																		}
-																																																																																																																																	}
-																																																																																																																																}
-																																																																																																																															}
-																																																																																																																														}
-																																																																																																																													}
-																																																																																																																												}
-																																																																																																																											}
-																																																																																																																										}
-																																																																																																																									}
-																																																																																																																								}
-																																																																																																																							}
-																																																																																																																						}
-																																																																																																																					}
-																																																																																																																				}
-																																																																																																																			}
-																																																																																																																		}
-																																																																																																																	}
-																																																																																																																}
-																																																																																																															}
-																																																																																																														}
-																																																																																																													}
-																																																																																																												}
-																																																																																																											}
-																																																																																																										}
-																																																																																																									}
-																																																																																																								}
-																																																																																																							}
-																																																																																																						}
-																																																																																																					}
-																																																																																																				}
-																																																																																																			}
-																																																																																																		}
-																																																																																																	}
-																																																																																																}
-																																																																																															}
-																																																																																														}
-																																																																																													}
-																																																																																												}
-																																																																																											}
-																																																																																										}
-																																																																																									}
-																																																																																								}
-																																																																																							}
-																																																																																						}
-																																																																																					}
-																																																																																				}
-																																																																																			}
-																																																																																		}
-																																																																																	}
-																																																																																}
-																																																																															}
-																																																																														}
-																																																																													}
-																																																																												}
-																																																																											}
-																																																																										}
-																																																																									}
-																																																																								}
-																																																																							}
-																																																																						}
-																																																																					}
-																																																																				}
-																																																																			}
-																																																																		}
-																																																																	}
-																																																																}
-																																																															}
-																																																														}
-																																																													}
-																																																												}
-																																																											}
-																																																										}
-																																																									}
-																																																								}
-																																																							}
-																																																						}
-																																																					}
-																																																				}
-																																																			}
-																																																		}
+																																																		_0: 'Wyoming',
+																																																		_1: {ctor: '[]'}
 																																																	}
 																																																}
 																																															}
@@ -14674,13 +13839,181 @@ var _lucamug$elm_meta_json_decoder$Main$menuItems = {
 		}
 	}
 };
-var _lucamug$elm_meta_json_decoder$Main$init = {autocomMenuItems: _lucamug$elm_meta_json_decoder$Main$menuItems, autocomState: _thebritican$elm_autocomplete$Autocomplete$empty, autocomHowManyToShow: 5, autocomQuery: '', autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing, autocomShowMenu: false};
+var _lucamug$elm_meta_json_decoder$Main$viewConfig = function () {
+	var customizedLi = F3(
+		function (keySelected, mouseSelected, menuItem) {
+			return {
+				attributes: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$classList(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'autocomplete-item', _1: true},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'key-selected', _1: keySelected || mouseSelected},
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$id(menuItem),
+						_1: {ctor: '[]'}
+					}
+				},
+				children: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(menuItem),
+					_1: {ctor: '[]'}
+				}
+			};
+		});
+	return _thebritican$elm_autocomplete$Autocomplete$viewConfig(
+		{
+			toId: function (id) {
+				return id;
+			},
+			ul: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('autocomplete-list'),
+				_1: {ctor: '[]'}
+			},
+			li: customizedLi
+		});
+}();
+var _lucamug$elm_meta_json_decoder$Main$acceptableItems = F2(
+	function (autocomFieldValue, autocomMenuItems) {
+		var lowerQuery = _elm_lang$core$String$toLower(autocomFieldValue);
+		return A2(
+			_elm_lang$core$List$filter,
+			function (_p0) {
+				return A2(
+					_elm_lang$core$String$contains,
+					lowerQuery,
+					_elm_lang$core$String$toLower(_p0));
+			},
+			autocomMenuItems);
+	});
+var _lucamug$elm_meta_json_decoder$Main$getMenuItemAtId = F2(
+	function (autocomMenuItems, id) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			'',
+			_elm_lang$core$List$head(
+				A2(
+					_elm_lang$core$List$filter,
+					function (menuItem) {
+						return _elm_lang$core$Native_Utils.eq(menuItem, id);
+					},
+					autocomMenuItems)));
+	});
+var _lucamug$elm_meta_json_decoder$Main$setQuery = F2(
+	function (model, id) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				autocomFieldValue: A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, id),
+				autocomSelectedMenuItem: _elm_lang$core$Maybe$Just(
+					A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, id))
+			});
+	});
+var _lucamug$elm_meta_json_decoder$Main$removeSelection = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing});
+};
+var _lucamug$elm_meta_json_decoder$Main$resetMenu = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{autocomState: _thebritican$elm_autocomplete$Autocomplete$empty, autocomShowMenu: false});
+};
+var _lucamug$elm_meta_json_decoder$Main$resetInput = function (model) {
+	return _lucamug$elm_meta_json_decoder$Main$resetMenu(
+		_lucamug$elm_meta_json_decoder$Main$removeSelection(
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{autocomFieldValue: ''})));
+};
+var _lucamug$elm_meta_json_decoder$Main$setField = F3(
+	function (field, value, model) {
+		var _p1 = field;
+		if (_p1.ctor === 'Field1') {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{field1: value});
+		} else {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{field2: value});
+		}
+	});
+var _lucamug$elm_meta_json_decoder$Main$init = {
+	ctor: '_Tuple2',
+	_0: {
+		focus: _elm_lang$core$Maybe$Nothing,
+		field1: '',
+		field2: '',
+		autocomFieldValue: '',
+		autocomMenuItems: _lucamug$elm_meta_json_decoder$Main$menuItems1,
+		autocomState: _thebritican$elm_autocomplete$Autocomplete$empty,
+		autocomHowManyToShow: 50,
+		autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing,
+		autocomShowMenu: false,
+		autocomFocus: false,
+		autocomPreventingBlur: false,
+		autocomPreventingFocus: false,
+		autocomplete2: {autocom2FieldValue: '', autocom2MenuItems: _lucamug$elm_meta_json_decoder$Main$menuItems2, autocom2State: _thebritican$elm_autocomplete$Autocomplete$empty, autocom2HowManyToShow: 50, autocom2SelectedMenuItem: _elm_lang$core$Maybe$Nothing, autocom2ShowMenu: false, autocom2Focus: false, autocom2PreventingBlur: false, autocom2PreventingFocus: false}
+	},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _lucamug$elm_meta_json_decoder$Main$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return {focus: a, field1: b, field2: c, autocomFieldValue: d, autocomMenuItems: e, autocomState: f, autocomHowManyToShow: g, autocomSelectedMenuItem: h, autocomShowMenu: i, autocomFocus: j, autocomPreventingBlur: k, autocomPreventingFocus: l, autocomplete2: m};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var _lucamug$elm_meta_json_decoder$Main$MsgAutocom = function (a) {
 	return {ctor: 'MsgAutocom', _0: a};
 };
+var _lucamug$elm_meta_json_decoder$Main$SetField = F2(
+	function (a, b) {
+		return {ctor: 'SetField', _0: a, _1: b};
+	});
+var _lucamug$elm_meta_json_decoder$Main$OnBlur = function (a) {
+	return {ctor: 'OnBlur', _0: a};
+};
+var _lucamug$elm_meta_json_decoder$Main$OnFocus = function (a) {
+	return {ctor: 'OnFocus', _0: a};
+};
 var _lucamug$elm_meta_json_decoder$Main$NoOp = {ctor: 'NoOp'};
+var _lucamug$elm_meta_json_decoder$Main$Field2 = {ctor: 'Field2'};
+var _lucamug$elm_meta_json_decoder$Main$Field1 = {ctor: 'Field1'};
+var _lucamug$elm_meta_json_decoder$Main$NoOpAutocom = {ctor: 'NoOpAutocom'};
 var _lucamug$elm_meta_json_decoder$Main$Reset = {ctor: 'Reset'};
-var _lucamug$elm_meta_json_decoder$Main$OnFocus = {ctor: 'OnFocus'};
+var _lucamug$elm_meta_json_decoder$Main$PreventFocusAndBlur = {ctor: 'PreventFocusAndBlur'};
+var _lucamug$elm_meta_json_decoder$Main$OnBlurAutocom = {ctor: 'OnBlurAutocom'};
+var _lucamug$elm_meta_json_decoder$Main$OnFocusAutocom = {ctor: 'OnFocusAutocom'};
 var _lucamug$elm_meta_json_decoder$Main$HandleEscape = {ctor: 'HandleEscape'};
 var _lucamug$elm_meta_json_decoder$Main$PreviewMenuItem = function (a) {
 	return {ctor: 'PreviewMenuItem', _0: a};
@@ -14696,102 +14029,98 @@ var _lucamug$elm_meta_json_decoder$Main$Wrap = function (a) {
 };
 var _lucamug$elm_meta_json_decoder$Main$updateConfig = _thebritican$elm_autocomplete$Autocomplete$updateConfig(
 	{
-		toId: function (_) {
-			return _.name;
+		toId: function (id) {
+			return id;
 		},
 		onKeyDown: F2(
 			function (code, maybeId) {
 				return (_elm_lang$core$Native_Utils.eq(code, 38) || _elm_lang$core$Native_Utils.eq(code, 40)) ? A2(
 					_elm_lang$core$Maybe$map,
-					function (_p1) {
+					function (_p2) {
 						return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-							_lucamug$elm_meta_json_decoder$Main$PreviewMenuItem(_p1));
+							_lucamug$elm_meta_json_decoder$Main$PreviewMenuItem(_p2));
 					},
 					maybeId) : (_elm_lang$core$Native_Utils.eq(code, 13) ? A2(
 					_elm_lang$core$Maybe$map,
-					function (_p2) {
+					function (_p3) {
 						return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-							_lucamug$elm_meta_json_decoder$Main$SelectMenuItemKeyboard(_p2));
+							_lucamug$elm_meta_json_decoder$Main$SelectMenuItemKeyboard(_p3));
 					},
 					maybeId) : _elm_lang$core$Maybe$Just(
 					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$Reset)));
 			}),
 		onTooLow: _elm_lang$core$Maybe$Just(
-			function (_p3) {
-				return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-					_lucamug$elm_meta_json_decoder$Main$Wrap(_p3));
-			}(false)),
-		onTooHigh: _elm_lang$core$Maybe$Just(
 			function (_p4) {
 				return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
 					_lucamug$elm_meta_json_decoder$Main$Wrap(_p4));
+			}(false)),
+		onTooHigh: _elm_lang$core$Maybe$Just(
+			function (_p5) {
+				return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+					_lucamug$elm_meta_json_decoder$Main$Wrap(_p5));
 			}(true)),
-		onMouseEnter: function (id) {
-			return _elm_lang$core$Maybe$Just(
-				function (_p5) {
-					return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-						_lucamug$elm_meta_json_decoder$Main$PreviewMenuItem(_p5));
-				}(id));
+		onMouseEnter: function (_p6) {
+			return _elm_lang$core$Maybe$Nothing;
 		},
-		onMouseLeave: function (_p6) {
+		onMouseLeave: function (_p7) {
 			return _elm_lang$core$Maybe$Nothing;
 		},
 		onMouseClick: function (id) {
 			return _elm_lang$core$Maybe$Just(
-				function (_p7) {
+				function (_p8) {
 					return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-						_lucamug$elm_meta_json_decoder$Main$SelectMenuItemMouse(_p7));
+						_lucamug$elm_meta_json_decoder$Main$SelectMenuItemMouse(_p8));
 				}(id));
 		},
 		separateSelections: false
 	});
 var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 	function (msg, model) {
-		var _p8 = msg;
-		switch (_p8.ctor) {
+		var _p9 = msg;
+		switch (_p9.ctor) {
 			case 'SetQuery':
-				var _p10 = _p8._0;
-				var autocomShowMenu = function (_p9) {
-					return !_elm_lang$core$List$isEmpty(_p9);
+				var _p11 = _p9._0;
+				var autocomShowMenu = function (_p10) {
+					return !_elm_lang$core$List$isEmpty(_p10);
 				}(
-					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, _p10, model.autocomMenuItems));
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, _p11, model.autocomMenuItems));
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
 						model,
-						{autocomQuery: _p10, autocomShowMenu: autocomShowMenu, autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing}),
+						{autocomFieldValue: _p11, autocomShowMenu: autocomShowMenu, autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing}),
 					{ctor: '[]'});
 			case 'SetAutoState':
-				var _p11 = A5(
+				var _p12 = A5(
 					_thebritican$elm_autocomplete$Autocomplete$update,
 					_lucamug$elm_meta_json_decoder$Main$updateConfig,
-					_p8._0,
+					_p9._0,
 					model.autocomHowManyToShow,
 					model.autocomState,
-					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomQuery, model.autocomMenuItems));
-				var newState = _p11._0;
-				var maybeMsg = _p11._1;
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomFieldValue, model.autocomMenuItems));
+				var newState = _p12._0;
+				var maybeMsg = _p12._1;
 				var newModel = _elm_lang$core$Native_Utils.update(
 					model,
 					{autocomState: newState});
-				var _p12 = maybeMsg;
-				if (_p12.ctor === 'Nothing') {
+				var _p13 = maybeMsg;
+				if (_p13.ctor === 'Nothing') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						newModel,
 						{ctor: '[]'});
 				} else {
-					return A2(_lucamug$elm_meta_json_decoder$Main$update, _p12._0, newModel);
+					return A2(_lucamug$elm_meta_json_decoder$Main$update, _p13._0, newModel);
 				}
 			case 'Wrap':
-				var _p13 = model.autocomSelectedMenuItem;
-				if (_p13.ctor === 'Just') {
+				var _p14 = model.autocomSelectedMenuItem;
+				if (_p14.ctor === 'Just') {
 					return A2(
 						_lucamug$elm_meta_json_decoder$Main$update,
 						_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$Reset),
 						model);
 				} else {
-					return _p8._0 ? A2(
+					return _p9._0 ? A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
@@ -14799,7 +14128,7 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 								autocomState: A4(
 									_thebritican$elm_autocomplete$Autocomplete$resetToLastItem,
 									_lucamug$elm_meta_json_decoder$Main$updateConfig,
-									A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomQuery, model.autocomMenuItems),
+									A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomFieldValue, model.autocomMenuItems),
 									model.autocomHowManyToShow,
 									model.autocomState),
 								autocomSelectedMenuItem: _elm_lang$core$List$head(
@@ -14807,7 +14136,7 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 										A2(
 											_elm_lang$core$List$take,
 											model.autocomHowManyToShow,
-											A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomQuery, model.autocomMenuItems))))
+											A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomFieldValue, model.autocomMenuItems))))
 							}),
 						{ctor: '[]'}) : A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -14817,34 +14146,34 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 								autocomState: A4(
 									_thebritican$elm_autocomplete$Autocomplete$resetToFirstItem,
 									_lucamug$elm_meta_json_decoder$Main$updateConfig,
-									A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomQuery, model.autocomMenuItems),
+									A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomFieldValue, model.autocomMenuItems),
 									model.autocomHowManyToShow,
 									model.autocomState),
 								autocomSelectedMenuItem: _elm_lang$core$List$head(
 									A2(
 										_elm_lang$core$List$take,
 										model.autocomHowManyToShow,
-										A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomQuery, model.autocomMenuItems)))
+										A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomFieldValue, model.autocomMenuItems)))
 							}),
 						{ctor: '[]'});
 				}
 			case 'SelectMenuItemKeyboard':
 				var newModel = _lucamug$elm_meta_json_decoder$Main$resetMenu(
-					A2(_lucamug$elm_meta_json_decoder$Main$setQuery, model, _p8._0));
+					A2(_lucamug$elm_meta_json_decoder$Main$setQuery, model, _p9._0));
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					newModel,
 					{ctor: '[]'});
 			case 'SelectMenuItemMouse':
 				var newModel = _lucamug$elm_meta_json_decoder$Main$resetMenu(
-					A2(_lucamug$elm_meta_json_decoder$Main$setQuery, model, _p8._0));
+					A2(_lucamug$elm_meta_json_decoder$Main$setQuery, model, _p9._0));
 				return {
 					ctor: '_Tuple2',
 					_0: newModel,
 					_1: A2(
 						_elm_lang$core$Task$attempt,
-						function (_p14) {
-							return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$NoOp);
+						function (_p15) {
+							return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$NoOpAutocom);
 						},
 						_elm_lang$dom$Dom$focus('president-input'))
 				};
@@ -14855,23 +14184,18 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 						model,
 						{
 							autocomSelectedMenuItem: _elm_lang$core$Maybe$Just(
-								A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, _p8._0))
+								A2(_lucamug$elm_meta_json_decoder$Main$getMenuItemAtId, model.autocomMenuItems, _p9._0))
 						}),
-					{ctor: '[]'});
-			case 'OnFocus':
-				return A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					model,
 					{ctor: '[]'});
 			case 'HandleEscape':
 				var validOptions = !_elm_lang$core$List$isEmpty(
-					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomQuery, model.autocomMenuItems));
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomFieldValue, model.autocomMenuItems));
 				var handleEscape = validOptions ? _lucamug$elm_meta_json_decoder$Main$resetMenu(
 					_lucamug$elm_meta_json_decoder$Main$removeSelection(model)) : _lucamug$elm_meta_json_decoder$Main$resetInput(model);
 				var escapedModel = function () {
-					var _p15 = model.autocomSelectedMenuItem;
-					if (_p15.ctor === 'Just') {
-						return _elm_lang$core$Native_Utils.eq(model.autocomQuery, _p15._0.name) ? _lucamug$elm_meta_json_decoder$Main$resetInput(model) : handleEscape;
+					var _p16 = model.autocomSelectedMenuItem;
+					if (_p16.ctor === 'Just') {
+						return _elm_lang$core$Native_Utils.eq(model.autocomFieldValue, _p16._0) ? _lucamug$elm_meta_json_decoder$Main$resetInput(model) : handleEscape;
 					} else {
 						return handleEscape;
 					}
@@ -14890,6 +14214,40 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 							autocomSelectedMenuItem: _elm_lang$core$Maybe$Nothing
 						}),
 					{ctor: '[]'});
+			case 'OnFocusAutocom':
+				return model.autocomPreventingFocus ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{autocomPreventingFocus: false}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{autocomFocus: true, autocomShowMenu: true}),
+					{ctor: '[]'});
+			case 'OnBlurAutocom':
+				return model.autocomPreventingBlur ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{autocomPreventingBlur: false}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{autocomFocus: false, autocomShowMenu: false}),
+					{ctor: '[]'});
+			case 'PreventFocusAndBlur':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{autocomPreventingFocus: true, autocomPreventingBlur: true}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -14899,8 +14257,37 @@ var _lucamug$elm_meta_json_decoder$Main$updateAutocom = F2(
 	});
 var _lucamug$elm_meta_json_decoder$Main$update = F2(
 	function (msg, model) {
-		var _p16 = A2(_elm_lang$core$Debug$log, 'msg', msg);
-		return A2(_lucamug$elm_meta_json_decoder$Main$updateAutocom, _p16._0, model);
+		var _p17 = A2(_elm_lang$core$Debug$log, 'msg', msg);
+		switch (_p17.ctor) {
+			case 'NoOp':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'SetField':
+				return {
+					ctor: '_Tuple2',
+					_0: A3(_lucamug$elm_meta_json_decoder$Main$setField, _p17._0, _p17._1, model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'OnFocus':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							focus: _elm_lang$core$Maybe$Just(_p17._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'OnBlur':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{focus: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return A2(_lucamug$elm_meta_json_decoder$Main$updateAutocom, _p17._0, model);
+		}
 	});
 var _lucamug$elm_meta_json_decoder$Main$SetAutoState = function (a) {
 	return {ctor: 'SetAutoState', _0: a};
@@ -14908,9 +14295,9 @@ var _lucamug$elm_meta_json_decoder$Main$SetAutoState = function (a) {
 var _lucamug$elm_meta_json_decoder$Main$subscriptions = function (model) {
 	return A2(
 		_elm_lang$core$Platform_Sub$map,
-		function (_p17) {
+		function (_p18) {
 			return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-				_lucamug$elm_meta_json_decoder$Main$SetAutoState(_p17));
+				_lucamug$elm_meta_json_decoder$Main$SetAutoState(_p18));
 		},
 		_thebritican$elm_autocomplete$Autocomplete$subscription);
 };
@@ -14920,22 +14307,27 @@ var _lucamug$elm_meta_json_decoder$Main$viewMenu = function (model) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('autocomplete-menu'),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onMouseDown(
+					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$PreventFocusAndBlur)),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$map,
-				function (_p18) {
+				function (_p19) {
 					return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-						_lucamug$elm_meta_json_decoder$Main$SetAutoState(_p18));
+						_lucamug$elm_meta_json_decoder$Main$SetAutoState(_p19));
 				},
 				A4(
 					_thebritican$elm_autocomplete$Autocomplete$view,
 					_lucamug$elm_meta_json_decoder$Main$viewConfig,
 					model.autocomHowManyToShow,
 					model.autocomState,
-					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomQuery, model.autocomMenuItems))),
+					A2(_lucamug$elm_meta_json_decoder$Main$acceptableItems, model.autocomFieldValue, model.autocomMenuItems))),
 			_1: {ctor: '[]'}
 		});
 };
@@ -14944,23 +14336,23 @@ var _lucamug$elm_meta_json_decoder$Main$SetQuery = function (a) {
 };
 var _lucamug$elm_meta_json_decoder$Main$viewAutocom = function (model) {
 	var activeDescendant = function (attributes) {
-		var _p19 = model.autocomSelectedMenuItem;
-		if (_p19.ctor === 'Just') {
+		var _p20 = model.autocomSelectedMenuItem;
+		if (_p20.ctor === 'Just') {
 			return {
 				ctor: '::',
-				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-activedescendant', _p19._0.name),
+				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-activedescendant', _p20._0),
 				_1: attributes
 			};
 		} else {
 			return attributes;
 		}
 	};
-	var autocomQuery = function () {
-		var _p20 = model.autocomSelectedMenuItem;
-		if (_p20.ctor === 'Just') {
-			return _p20._0.name;
+	var autocomFieldValue = function () {
+		var _p21 = model.autocomSelectedMenuItem;
+		if (_p21.ctor === 'Just') {
+			return _p21._0;
 		} else {
-			return model.autocomQuery;
+			return model.autocomFieldValue;
 		}
 	}();
 	var menu = model.autocomShowMenu ? {
@@ -14969,11 +14361,11 @@ var _lucamug$elm_meta_json_decoder$Main$viewAutocom = function (model) {
 		_1: {ctor: '[]'}
 	} : {ctor: '[]'};
 	var fromResult = function (result) {
-		var _p21 = result;
-		if (_p21.ctor === 'Ok') {
-			return _elm_lang$core$Json_Decode$succeed(_p21._0);
+		var _p22 = result;
+		if (_p22.ctor === 'Ok') {
+			return _elm_lang$core$Json_Decode$succeed(_p22._0);
 		} else {
-			return _elm_lang$core$Json_Decode$fail(_p21._0);
+			return _elm_lang$core$Json_Decode$fail(_p22._0);
 		}
 	};
 	var dec = A2(
@@ -14983,7 +14375,7 @@ var _lucamug$elm_meta_json_decoder$Main$viewAutocom = function (model) {
 			_elm_lang$core$Json_Decode$map,
 			function (code) {
 				return (_elm_lang$core$Native_Utils.eq(code, 38) || _elm_lang$core$Native_Utils.eq(code, 40)) ? _elm_lang$core$Result$Ok(
-					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$NoOp)) : (_elm_lang$core$Native_Utils.eq(code, 27) ? _elm_lang$core$Result$Ok(
+					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$NoOpAutocom)) : (_elm_lang$core$Native_Utils.eq(code, 27) ? _elm_lang$core$Result$Ok(
 					_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$HandleEscape)) : _elm_lang$core$Result$Err('not handling that key'));
 			},
 			_elm_lang$html$Html_Events$keyCode));
@@ -15000,54 +14392,68 @@ var _lucamug$elm_meta_json_decoder$Main$viewAutocom = function (model) {
 					activeDescendant(
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onInput(
-								function (_p22) {
-									return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
-										_lucamug$elm_meta_json_decoder$Main$SetQuery(_p22));
-								}),
+							_0: _elm_lang$html$Html_Attributes$type_('text'),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onFocus(
-									_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$OnFocus)),
+								_0: _elm_lang$html$Html_Events$onInput(
+									function (_p23) {
+										return _lucamug$elm_meta_json_decoder$Main$MsgAutocom(
+											_lucamug$elm_meta_json_decoder$Main$SetQuery(_p23));
+									}),
 								_1: {
 									ctor: '::',
-									_0: A3(_elm_lang$html$Html_Events$onWithOptions, 'keydown', options, dec),
+									_0: _elm_lang$html$Html_Events$onFocus(
+										_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$OnFocusAutocom)),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$value(autocomQuery),
+										_0: _elm_lang$html$Html_Events$onBlur(
+											_lucamug$elm_meta_json_decoder$Main$MsgAutocom(_lucamug$elm_meta_json_decoder$Main$OnBlurAutocom)),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$id('president-input'),
+											_0: A3(_elm_lang$html$Html_Events$onWithOptions, 'keydown', options, dec),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('autocomplete-input'),
+												_0: _elm_lang$html$Html_Attributes$value(autocomFieldValue),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$autocomplete(false),
+													_0: _elm_lang$html$Html_Attributes$id('president-input'),
 													_1: {
 														ctor: '::',
-														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-owns', 'list-of-presidents'),
+														_0: _elm_lang$html$Html_Attributes$classList(
+															{
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 'autocomplete-input', _1: true},
+																_1: {ctor: '[]'}
+															}),
 														_1: {
 															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html_Attributes$attribute,
-																'aria-expanded',
-																_elm_lang$core$String$toLower(
-																	_elm_lang$core$Basics$toString(model.autocomShowMenu))),
+															_0: _elm_lang$html$Html_Attributes$autocomplete(false),
 															_1: {
 																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html_Attributes$attribute,
-																	'aria-haspopup',
-																	_elm_lang$core$String$toLower(
-																		_elm_lang$core$Basics$toString(model.autocomShowMenu))),
+																_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-owns', 'list-of-presidents'),
 																_1: {
 																	ctor: '::',
-																	_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'combobox'),
+																	_0: A2(
+																		_elm_lang$html$Html_Attributes$attribute,
+																		'aria-expanded',
+																		_elm_lang$core$String$toLower(
+																			_elm_lang$core$Basics$toString(model.autocomShowMenu))),
 																	_1: {
 																		ctor: '::',
-																		_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-autocomplete', 'list'),
-																		_1: {ctor: '[]'}
+																		_0: A2(
+																			_elm_lang$html$Html_Attributes$attribute,
+																			'aria-haspopup',
+																			_elm_lang$core$String$toLower(
+																				_elm_lang$core$Basics$toString(model.autocomShowMenu))),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'combobox'),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-autocomplete', 'list'),
+																				_1: {ctor: '[]'}
+																			}
+																		}
 																	}
 																}
 															}
@@ -15066,23 +14472,336 @@ var _lucamug$elm_meta_json_decoder$Main$viewAutocom = function (model) {
 			menu));
 };
 var _lucamug$elm_meta_json_decoder$Main$view = function (model) {
-	return _lucamug$elm_meta_json_decoder$Main$viewAutocom(model);
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('form-container'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$label,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$h2,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('#1 Normal'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$ul,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$li,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'Focus: ',
+														_elm_lang$core$Basics$toString(model.focus))),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$li,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(
+														A2(_elm_lang$core$Basics_ops['++'], 'Content: ', model.field1)),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$input,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$type_('text'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onInput(
+													_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Field1)),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onFocus(
+														_lucamug$elm_meta_json_decoder$Main$OnFocus(_lucamug$elm_meta_json_decoder$Main$Field1)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onBlur(
+															_lucamug$elm_meta_json_decoder$Main$OnBlur(_lucamug$elm_meta_json_decoder$Main$Field1)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$value(model.field1),
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$h2,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('#2 Using <datalist>'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$ul,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$li,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'Focus: ',
+															_elm_lang$core$Basics$toString(model.focus))),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$li,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(
+															A2(_elm_lang$core$Basics_ops['++'], 'Content: ', model.field2)),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$input,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$type_('text'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onInput(
+														_lucamug$elm_meta_json_decoder$Main$SetField(_lucamug$elm_meta_json_decoder$Main$Field2)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onFocus(
+															_lucamug$elm_meta_json_decoder$Main$OnFocus(_lucamug$elm_meta_json_decoder$Main$Field2)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onBlur(
+																_lucamug$elm_meta_json_decoder$Main$OnBlur(_lucamug$elm_meta_json_decoder$Main$Field2)),
+															_1: {
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$value(model.field2),
+																_1: {
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Attributes$list('programmingLanguage'),
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$datalist,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$id('programmingLanguage'),
+													_1: {ctor: '[]'}
+												},
+												A2(
+													_elm_lang$core$List$map,
+													function (item) {
+														return A2(
+															_elm_lang$html$Html$option,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$value(item),
+																_1: {ctor: '[]'}
+															},
+															{ctor: '[]'});
+													},
+													_lucamug$elm_meta_json_decoder$Main$menuItems1)),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$label,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$h2,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('#3 Using elm-autocomplete'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$ul,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$li,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																'Focus: ',
+																_elm_lang$core$Basics$toString(model.autocomFocus))),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$li,
+														{ctor: '[]'},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text(
+																A2(_elm_lang$core$Basics_ops['++'], 'Value: ', model.autocomFieldValue)),
+															_1: {ctor: '[]'}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$li,
+															{ctor: '[]'},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text(
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		'State:',
+																		_elm_lang$core$Basics$toString(model.autocomState))),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$li,
+																{ctor: '[]'},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text(
+																		A2(
+																			_elm_lang$core$Basics_ops['++'],
+																			'HowMany:',
+																			_elm_lang$core$Basics$toString(model.autocomHowManyToShow))),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$li,
+																	{ctor: '[]'},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text(
+																			A2(
+																				_elm_lang$core$Basics_ops['++'],
+																				'Selected:',
+																				_elm_lang$core$Basics$toString(model.autocomSelectedMenuItem))),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$li,
+																		{ctor: '[]'},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text(
+																				A2(
+																					_elm_lang$core$Basics_ops['++'],
+																					'ShowMenu:',
+																					_elm_lang$core$Basics$toString(model.autocomShowMenu))),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: _lucamug$elm_meta_json_decoder$Main$viewAutocom(model),
+											_1: {ctor: '[]'}
+										}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
 };
 var _lucamug$elm_meta_json_decoder$Main$main = _elm_lang$html$Html$program(
-	{
-		init: A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			_lucamug$elm_meta_json_decoder$Main$init,
-			{ctor: '[]'}),
-		update: _lucamug$elm_meta_json_decoder$Main$update,
-		view: _lucamug$elm_meta_json_decoder$Main$view,
-		subscriptions: _lucamug$elm_meta_json_decoder$Main$subscriptions
-	})();
+	{init: _lucamug$elm_meta_json_decoder$Main$init, view: _lucamug$elm_meta_json_decoder$Main$view, update: _lucamug$elm_meta_json_decoder$Main$update, subscriptions: _lucamug$elm_meta_json_decoder$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _lucamug$elm_meta_json_decoder$Main$main !== 'undefined') {
-    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Autocomplete.Msg":{"args":[],"tags":{"Msg":["Autocomplete.Autocomplete.Msg"]}},"Autocomplete.Autocomplete.Msg":{"args":[],"tags":{"MouseLeave":["String"],"WentTooHigh":[],"WentTooLow":[],"MouseClick":["String"],"KeyDown":["Char.KeyCode"],"NoOp":[],"MouseEnter":["String"]}},"Main.Msg":{"args":[],"tags":{"MsgAutocom":["Main.MsgAutocom"]}},"Main.MsgAutocom":{"args":[],"tags":{"PreviewMenuItem":["String"],"SelectMenuItemMouse":["String"],"OnFocus":[],"HandleEscape":[],"Wrap":["Bool"],"SetAutoState":["Autocomplete.Msg"],"Reset":[],"SetQuery":["String"],"SelectMenuItemKeyboard":["String"],"NoOp":[]}}},"aliases":{"Char.KeyCode":{"args":[],"type":"Int"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _lucamug$elm_meta_json_decoder$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Autocomplete.Msg":{"args":[],"tags":{"Msg":["Autocomplete.Autocomplete.Msg"]}},"Autocomplete.Autocomplete.Msg":{"args":[],"tags":{"MouseLeave":["String"],"WentTooHigh":[],"WentTooLow":[],"MouseClick":["String"],"KeyDown":["Char.KeyCode"],"NoOp":[],"MouseEnter":["String"]}},"Main.Msg":{"args":[],"tags":{"OnFocus":["Main.FormField"],"SetField":["Main.FormField","String"],"MsgAutocom":["Main.MsgAutocom"],"OnBlur":["Main.FormField"],"NoOp":[]}},"Main.MsgAutocom":{"args":[],"tags":{"PreviewMenuItem":["String"],"SelectMenuItemMouse":["String"],"NoOpAutocom":[],"HandleEscape":[],"OnBlurAutocom":[],"Wrap":["Bool"],"SetAutoState":["Autocomplete.Msg"],"Reset":[],"SetQuery":["String"],"PreventFocusAndBlur":[],"OnFocusAutocom":[],"SelectMenuItemKeyboard":["String"]}},"Main.FormField":{"args":[],"tags":{"Field1":[],"Field2":[]}}},"aliases":{"Char.KeyCode":{"args":[],"type":"Int"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

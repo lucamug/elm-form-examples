@@ -15225,7 +15225,15 @@ var _lucamug$elm_meta_json_decoder$Utils$exampleComment = _elm_lang$core$Dict$fr
 																				_1: {
 																					ctor: '::',
 																					_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '19', 'Adding a date picker'),
-																					_1: {ctor: '[]'}
+																					_1: {
+																						ctor: '::',
+																						_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '20', 'Adding HTML date'),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(_lucamug$elm_meta_json_decoder$Utils_ops['=>'], '21', 'Adding Autocomplete field'),
+																							_1: {ctor: '[]'}
+																						}
+																					}
 																				}
 																			}
 																		}
@@ -17170,7 +17178,7 @@ var _lucamug$elm_meta_json_decoder$Main$settings = function () {
 		defaultSettings,
 		{isDisabled: isDisabled, placeholder: ''});
 }();
-var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '19';
+var _lucamug$elm_meta_json_decoder$Main$exampleVersion = '20';
 var _lucamug$elm_meta_json_decoder$Main$Model = function (a) {
 	return function (b) {
 		return function (c) {
@@ -17581,7 +17589,6 @@ var _lucamug$elm_meta_json_decoder$Main$update = F2(
 		}
 	});
 var _lucamug$elm_meta_json_decoder$Main$viewForm = function (model) {
-	var dp = model.datePicker;
 	return A2(
 		_elm_lang$html$Html$div,
 		{

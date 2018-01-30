@@ -356,10 +356,6 @@ viewInput model formField inputType inputName =
 
 viewForm : Model -> Html Msg
 viewForm model =
-    let
-        dp =
-            model.datePicker
-    in
     div [ class "form-container" ]
         [ div
             [ onEnter SubmitForm
