@@ -44,7 +44,7 @@ viewFooter version =
 
 urlMirrorService : String
 urlMirrorService =
-    "http://httpbin.org/post"
+    "https://httpbin.org/post"
 
 
 viewHeader : String -> Html msg
